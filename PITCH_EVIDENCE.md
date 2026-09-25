@@ -92,8 +92,9 @@ attendance rose from 384 to 422 (+10%), average wait to a named clinician rose f
 - 422 patients a day through a 70-bed ED (bed count per Dr Fleischer, NZ Herald, below).
 - Roughly 1 in 3 Christchurch ED patients is admitted. The other ~7 in 10 leave without
   admission — every one of them is a front-door triage conversation.
-- 13,081 arrivals in May alone. At ~1,000 per month that is a very large, very consistent
-  intake surface.
+- 13,081 arrivals in May alone — roughly **13,000 arrivals per month** and a large,
+  consistent potential intake surface. Do not imply that every arrival represents the same
+  triage workflow or is addressable by the product; validate the eligible cohort in a pilot.
 
 ### 1.2 Corridor care has tripled in three years
 
@@ -203,10 +204,11 @@ its busiest day on record.
   **95% by 2030**. So the system has clawed back roughly 8 points in three years against a
   target that needs nearly 19 more.
 
-**The most quotable national fact:** a ministerial briefing surfaced in the June 2026 public
-sector targets update states that **most emergency departments nationwide are over capacity
-most of the time**, and classifies reaching 95% by 2030 as only **"feasible"** — i.e. at
-serious risk. Same day, Stuff reported Tauranga Hospital's ED had run at up to **200%
+**The most defensible national fact:** the DPMC target factsheet classifies achieving the 95%
+target by 2030 as **"feasible"**, rather than on track. It reports a December 2025 result of
+74.2% against a 68.0% September 2023 baseline. Do **not** attribute “most EDs are over
+capacity most of the time” to this factsheet: add the primary ministerial briefing before using
+that wording in a deck. Same day, Stuff reported Tauranga Hospital's ED had run at up to **200%
 capacity** with staff declaring a state of emergency.
 
 **The contrast that makes your argument:** elective treatment improved sharply — 72.6% of
@@ -220,9 +222,9 @@ gain in years." The ED number barely moved.
 > performance is structural, not bad luck." — B2B News, 23 Sep 2026
 
 This is a strong framing for your pitch: **schedulable work can be bought and planned. The
-front door cannot.** It is the one part of the hospital that no amount of elective
-outsourcing or extra winter beds fixes, which is precisely why a front-door software wedge
-is worth building.
+front door cannot.** Extra beds, staffing and better hospital flow remain necessary, but they
+do not by themselves validate or replace a front-door information and escalation workflow. A
+software wedge is therefore a complementary, testable lever — not the only solution.
 
 Health Minister Simeon Brown, DPMC factsheet on Target 1, March 2026:
 > "Improvements across the whole system of care are needed to reduce the unacceptable wait
@@ -472,10 +474,11 @@ Zealand emergency department.**
 
 ---
 
-## 6. AI cannot safely do triage — the evidence base for "human decision-maker, always"
+## 6. Current evidence does not support autonomous AI triage — the case for a human decision-maker
 
-This section is your strongest defence, and it is unusually well evidenced. Use it to show
-you understand the risk, not to attack competitors.
+This section is your strongest defence. It supports supervised decision support and local
+prospective validation; it does **not** prove that no future AI system could ever assist with
+triage. Use it to show you understand the risk, not to attack competitors.
 
 ### 6.1 LLMs do not reach clinical agreement on urgency
 
@@ -945,7 +948,7 @@ nurses' evaluations are "scarcely documented." Michalowski M, Topaz M, Peltonen 
 of Advanced Nursing* 82(1):907–912, Jan 2026 issue. DOI 10.1111/jan.16911. Relevant to your
 product: this is under-capture creating clinical risk.
 
-### 9.3 What Health NZ itself is admitting about Heidi — your opening line
+### 9.3 What Health NZ itself is reporting about Heidi — your opening line
 
 RNZ, 17 March 2026:
 https://www.rnz.co.nz/news/health/589774/emergency-doctors-estimate-ai-scribe-heidi-saving-up-to-10-minutes-per-patient
@@ -974,9 +977,11 @@ https://www.rnz.co.nz/news/health/589774/emergency-doctors-estimate-ai-scribe-he
 - Delivered by the **HealthX** programme.
 
 **Openings in that paragraph:** editing effort, accuracy, trust, and the fact that the health
-system has no quantified evaluation. Also note Heidi is a **documentation** tool — it does not
-triage, does not allocate urgency, does not flag missed red flags, and does not own a
-clinician-reviewed decision record.
+system has no quantified evaluation. Do not claim that Heidi cannot flag red flags or support
+clinical reasoning without current, primary product evidence. Its public positioning has expanded
+beyond note-writing. The defensible differentiation claim is narrower: this product is designed
+to produce a clinician-owned, editable and auditable front-door brief and urgency-decision record;
+whether that workflow is unmet must be validated with Canterbury users.
 
 ### 9.4 NZ patient trust research — quote this, it is locally specific
 
@@ -1038,10 +1043,89 @@ train its AI."
 
 ### The finding that should shape your slide
 
-**No 2026 funding rounds were found for triage-specific startups.** The 2026 capital in this
-category is overwhelmingly going to ambient documentation and AI-agent companies. Nobody is
-funding triage. That absence is a positioning argument, and it is also a warning: triage is
-harder to sell, harder to validate, and harder to buy than documentation.
+**In this six-month search, no verified 2026 funding rounds for triage-specific startups were
+found.** The visible 2026 capital in this category is overwhelmingly going to ambient
+documentation and AI-agent companies. Treat this as a search finding, not proof that nobody is
+funding triage. It is a positioning signal and a warning: triage is likely harder to validate and
+buy than documentation.
+
+---
+
+## 10.5 Christchurch beachhead: market and buyer hypotheses to validate
+
+This is deliberately a **beachhead model, not a TAM claim**. There is no verified public price,
+procurement pathway, or addressable-workflow percentage for a Canterbury triage product. Do not
+invent one for the pitch.
+
+### What the local data establishes
+
+- Christchurch Hospital recorded **60,789 ED arrivals from January to May 2026**. Annualising
+  that five-month run-rate gives about **145,900 arrivals**, but seasonality and changes in demand
+  make this a planning estimate, not a forecast.
+- May alone recorded **13,081 arrivals**. The OIA data also shows 69.1% were not admitted; this
+  is not a claim about who is eligible for the product, only an indication that front-door
+  workflow is high-volume.
+- A single successful site is enough to establish workflow fit and a measured baseline before any
+  multi-site market claim.
+
+### The people who must say “yes”
+
+Treat these as customer-discovery targets, not assumptions about Health NZ's internal authority:
+
+| Role to interview | Decision to validate | Evidence needed from them |
+|---|---|---|
+| Triage and charge nurses | Does the brief reduce duplicate capture or missed context without adding clicks? | Observed workflow and edit/rejection reasons |
+| ED clinical director / senior emergency physician | Is the output clinically useful and safely bounded? | Agreed escalation and review criteria |
+| Nursing leadership | Does it fit nursing documentation and staffing practice? | Acceptance criteria and training constraints |
+| Digital, privacy, security and data-governance leads | Can data be processed, retained and audited appropriately? | Architecture, consent and data-residency requirements |
+| Māori health / data-governance partners and patient representatives | Does the design uphold trust, consent and governance expectations? | Co-designed consent, governance and equity measures |
+| Operational and procurement sponsor | Is there a route from pilot to a paid service if it works? | Pilot owner, evaluation plan and procurement requirements |
+
+### Competitive position: state only what can be proven
+
+| Category | What is established | What must not be assumed |
+|---|---|---|
+| National ambient-scribe rollout (Heidi) | Health NZ says every NZ ED has access and 1,250 ED doctors/frontline staff were included. | That it solves, or cannot solve, a particular Canterbury triage workflow. |
+| Generic ambient scribes | They target clinical documentation and have evidence of mixed workflow/time outcomes. | That any vendor is clinically equivalent, or lacks a feature, without a current product check. |
+| This proposed product | Intended: editable structured front-door brief, provenance and a clinician-owned urgency decision record. | Clinical benefit, time saving, willingness to pay, or safety benefit before a prospective pilot. |
+
+### Pitch-safe market statement
+
+> “Christchurch is our beachhead, not a claimed national market. The local ED has roughly
+> 13,000 arrivals in a recent month and documented capacity pressure. We will first prove that
+> a clinician-owned intake and escalation brief improves a defined workflow. Only then will we
+> establish pricing, procurement fit and expansion to comparable sites.”
+
+## 10.6 Pilot: the evidence plan that converts a problem into a buyable product
+
+### Scope and safeguards
+
+- Start with one defined, lower-risk workflow agreed with ED leadership; do not start with an
+  autonomous urgency recommendation.
+- Keep the nurse or clinician as the recorded decision-maker. Distinguish patient-stated facts,
+  clinician observations and system-generated prompts.
+- Require visible provenance, editing, rejection and correction; log these for audit.
+- Obtain local privacy, security, Māori data-governance and patient-consent guidance before any
+  real-patient use. Do not treat a research prototype as clinical decision support clearance.
+
+### Measures to pre-register
+
+| Outcome | Measure | Why it matters |
+|---|---|---|
+| Workflow burden | Median documentation minutes and number of duplicate fields per eligible encounter | Tests whether the tool reduces, rather than moves, work |
+| Information completeness | Checklist-based red-flag/context capture compared with usual workflow | Tests the core information-loss hypothesis |
+| Human control | Edit rate, reject rate, reason for edit, and time to final clinician sign-off | Shows whether the output is trustworthy and usable |
+| Safety | Missed-context review, escalation-review rate, adverse-event review and a stop rule | Prevents speed from becoming the primary success measure |
+| Equity and consent | Consent/refusal, interpreter use, Māori and other priority-group experience where ethically approved | Tests whether benefits and burdens are shared fairly |
+| Commercial fit | Sponsor assessment, implementation time, training time and estimated workflow value | Establishes whether a pilot can lead to procurement |
+
+### Minimum evidence gates
+
+1. No deterioration in the agreed safety/completeness measure.
+2. Clinicians remain the documented owners of urgency and escalation decisions.
+3. Measurable reduction in duplicate capture or documentation burden for the selected workflow.
+4. Acceptable privacy, consent, equity and governance review.
+5. A named operational sponsor agrees that the result is decision-useful.
 
 ---
 
@@ -1057,7 +1141,7 @@ buyer cannot yet justify spending on it.
    attributable to charting was found. Multiple avenues were checked: PubMed/Europe PMC
    title-field searches, a JCN ED triage scope-of-practice paper, an *Australasian Emergency
    Care* review on triage efficiency. **This is a genuine gap, and arguably your best pitch
-   hook: you cannot sell against a metric nobody has measured.**
+   hook: do not claim improvement against a metric until the pilot has measured a baseline.**
 2. **The entire ambient-AI-scribe-in-ED evidence base is six studies with n=6 to 24**
    (§7.4). There is no large, rigorous, ED-specific trial.
 3. **Health NZ has no quantified evaluation of its own national ED scribe rollout** and
@@ -1095,8 +1179,13 @@ buyer cannot yet justify spending on it.
 - **Any raw "AI scribe reduces documentation time by 76%"** claim that appears on vendor
   case-study aggregators (e.g. usecase.ai). These are marketing numbers with no methodology.
 - **Heidi's "sole supplier for NHS England Midlands" and "deployed across every ED in New
-  Zealand"** — the New Zealand part is now confirmed by Beehive and HiNZ (§0), but the NHS
-  England claim is single-sourced to Fierce Healthcare citing the company.
+   Zealand"** — the New Zealand part is now confirmed by Beehive and HiNZ (§0), but the NHS
+   England claim is single-sourced to Fierce Healthcare citing the company.
+- **The UK “554 deaths a week” crowding result as a causal fact** — it was released as a
+   conference presentation/press release. If used, call it an observational, modelled estimate
+   with a wide uncertainty range, not proof that crowding caused that number of deaths.
+- **The 55-year-old chest-pain case as a primary regulatory finding** — add the original HDC
+   decision before using it as a stand-alone slide. The current citation is secondary reporting.
 
 ---
 
@@ -1110,17 +1199,18 @@ Christchurch Hospital ED ran at 200–300% occupancy with patients in corridors,
 angled and then perpendicular to the wall. 14,587 corridor patients in 2025–26, up from
 3,911 three years earlier, with corridor hours up five-fold. A 20-year veteran nurse quit
 because senior triage nurses were overseeing up to 10 corridor patients while still triaging,
-which she called "a high-risk situation." A real 55-year-old man with cardiac chest pain was
-triaged as non-cardiac in a 200%-occupancy ED, ten nurses short, and did not get an ECG for
-four and a half hours; the HDC found Health NZ in breach of the Code of Rights.
+which she called "a high-risk situation." A secondary report describes a 55-year-old man with
+cardiac chest pain who was triaged as non-cardiac in a 200%-occupancy ED, ten nurses short, and
+did not get an ECG for four and a half hours. Verify and add the primary HDC decision before
+using that case in a deck.
 
-**2. It is not a resourcing problem, and the evidence is now unambiguous.**
+**2. It is not only a resourcing problem.**
 Elective surgery improved sharply in the same quarter that ED performance moved 0.2 points,
-because elective work can be scheduled, batched and outsourced. The front door cannot. A
-ministerial briefing states most NZ EDs are over capacity most of the time, and reaching 95%
-by 2030 is rated only "feasible." Nursing is a multi-year pipeline, not a purchase order.
-Whatever is going to change at the front door will be a process or a software change, because
-it is the only lever left.
+because elective work can be scheduled, batched and outsourced. The front door cannot. The DPMC
+factsheet rates the 95% target as "feasible," and Health NZ is investing in staffing, beds,
+urgent care and flow. These are necessary system responses. A clinician-led process and software
+pilot is a complementary, testable way to improve information capture and escalation review at
+the front door; it is not a substitute for staff or bed capacity.
 
 **3. The mechanism of harm is information, not just time.**
 Handover is 97.6% verbal, median 40 seconds, with allergy details missing 55% of the time and
@@ -1138,30 +1228,31 @@ found AI notes scored *worse* than human notes on all 10 quality domains. The sc
 the whole category rests on six studies with 6 to 24 participants. And Health NZ itself is not
 attributing time savings for its own national rollout.
 
-**5. AI must not, and provably cannot, make the triage decision.**
-39,375 real ED cases: no frontier LLM reached strong agreement with physicians. Experienced
-nurses beat general-purpose AI 92% to 65% on paediatric triage, with the AI biased toward
-under-triaging the sickest patients. A fine-tuned LLM lost to a plain XGBoost model on 74,170
-real paediatric encounters. Nine emergency medicine organisations, led by ACEP, published a
-consensus statement on 18 March 2026: emergency physicians retain authority for patient care
-decisions, AI should enhance not replace clinical judgement, and the physician-patient
+**5. Current evidence does not support autonomous AI triage.**
+In 39,375 real ED cases, no tested frontier LLM reached strong agreement with physicians.
+Experienced nurses beat general-purpose AI 92% to 65% on paediatric triage, with the AI biased
+toward under-triaging the sickest patients. A fine-tuned LLM lost to a plain XGBoost model on
+74,170 real paediatric encounters. Nine emergency medicine organisations, led by ACEP, published
+a consensus statement on 18 March 2026: emergency physicians retain authority for patient care
+decisions, AI should enhance rather than replace clinical judgement, and the physician-patient
 relationship must be preserved.
 
 **6. So the product is not "AI triage." It is a structured, reviewable front-door brief with a
 clinician who owns the decision.** The clinician keeps authority. The report distinguishes what
 was said or observed from what the model inferred. The urgency assignment is a recorded,
 attributable human act. Every suggestion is editable and rejectable. This is not a hedge; it is
-the only version of this product that the specialty societies, the regulator and the evidence
-will accept.
+the product form most clearly aligned with the specialty consensus, safety evidence and
+clinician-led validation expectations.
 
-**7. The unmet gap is the nursing side and the escalation review.** 86% of nurse managers say
+**7. The nursing side and escalation review are a hypothesis worth testing.** 86% of nurse managers say
 documentation requirements cut RN time for direct patient care. 74% say physician-style ambient
 tools will not solve nursing documentation burden unless redesigned for nursing-specific
 workflows. 79% say bedside nurses are not included in AI documentation design at all. New Zealand
 patients told researchers that AI must not replace human touch, must have Māori governance, and
-that NZ-based and university partners are more trustworthy than commercial or overseas ones. And
-Heidi, already in every NZ ED, is a note-writing tool: it does not triage, does not flag missed
-red flags, and does not produce a clinician-owned urgency decision record.
+that NZ-based and university partners are more trustworthy than commercial or overseas ones. The
+national Heidi rollout proves that the incumbent category is real. Do not make unverified claims
+about its feature limits. Instead, test whether Canterbury teams value a clinician-owned urgency
+decision record, structured intake brief and escalation review beyond their existing tools.
 
 **8. What we would do with your money: measure the thing nobody has measured.** There is no
 2026 study of how many minutes an ED nurse spends on intake and triage documentation per
