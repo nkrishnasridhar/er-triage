@@ -2,6 +2,10 @@
 
 ER Triage is initialized from the [SaaSathon Starter](https://github.com/justus-lumin/SaaSathon-Template): a Next.js, TypeScript, Supabase, Tailwind and pnpm project foundation.
 
+The product specified for this weekend is **Front Brief**, a clinician-reviewed emergency-department intake copilot. The design package is in [docs/README.md](docs/README.md). This pass is documentation only. Application behaviour is still the starter.
+
+Hackathon data is synthetic and fictional. Do not enter real patient health information. The product must not diagnose, prescribe, assign an Australasian Triage Scale category, rank patients, or present model output as clinical truth. A clinician reviews and approves every brief.
+
 ## Getting Started
 
 You need Node.js 22+, pnpm 10 and Docker for local Supabase.
