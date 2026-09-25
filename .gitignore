@@ -1,15 +1,25 @@
 # Dependencies
 node_modules/
 
-# Build outputs
+# Next.js and build outputs
+.next/
+out/
 dist/
 build/
-.next/
 
 # Environment
-.env
-.env.*
+.env*
 !.env.example
+
+# Vercel
+.vercel/
+
+# TypeScript
+*.tsbuildinfo
+
+# Supabase local state
+supabase/.temp/
+supabase/.branches/
 
 # Logs
 *.log
