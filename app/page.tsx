@@ -20,7 +20,7 @@ export default function Home() {
           </div>
           <h1 className="text-h2 mt-4 text-center">Start by speaking.</h1>
           <p className="mx-auto mt-4 max-w-xl text-center text-base leading-7 text-muted">
-            The check-in assistant will ask a few questions aloud. You will review and
+            The check-in assistant will ask five questions aloud. You will review and
             confirm the text before anything is sent to the clinical team.
           </p>
           <Link

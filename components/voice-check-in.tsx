@@ -96,7 +96,8 @@ export function VoiceCheckIn() {
             type: "response.create",
             response: {
               input: [],
-              instructions: "Start the check-in with a short welcome and the first question.",
+              instructions:
+                "Start with the exact opening statement in your instructions, then ask question 1 verbatim. Ask all five fixed questions in order regardless of the answers. Do not skip, rephrase, or add questions.",
             },
           }),
         );
