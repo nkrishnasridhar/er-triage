@@ -1,11 +1,14 @@
-# ER Triage
+# ERgency
 
-ER Triage separates a tablet check-in from a **clinician-reviewed** workspace.
-The primary tablet flow is a spoken conversation: the assistant asks neutral
-questions aloud, then the person must check and edit the resulting text before
-submitting a write-once account. A separate written form remains available. On
-a computer, a qualified clinician reviews the source account and draft,
-corrects it, sets priority and next step, and signs it off.
+ERgency is a clinician-reviewed emergency-department intake copilot. It helps
+people communicate what brought them to the department, then gives clinicians a
+clear, source-preserving brief to review before they make any decision.
+
+The tablet check-in is voice-first: ERgency asks neutral questions aloud, and
+the person checks and can edit the resulting text before submitting a write-once
+account. A written form is also available. In the clinician workspace, staff
+review the original account and draft, correct it where needed, record the
+priority and next step, and sign it off.
 
 The product is described in full, including what it deliberately does not do, in
 [PRODUCT_GOAL.md](PRODUCT_GOAL.md).
@@ -17,20 +20,21 @@ The product is described in full, including what it deliberately does not do, in
 
 ## The workflow
 
-1. **Check in** — the anonymous tablet starts with a voice-first browser
-   conversation. The Realtime provider processes microphone audio to speak and
-   transcribe during that session; the app does not record audio and submits
-   only user-confirmed text. A separate written form is always available, and
+1. **Capture the person’s account** — the tablet starts a voice-first browser
+   check-in. The Realtime provider processes microphone audio to speak and
+   transcribe during that session; ERgency does not record audio and submits
+   only text the person has confirmed. A written form is always available, and
    the tablet cannot read the clinical workspace.
-2. **Draft** — a server-only composition boundary organises the text into a
-   source-preserving draft, falling back safely to local deterministic rules.
-3. **Suggest** — a separate, source-linked model pass suggests where to start
-   in the active review list. Every report remains openable; the order is not a
-   clinical priority or decision.
-4. **Review** — a clinician edits the draft and chooses a priority and next
-   step. Nothing is pre-selected by the application.
-5. **Hand over** — the signed-off brief becomes a read-only record naming the
-   clinician who approved it.
+2. **Create a reviewable brief** — a server-only composition boundary organises
+   the account into a source-preserving draft, falling back safely to local
+   deterministic rules.
+3. **Support, never replace, review** — a separate source-linked model pass can
+   surface where to start in the active review list. Every report remains
+   openable; the order is not a clinical priority or decision.
+4. **Keep decisions with clinicians** — a clinician edits the draft and chooses
+   a priority and next step. ERgency pre-selects neither.
+5. **Create an accountable handover** — the signed-off brief becomes a
+   read-only record naming the clinician who approved it.
 
 ## The safety boundaries, and where they are enforced
 
@@ -50,7 +54,10 @@ in the application cannot cross them.
 | Accounts cannot be deleted out from under a record | `ON DELETE RESTRICT` on every reference |
 | Patient identity is minimised | No name, date of birth or contact detail is stored at all |
 
-The product specified for this weekend is **ERgency**, a clinician-reviewed emergency-department intake copilot. The design package is in [docs/README.md](docs/README.md).
+ERgency is designed to make AI assistance inspectable and accountable: it
+preserves the person’s source account, flags reviewable gaps or conflicts, and
+leaves clinical judgement and approval with a named clinician. The design
+package is in [docs/README.md](docs/README.md).
 
 The implemented path is `/` for voice-first tablet check-in, `/check-in` for
 the written/voice-transcript confirmation form, `/queue` for staff reports, and
@@ -58,7 +65,17 @@ the written/voice-transcript confirmation form, `/queue` for staff reports, and
 [the implementation contract](docs/33-tablet-clinician-workflow.md) for the
 data-access, AI, speech, and role boundaries.
 
-Hackathon data is synthetic and fictional. Do not enter real patient health information. The product must not diagnose, prescribe, assign an Australasian Triage Scale category, or present model output as clinical truth. Its suggested review order is an inspectable starting view only; a clinician reviews and approves every brief.
+Hackathon data is synthetic and fictional. Do not enter real patient health
+information. ERgency must not diagnose, prescribe, assign an Australasian
+Triage Scale category, or present model output as clinical truth. Its suggested
+review order is an inspectable starting view only; a clinician reviews and
+approves every brief.
+
+### Future wearable path — architecture only
+
+The demo may show one **simulated**, timestamped device-reported heart-rate value in a clinician record. It is not clinically verified, is never sent to either AI pass, and cannot influence a priority, next step, queue order, diagnosis, or safety conclusion.
+
+A future live integration would require a patient-authorised native iPhone companion to read selected Apple Health/HealthKit data and submit a one-time snapshot to ERgency. Android Health Connect would be a separate later path. This browser app does not connect to watches or other devices, and it does not include Jev, a Jev API key, or any other wearable vendor integration. Any real-patient version needs clinical, privacy, security, consent, and vendor data-processing review before development.
 
 ### Known mismatches between `docs/` and the code
 
