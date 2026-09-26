@@ -304,7 +304,7 @@ async function main() {
     const queue = await (await request("/queue")).text();
     assert.ok(queue.includes("TABLET-HTTP-1"));
     assert.ok(queue.includes("Awaiting review"));
-    assert.ok(queue.includes("Suggested clinician review order"));
+    assert.match(queue, /suggested clinician review order/i);
     assert.ok(queue.includes("Unassessed"));
     assert.ok(!queue.includes("TABLET-RLS-1"), "Approved records are not in the active queue");
     assert.ok(!queue.includes("AI priority"));

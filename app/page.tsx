@@ -1,11 +1,14 @@
 import Link from "next/link";
+import { BrandMark } from "@/components/brand-mark";
 import { VoiceCheckIn } from "@/components/voice-check-in";
 
 export default function Home() {
   return (
     <main id="main" className="flex h-dvh min-h-0 flex-col overflow-hidden bg-paper text-pine">
       <header className="flex shrink-0 items-center justify-between px-6 py-4 sm:px-10 sm:py-6">
-        <p className="text-sm font-semibold tracking-tight">ERgency</p>
+        <Link href="/" aria-label="ERgency home">
+          <BrandMark />
+        </Link>
         <Link href="/login" className="text-sm underline-offset-4 hover:underline">
           Staff sign in
         </Link>

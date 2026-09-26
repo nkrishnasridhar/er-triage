@@ -2,7 +2,6 @@ import Link from "next/link";
 import { signOut } from "@/app/login/actions";
 import { BrandMark } from "@/components/brand-mark";
 import { Button } from "@/components/ui/button";
-import type { StaffRole } from "@/lib/auth";
 
 /**
  * Shared chrome for signed-in pages. `isConfigured` pages redirect to /login
@@ -10,11 +9,9 @@ import type { StaffRole } from "@/lib/auth";
  */
 export function AppShell({
   email,
-  role,
   children,
 }: {
   email: string;
-  role: StaffRole;
   children: React.ReactNode;
 }) {
   return (
@@ -36,7 +33,7 @@ export function AppShell({
           </div>
           <div className="flex min-w-0 items-center gap-4">
             <span className="max-w-48 truncate text-sm text-muted">
-              {email} · {role}
+              {email}
             </span>
             <form action={signOut}>
               <Button variant="ghost" type="submit">

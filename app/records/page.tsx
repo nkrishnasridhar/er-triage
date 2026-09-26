@@ -10,7 +10,7 @@ export const metadata = { title: "Approved records" };
 
 export default async function ApprovedRecordsPage() {
   if (!isConfigured()) redirect("/login");
-  const { supabase, email, role } = await requireStaff();
+  const { supabase, email } = await requireStaff();
 
   const { data: briefs, error: briefsError } = await supabase
     .from("triage_briefs")
@@ -32,7 +32,7 @@ export default async function ApprovedRecordsPage() {
   const encounterById = new Map((encounters ?? []).map((encounter) => [encounter.id, encounter]));
 
   return (
-    <AppShell email={email} role={role}>
+    <AppShell email={email}>
       <main id="main" className="mx-auto max-w-5xl px-5 py-10 lg:px-[30px]">
         <Link href="/queue" className="text-sm underline-offset-4 hover:underline">
           &larr; Back to the active queue

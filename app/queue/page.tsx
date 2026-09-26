@@ -18,7 +18,7 @@ export const metadata = { title: "Queue" };
 
 export default async function QueuePage() {
   if (!isConfigured()) redirect("/login");
-  const { supabase, email, role } = await requireStaff();
+  const { supabase, email } = await requireStaff();
 
   const { data: encounters, error } = await supabase
     .from("encounters")
@@ -68,7 +68,7 @@ export default async function QueuePage() {
   const approvedCount = rows.length - awaiting.length;
 
   return (
-    <AppShell email={email} role={role}>
+    <AppShell email={email}>
       <main id="main" className="mx-auto max-w-5xl px-5 py-10 lg:px-[30px]">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>

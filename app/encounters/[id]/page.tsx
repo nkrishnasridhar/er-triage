@@ -110,7 +110,7 @@ export default async function EncounterPage({
   const band = (suggestion?.attention_band ?? "unassessed") as ReviewBand;
 
   return (
-    <AppShell email={email} role={role}>
+    <AppShell email={email}>
       <main id="main" className="mx-auto max-w-3xl px-5 py-10 lg:px-[30px]">
         <Link href="/queue" className="text-sm underline-offset-4 hover:underline">
           &larr; Back to the queue
