@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
+
 export const metadata: Metadata = {
-  title: { default: "ER Triage", template: "%s · ER Triage" },
-  description:
-    "Turn a patient's first account into a clinician-reviewed triage brief.",
+  title: { default: "Christchurch ER", template: "%s · Christchurch ER" },
+  description: "Christchurch ER check-in.",
 };
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
