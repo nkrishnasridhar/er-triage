@@ -2,14 +2,10 @@ import "server-only";
 import { z } from "zod";
 import type { DraftBrief, IntakeInput } from "@/lib/draft-brief";
 import { deterministicFallback, validateModelDraft } from "@/lib/brief-composition-validation";
+import { untrustedIntakeForModel } from "@/lib/model-intake";
 
 export type CompositionSource = "model-v1" | "deterministic-fallback-v1";
 export type ComposedDraft = { draft: DraftBrief; source: CompositionSource };
-
-function untrustedIntake(input: IntakeInput) {
-  const escape = (value: string) => value.replaceAll("</untrusted_intake>", "[closing tag removed]");
-  return `<untrusted_intake>\nPresenting concern: ${escape(input.presentingConcern)}\nPatient account: ${escape(input.patientAccount)}\nStaff observations: ${escape(input.observedSigns)}\n</untrusted_intake>`;
-}
 
 /**
  * The provider boundary is server-only and optional. A missing key, timeout,
@@ -44,7 +40,7 @@ export async function composeDraftBrief(input: IntakeInput): Promise<ComposedDra
           },
           {
             role: "user",
-            content: untrustedIntake(input),
+            content: untrustedIntakeForModel(input),
           },
         ],
       }),

@@ -38,6 +38,9 @@ export type Database = {
         Row: {
           age_years: number | null;
           created_at: string;
+          device_snapshot_captured_at: string | null;
+          device_snapshot_heart_rate_bpm: number | null;
+          device_snapshot_source: string | null;
           id: string;
           observed_signs: string;
           patient_account: string;
@@ -51,6 +54,9 @@ export type Database = {
         Insert: {
           age_years?: number | null;
           created_at?: string;
+          device_snapshot_captured_at?: string | null;
+          device_snapshot_heart_rate_bpm?: number | null;
+          device_snapshot_source?: string | null;
           id?: string;
           observed_signs?: string;
           patient_account?: string;
@@ -64,6 +70,9 @@ export type Database = {
         Update: {
           age_years?: number | null;
           created_at?: string;
+          device_snapshot_captured_at?: string | null;
+          device_snapshot_heart_rate_bpm?: number | null;
+          device_snapshot_source?: string | null;
           id?: string;
           observed_signs?: string;
           patient_account?: string;

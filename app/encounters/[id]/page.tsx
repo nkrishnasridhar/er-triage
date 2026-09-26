@@ -137,6 +137,26 @@ export default async function EncounterPage({
           <ClinicianDecisionNotice approved={approved} />
         </div>
 
+        {encounter.device_snapshot_source === "simulated" &&
+          encounter.device_snapshot_heart_rate_bpm !== null &&
+          encounter.device_snapshot_captured_at && (
+            <section className="mt-8 rounded-card border border-line bg-moss p-5" aria-labelledby="device-snapshot">
+              <p className="text-body-2 text-muted">DEVICE-REPORTED SNAPSHOT — SIMULATED</p>
+              <h2 id="device-snapshot" className="mt-2 text-xl font-semibold">
+                Optional heart-rate reading
+              </h2>
+              <p className="mt-4 text-2xl font-semibold">
+                {encounter.device_snapshot_heart_rate_bpm} bpm
+              </p>
+              <p className="mt-1 text-sm text-muted">
+                Captured {formatTimestamp(encounter.device_snapshot_captured_at)}
+              </p>
+              <p className="mt-4 text-sm leading-6 text-muted">
+                Not clinically verified. This fictional device-reported value has not been interpreted by the system and must not be used as a clinical assessment or decision.
+              </p>
+            </section>
+          )}
+
         <section className="mt-8 rounded-card border border-line p-5" aria-labelledby="review-suggestion">
           <p className="text-body-2 text-muted">SUGGESTED REVIEW ORDER</p>
           <h2 id="review-suggestion" className="mt-2 text-xl font-semibold">

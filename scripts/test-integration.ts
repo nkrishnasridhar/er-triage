@@ -65,6 +65,100 @@ async function main() {
       );
     }
 
+    const deviceSnapshot = {
+      device_snapshot_heart_rate_bpm: 74,
+      device_snapshot_captured_at: "2026-09-27T10:15:00.000Z",
+      device_snapshot_source: "simulated",
+    };
+    const snapshotEncounter = await admin
+      .from("encounters")
+      .insert({
+        patient_reference: "DEVICE-SNAPSHOT-1",
+        presenting_concern: "Synthetic device snapshot demonstration",
+        patient_account: "Fictional demo account only.",
+        observed_signs: "",
+        recorded_by: userIds[0],
+        recorded_by_label: emails.alice,
+        submission_source: "staff",
+        speech_used: false,
+        ...deviceSnapshot,
+      })
+      .select("id")
+      .single();
+    assert.equal(snapshotEncounter.error, null);
+    assert.ok(snapshotEncounter.data?.id);
+    const snapshotEncounterId = snapshotEncounter.data!.id;
+    encounterIds.push(snapshotEncounterId);
+    assert.equal(
+      (
+        await admin.from("triage_briefs").insert({
+          encounter_id: snapshotEncounterId,
+          drafted_by: userIds[0],
+          concern_summary: "Synthetic device snapshot demonstration.",
+          patient_reported: "Fictional demo account only.",
+          staff_observed: "",
+          items_to_check: "",
+          open_questions: "",
+          drafted_from: "deterministic-fallback-v1",
+        })
+      ).error,
+      null,
+    );
+    for (const staffClient of [alice, bob]) {
+      const snapshotRead = await staffClient
+        .from("encounters")
+        .select("device_snapshot_heart_rate_bpm, device_snapshot_captured_at, device_snapshot_source")
+        .eq("id", snapshotEncounterId)
+        .single();
+      assert.equal(snapshotRead.error, null, "Staff can read the synthetic device snapshot");
+      assert.deepEqual(snapshotRead.data, deviceSnapshot);
+
+      const snapshotUpdate = await staffClient
+        .from("encounters")
+        .update({ device_snapshot_heart_rate_bpm: 75 })
+        .eq("id", snapshotEncounterId)
+        .select();
+      assert.ok(
+        snapshotUpdate.error || snapshotUpdate.data?.length === 0,
+        "Staff cannot change a captured device snapshot",
+      );
+    }
+    assert.ok(
+      (
+        await admin.from("encounters").insert({
+          patient_reference: "INVALID-SNAPSHOT-1",
+          presenting_concern: "Invalid synthetic snapshot",
+          patient_account: "Fictional test data only.",
+          observed_signs: "",
+          recorded_by: userIds[0],
+          recorded_by_label: emails.alice,
+          submission_source: "staff",
+          speech_used: false,
+          device_snapshot_heart_rate_bpm: 74,
+          device_snapshot_source: "simulated",
+        })
+      ).error,
+      "A snapshot requires a timestamp",
+    );
+    assert.ok(
+      (
+        await admin.from("encounters").insert({
+          patient_reference: "INVALID-SNAPSHOT-2",
+          presenting_concern: "Invalid synthetic snapshot",
+          patient_account: "Fictional test data only.",
+          observed_signs: "",
+          recorded_by: userIds[0],
+          recorded_by_label: emails.alice,
+          submission_source: "staff",
+          speech_used: false,
+          device_snapshot_heart_rate_bpm: 251,
+          device_snapshot_captured_at: "2026-09-27T10:15:00.000Z",
+          device_snapshot_source: "simulated",
+        })
+      ).error,
+      "A synthetic snapshot must use a bounded heart-rate value",
+    );
+
     // The anonymous tablet can use only the narrow, atomic capture RPC.
     assert.ok((await anonymous.from("encounters").select()).error, "Anonymous reads are denied");
     assert.ok(
@@ -218,6 +312,15 @@ async function main() {
       frozen,
       "An approved brief is immutable for every clinician",
     );
+    const approvedEncounterUpdate = await alice
+      .from("encounters")
+      .update({ device_snapshot_heart_rate_bpm: 75 })
+      .eq("id", capturedId!)
+      .select();
+    assert.ok(
+      approvedEncounterUpdate.error || approvedEncounterUpdate.data?.length === 0,
+      "An approved record's captured snapshot remains immutable",
+    );
 
     // Exercise the actual tablet Server Action and authenticated review route.
     const env = {
@@ -280,6 +383,7 @@ async function main() {
     assert.ok(voiceHtml.includes("Start by speaking"));
     assert.ok(voiceHtml.includes("Use the written form"));
     assert.ok(!voiceHtml.includes("priority"), "The tablet never exposes a priority control");
+    assert.ok(!voiceHtml.includes("Device-reported snapshot"), "The tablet never exposes device snapshots");
     const tabletHtml = await (await request("/check-in")).text();
     assert.ok(tabletHtml.includes("Tell us what is happening"));
     const tabletResult = await submit("/check-in", tabletHtml, "form", {
@@ -313,6 +417,10 @@ async function main() {
     assert.ok(records.includes("TABLET-RLS-1"));
     const approvedRecord = await (await request(`/encounters/${capturedId}`)).text();
     assert.ok(approvedRecord.includes("This record is now read-only."));
+    const snapshotRecord = await (await request(`/encounters/${snapshotEncounterId}`)).text();
+    assert.ok(snapshotRecord.includes("Device-reported snapshot"));
+    assert.ok(snapshotRecord.includes("74 bpm"));
+    assert.ok(snapshotRecord.includes("Not clinically verified."));
 
     console.log("PASS: anonymous tablet hand-off, review-suggestion access, immutable approval, and clinician queue");
   } finally {

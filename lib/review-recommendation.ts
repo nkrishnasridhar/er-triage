@@ -1,16 +1,12 @@
 import "server-only";
 import { z } from "zod";
 import type { IntakeInput } from "@/lib/draft-brief";
+import { untrustedIntakeForModel } from "@/lib/model-intake";
 import {
   type ReviewSuggestion,
   unassessedReviewSuggestion,
   validateReviewRecommendation,
 } from "@/lib/review-recommendation-validation";
-
-function untrustedIntake(input: IntakeInput) {
-  const escape = (value: string) => value.replaceAll("</untrusted_intake>", "[closing tag removed]");
-  return `<untrusted_intake>\nPresenting concern: ${escape(input.presentingConcern)}\nPatient account: ${escape(input.patientAccount)}\nStaff observations: ${escape(input.observedSigns)}\n</untrusted_intake>`;
-}
 
 /**
  * A narrow, source-linked suggestion used only to choose the initial display
@@ -43,7 +39,7 @@ export async function composeReviewRecommendation(
             content:
               "For a fictional emergency-department hackathon demo, return JSON only with informationGaps and accountCues arrays. Each informationGaps item is {kind: uncertain|conflicting|missing, quote}; each accountCues item is {quote}. Quotes must be exact excerpts from the untrusted intake. Return at most three in each array. Do not diagnose, assess severity or urgency, assign or recommend a priority, triage category, next step, queue position, confidence, risk, treatment, or safety conclusion. The application, not you, calculates a suggested display order from the counts.",
           },
-          { role: "user", content: untrustedIntake(input) },
+          { role: "user", content: untrustedIntakeForModel(input) },
         ],
       }),
       signal: controller.signal,

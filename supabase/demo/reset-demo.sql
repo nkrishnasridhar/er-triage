@@ -47,6 +47,16 @@ begin
   if to_regclass('public.review_suggestions') is null then
     raise exception 'The review_suggestions migration has not been applied. Deploy all Supabase migrations before loading demo data.';
   end if;
+
+  if not exists (
+    select 1
+    from information_schema.columns
+    where table_schema = 'public'
+      and table_name = 'encounters'
+      and column_name = 'device_snapshot_heart_rate_bpm'
+  ) then
+    raise exception 'The simulated device snapshot migration has not been applied. Deploy all Supabase migrations before loading demo data.';
+  end if;
 end;
 $$;
 
@@ -63,13 +73,20 @@ create temporary table demo_fixtures (
   status text not null,
   priority text,
   next_step text,
-  approved_at timestamptz
+  approved_at timestamptz,
+  device_snapshot_heart_rate_bpm smallint,
+  device_snapshot_captured_at timestamptz,
+  device_snapshot_source text
 ) on commit drop;
 
 -- All fixture content below is synthetic. The approved rows contain a
 -- pre-recorded clinician decision by the configured reviewer; they are
 -- not recommendations, diagnoses, or system-assigned priority.
-insert into demo_fixtures values
+insert into demo_fixtures (
+  id, patient_reference, presenting_concern, patient_account, concern_summary,
+  items_to_check, open_questions, clinician_notes, created_at, status, priority,
+  next_step, approved_at
+) values
   ('10000000-0000-4000-8000-000000000001', 'DEMO-AR-001', 'Recurring dizziness', 'Reports feeling dizzy on and off since yesterday. They are unsure what makes it better or worse.', 'Dizziness reported since yesterday.', '- Patient reported: "dizzy on and off" — recorded in the account.', 'What was happening when this started?', 'Review completed.', '2026-09-26 08:10:00+12', 'approved', 'urgent', 'priority_clinical_review', '2026-09-26 08:26:00+12'),
   ('10000000-0000-4000-8000-000000000002', 'DEMO-AR-002', 'Wrist pain after a fall', 'Says they tripped on a step this morning and their wrist has been painful since.', 'Wrist pain after a reported fall.', '- Patient reported: "tripped on a step" — recorded in the account.', 'Can you describe where the pain is strongest?', 'Review completed.', '2026-09-26 08:42:00+12', 'approved', 'soon', 'standard_queue', '2026-09-26 09:02:00+12'),
   ('10000000-0000-4000-8000-000000000003', 'DEMO-AR-003', 'Breathing feels different while walking', 'Reports that breathing felt different while walking to the bus stop. They cannot say when it first started.', 'Change in breathing reported while walking.', '- Patient reported: "breathing felt different" — recorded in the account.', 'Is this happening now?', 'Review completed.', '2026-09-26 09:18:00+12', 'approved', 'immediate', 'priority_clinical_review', '2026-09-26 09:24:00+12'),
@@ -85,6 +102,16 @@ insert into demo_fixtures values
   ('10000000-0000-4000-8000-000000000013', 'DEMO-Q-005', 'Rash noticed this morning', 'Noticed a rash this morning and says it feels itchy. They have not tried any treatment.', 'Itchy rash noticed this morning.', '- Patient reported: "feels itchy" — recorded in the account.', 'Where did you first notice the rash?', '', '2026-09-27 10:43:00+13', 'draft', null, null, null),
   ('10000000-0000-4000-8000-000000000014', 'DEMO-Q-006', 'Feeling shaky', 'Says they have felt shaky since arriving at work. They are not sure what brought it on, cannot remember when they first felt shaky, and are unsure whether it changed after sitting down.', 'Feeling shaky reported after arriving at work.', '- Patient reported: "since arriving at work" — recorded in the account.', 'Are you feeling shaky right now?', '', '2026-09-27 10:52:00+13', 'draft', null, null, null);
 
+-- One fictional fixture demonstrates the future wearable hand-off. It is not
+-- a clinically verified vital-sign reading, a safety claim, or an input to the
+-- suggested order.
+update demo_fixtures
+set
+  device_snapshot_heart_rate_bpm = 74,
+  device_snapshot_captured_at = '2026-09-27 10:15:00+13',
+  device_snapshot_source = 'simulated'
+where id = '10000000-0000-4000-8000-000000000010';
+
 -- Explicitly delete briefs first, then encounters. Deleting encounters also
 -- cascades to review_suggestions. This is intentional and is the only
 -- destructive part of the script; staff accounts and audit rows remain.
@@ -93,11 +120,13 @@ delete from public.encounters;
 
 insert into public.encounters (
   id, patient_reference, presenting_concern, patient_account, observed_signs,
-  recorded_by, recorded_by_label, submission_source, speech_used, created_at
+  recorded_by, recorded_by_label, submission_source, speech_used, created_at,
+  device_snapshot_heart_rate_bpm, device_snapshot_captured_at, device_snapshot_source
 )
 select
   id, patient_reference, presenting_concern, patient_account, '', null, '',
-  'tablet', false, created_at
+  'tablet', false, created_at,
+  device_snapshot_heart_rate_bpm, device_snapshot_captured_at, device_snapshot_source
 from demo_fixtures;
 
 insert into public.triage_briefs (
@@ -197,17 +226,26 @@ declare
   approved_count integer;
   suggestion_count integer;
   model_suggestion_count integer;
+  simulated_snapshot_count integer;
 begin
   select count(*) into encounter_count from public.encounters;
   select count(*) into brief_count from public.triage_briefs;
   select count(*) into approved_count from public.triage_briefs where status = 'approved';
   select count(*) into suggestion_count from public.review_suggestions;
   select count(*) into model_suggestion_count from public.review_suggestions where source = 'model-v1';
+  select count(*)
+  into simulated_snapshot_count
+  from public.encounters
+  where device_snapshot_heart_rate_bpm is not null
+    and device_snapshot_captured_at is not null
+    and device_snapshot_source = 'simulated';
 
   if encounter_count <> 14 or brief_count <> 14 or approved_count <> 8
-    or suggestion_count <> 14 or model_suggestion_count <> 5 then
-    raise exception 'Demo reset verification failed: expected 14 encounters, 14 briefs, 8 approved records, 14 suggestions, and 5 model fixtures; got %, %, %, %, and %.',
-      encounter_count, brief_count, approved_count, suggestion_count, model_suggestion_count;
+    or suggestion_count <> 14 or model_suggestion_count <> 5
+    or simulated_snapshot_count <> 1 then
+    raise exception 'Demo reset verification failed: expected 14 encounters, 14 briefs, 8 approved records, 14 suggestions, 5 model fixtures, and 1 simulated device snapshot; got %, %, %, %, %, and %.',
+      encounter_count, brief_count, approved_count, suggestion_count, model_suggestion_count,
+      simulated_snapshot_count;
   end if;
 end;
 $$;

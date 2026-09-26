@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { deterministicFallback, validateModelDraft } from "../lib/brief-composition-validation";
+import { untrustedIntakeForModel } from "../lib/model-intake";
 
 const intake = {
   presentingConcern: "Ankle pain",
@@ -55,4 +56,13 @@ test("the deterministic fallback preserves the source account without a clinical
   assert.equal(result.source, "deterministic-fallback-v1");
   assert.equal(result.draft.patientReported, intake.patientAccount);
   assert.doesNotMatch(result.draft.itemsToCheck, /priority|triage|diagnos/i);
+});
+
+test("a device snapshot is excluded from every model input", () => {
+  const modelInput = untrustedIntakeForModel({
+    ...intake,
+    deviceSnapshot: "WEARABLE-SNAPSHOT-74-BPM",
+  } as typeof intake & { deviceSnapshot: string });
+
+  assert.doesNotMatch(modelInput, /WEARABLE-SNAPSHOT|74-BPM|device snapshot/i);
 });
