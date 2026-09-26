@@ -85,14 +85,14 @@ export default async function EncounterPage({
 
         <div className="mt-6 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-body-2 text-charcoal">PATIENT REFERENCE</p>
+            <p className="text-body-2 text-muted">PATIENT REFERENCE</p>
             <h1 className="text-h3 mt-2 break-words">{encounter.patient_reference}</h1>
-            <p className="mt-2 text-sm leading-6 text-charcoal">
+            <p className="mt-2 text-sm leading-6 text-muted">
               {encounter.presenting_concern}
               {encounter.age_years !== null && ` · age ${encounter.age_years}`}
             </p>
           </div>
-          <p className="text-sm text-charcoal">
+          <p className="text-sm text-muted">
             Captured {formatTimestamp(encounter.created_at)}
               {encounter.submission_source === "tablet"
                 ? " from tablet check-in"
@@ -106,7 +106,7 @@ export default async function EncounterPage({
 
         {approved ? (
           <div className="mt-10 space-y-10">
-            <section aria-labelledby="decision" className="rounded-[20px] border border-black/15 p-6">
+            <section aria-labelledby="decision" className="rounded-card border border-line p-6">
               <h2 id="decision" className="text-xl font-semibold">
                 Clinician decision
               </h2>
@@ -114,7 +114,7 @@ export default async function EncounterPage({
                 <Decision label="Priority" value={priorityLabel(brief.priority)} />
                 <Decision label="Next step" value={nextStepLabel(brief.next_step)} />
               </div>
-              <p className="mt-6 border-t border-black/10 pt-4 text-sm leading-6 text-charcoal">
+              <p className="mt-6 border-t border-line pt-4 text-sm leading-6 text-muted">
                 Approved by {brief.reviewed_by_label} on{" "}
                 {formatTimestamp(brief.approved_at)}. This record is now read-only.
               </p>
@@ -152,19 +152,19 @@ export default async function EncounterPage({
               <h2 id="source" className="text-xl font-semibold">
                 Source capture
               </h2>
-              <p className="mt-2 text-sm leading-6 text-charcoal">
+              <p className="mt-2 text-sm leading-6 text-muted">
                 Kept exactly as recorded, for comparison against the brief above.
               </p>
               <div className="mt-4 space-y-4">
                 <div>
                   <p className="text-sm font-medium">In the patient&apos;s words</p>
-                  <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-charcoal">
+                  <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-muted">
                     {encounter.patient_account || "Nothing recorded."}
                   </p>
                 </div>
                 <div>
                   <p className="text-sm font-medium">Observed by staff</p>
-                  <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-charcoal">
+                  <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-muted">
                     {encounter.observed_signs || "Nothing recorded."}
                   </p>
                 </div>
@@ -199,18 +199,18 @@ function ReadOnlyDraft({
 }) {
   return (
     <section className="space-y-7" aria-labelledby="read-only-heading">
-      <div className="rounded-[20px] border border-black/15 bg-off-white p-5">
+      <div className="rounded-card border border-line bg-moss p-5">
         <h2 id="read-only-heading" className="text-lg font-semibold">Read-only report</h2>
-        <p className="mt-2 text-sm leading-6 text-charcoal">
+        <p className="mt-2 text-sm leading-6 text-muted">
           A clinician must review, decide and approve this report. Your role cannot change it.
         </p>
       </div>
       <section>
         <h2 className="text-xl font-semibold">What was captured</h2>
         <p className="mt-4 text-sm font-medium">In the patient&apos;s words</p>
-        <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-charcoal">{brief.patient_reported || "Nothing recorded."}</p>
+        <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-muted">{brief.patient_reported || "Nothing recorded."}</p>
         <p className="mt-5 text-sm font-medium">Observed by staff</p>
-        <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-charcoal">{brief.staff_observed || "Nothing recorded."}</p>
+        <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-muted">{brief.staff_observed || "Nothing recorded."}</p>
       </section>
       <section>
         <h2 className="text-xl font-semibold">Draft analysis</h2>

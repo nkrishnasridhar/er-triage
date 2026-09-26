@@ -12,6 +12,15 @@ Keep this a small, readable foundation. Prefer one complete feature over layers 
 - Run pnpm lint, pnpm typecheck, pnpm test, pnpm build and, when Docker is available, pnpm test:integration.
 - Do not provision paid services or additional production projects without the owner's approval.
 
+## Visual brand system
+
+- The public product name is **Front Brief**. The selected visual direction is **Fieldnote**. The two logo marks in `docs/brand-exploration/selected-logo/` are finalists; do not choose between them without the owner's direction.
+- Treat `app/globals.css` as the source of truth for UI tokens. Use the Tailwind colors `paper`, `surface`, `pine`, `muted`, `sage`, `moss`, `clay`, and `line`; do not add ad hoc hex colors or revive the starter blue/black palette.
+- Keep screens light and soothing: warm paper page backgrounds, white or pale moss surfaces, pine text, muted secondary text, sage accents, and subtle line borders. **Do not use dark page, panel, or button backgrounds.** Pine is for text and icons; use pale moss with pine text for primary actions.
+- Use Inter, which is already bundled. Prefer the existing spacing scale, `rounded-card` for cards, and `rounded-control` for form fields and buttons.
+- Keep brand colors separate from clinical meaning. Never use the logo palette to imply urgency, acuity, safety, or disposition; clinical statuses need explicit text labels and their own accessible semantic treatment. Never rely on color alone.
+- Reuse `components/ui` and existing CSS tokens. When adding or changing UI, preserve the light Fieldnote system across loading, empty, error, and interaction states as well as the main screen.
+
 ## Clinical safety invariants
 
 These are the product, not implementation details. Do not weaken them, and keep

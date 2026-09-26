@@ -2,10 +2,16 @@
 @import "@fontsource-variable/inter";
 
 @theme {
-  --color-black: #000000;
-  --color-charcoal: #242424;
-  --color-blue: #2395ff;
-  --color-off-white: #f0f0f0;
+  --color-paper: #f7f5ef;
+  --color-surface: #ffffff;
+  --color-pine: #293b36;
+  --color-muted: #65766c;
+  --color-sage: #78927b;
+  --color-moss: #dce4d8;
+  --color-clay: #b2794b;
+  --color-line: #d5ddd6;
+  --radius-card: 1.25rem;
+  --radius-control: 0.75rem;
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
 }
 :root {
@@ -69,13 +75,13 @@
 }
 @layer base {
   body {
-    background: white;
-    color: var(--color-black);
+    background: var(--color-paper);
+    color: var(--color-pine);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
   :focus-visible {
-    outline: 2px solid var(--color-black);
+    outline: 2px solid var(--color-pine);
     outline-offset: 4px;
   }
   button,
@@ -85,7 +91,7 @@
     -webkit-tap-highlight-color: transparent;
   }
   ::selection {
-    background: var(--color-blue);
-    color: black;
+    background: var(--color-moss);
+    color: var(--color-pine);
   }
 }

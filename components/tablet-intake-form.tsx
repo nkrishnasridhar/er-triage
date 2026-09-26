@@ -78,10 +78,10 @@ export function TabletIntakeForm() {
 
   if (state.success) {
     return (
-      <section aria-live="polite" className="rounded-[28px] bg-white p-8 text-center shadow-sm">
-        <p className="text-body-2 text-charcoal">CHECK-IN COMPLETE</p>
+      <section aria-live="polite" className="rounded-card bg-surface p-8 text-center shadow-sm">
+        <p className="text-body-2 text-muted">CHECK-IN COMPLETE</p>
         <h2 className="text-h2 mt-4">Thank you.</h2>
-        <p className="mx-auto mt-5 max-w-md text-base leading-7 text-charcoal">
+        <p className="mx-auto mt-5 max-w-md text-base leading-7 text-muted">
           Your account has been sent to the clinical team. Please follow the
           instructions from staff.
         </p>
@@ -93,13 +93,13 @@ export function TabletIntakeForm() {
   }
 
   return (
-    <form action={action} className="space-y-7 rounded-[28px] bg-white p-6 shadow-sm sm:p-8">
+    <form action={action} className="space-y-7 rounded-card bg-surface p-6 shadow-sm sm:p-8">
       <input type="hidden" name="speech_used" value={speechUsed ? "true" : "false"} />
       <div>
         <label htmlFor="patient_reference" className="text-base font-semibold">
           Local patient reference
         </label>
-        <p id="reference-help" className="mt-2 text-sm leading-6 text-charcoal">
+        <p id="reference-help" className="mt-2 text-sm leading-6 text-muted">
           Do not enter your name, date of birth, address, phone number, or email.
         </p>
         <input
@@ -145,17 +145,17 @@ export function TabletIntakeForm() {
             </Button>
           )}
         </div>
-        <p id="account-help" className="mt-2 text-sm leading-6 text-charcoal">
+        <p id="account-help" className="mt-2 text-sm leading-6 text-muted">
           You can type or speak, then check and correct the text before sending.
           Difficulty communicating does not change how staff assess you.
         </p>
         {speechState === "unsupported" && (
-          <p className="mt-2 text-sm leading-6 text-charcoal">
+          <p className="mt-2 text-sm leading-6 text-muted">
             Speech input is not available in this browser. You can still type your account.
           </p>
         )}
         {speechState === "error" && (
-          <p role="alert" className="mt-2 text-sm leading-6 text-charcoal">
+          <p role="alert" className="mt-2 text-sm leading-6 text-muted">
             Speech input stopped. Check the text below or continue by typing.
           </p>
         )}
@@ -173,7 +173,7 @@ export function TabletIntakeForm() {
         />
       </div>
 
-      <aside className="rounded-[20px] bg-off-white p-4 text-sm leading-6 text-charcoal">
+      <aside className="rounded-card bg-moss p-4 text-sm leading-6 text-muted">
         We do not store audio. Only the text you check and send is shared with the clinical team.
         This demonstration accepts fictional information only.
       </aside>

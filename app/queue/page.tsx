@@ -61,9 +61,9 @@ export default async function QueuePage() {
       <main id="main" className="mx-auto max-w-5xl px-5 py-10 lg:px-[30px]">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="text-body-2 text-charcoal">SHARED DEPARTMENT QUEUE</p>
+            <p className="text-body-2 text-muted">SHARED DEPARTMENT QUEUE</p>
             <h1 className="text-h2 mt-3">Waiting on a clinician.</h1>
-            <p className="mt-4 max-w-2xl text-sm leading-6 text-charcoal">
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
               Tablet accounts arrive in capture order. Nothing here carries a
               priority until a qualified clinician records one.
             </p>
@@ -76,25 +76,25 @@ export default async function QueuePage() {
         </div>
 
         {rows.length === 0 ? (
-          <div className="mt-10 rounded-[20px] border border-dashed border-black/20 px-6 py-14">
+          <div className="mt-10 rounded-card border border-dashed border-line px-6 py-14">
             <p className="text-h3">No intakes yet.</p>
-            <p className="mt-4 text-sm leading-6 text-charcoal">
+            <p className="mt-4 text-sm leading-6 text-muted">
               Tablet accounts will appear here for clinician review.
             </p>
           </div>
         ) : (
           <div className="mt-12 space-y-12">
             <section aria-labelledby="awaiting-heading">
-              <div className="mb-5 flex items-center justify-between border-b border-black/10 pb-4">
+              <div className="mb-5 flex items-center justify-between border-b border-line pb-4">
                 <h2 id="awaiting-heading" className="text-lg font-semibold">
                   Awaiting review
                 </h2>
-                <span className="rounded-full bg-off-white px-3 py-1 text-sm">
+                <span className="rounded-full bg-moss px-3 py-1 text-sm">
                   {awaiting.length}
                 </span>
               </div>
               {awaiting.length === 0 ? (
-                <p className="text-sm leading-6 text-charcoal">
+                <p className="text-sm leading-6 text-muted">
                   Nothing is waiting. Every brief has been signed off.
                 </p>
               ) : (
@@ -117,16 +117,16 @@ export default async function QueuePage() {
             </section>
 
             <section aria-labelledby="approved-heading">
-              <div className="mb-5 flex items-center justify-between border-b border-black/10 pb-4">
+              <div className="mb-5 flex items-center justify-between border-b border-line pb-4">
                 <h2 id="approved-heading" className="text-lg font-semibold">
                   Approved handover records
                 </h2>
-                <span className="rounded-full bg-off-white px-3 py-1 text-sm">
+                <span className="rounded-full bg-moss px-3 py-1 text-sm">
                   {approved.length}
                 </span>
               </div>
               {approved.length === 0 ? (
-                <p className="text-sm leading-6 text-charcoal">
+                <p className="text-sm leading-6 text-muted">
                   No approved records yet.
                 </p>
               ) : (
@@ -178,12 +178,12 @@ function QueueRow({
   return (
     <Link
       href={`/encounters/${id}`}
-      className="flex flex-wrap items-center justify-between gap-4 rounded-[20px] border border-black/10 p-5 transition-colors hover:bg-off-white"
+      className="flex flex-wrap items-center justify-between gap-4 rounded-card border border-line p-5 transition-colors hover:bg-moss"
     >
       <div className="min-w-0">
         <p className="break-words font-semibold">{reference}</p>
-        <p className="mt-1 break-words text-sm leading-6 text-charcoal">{concern}</p>
-        <p className="mt-1 text-sm text-charcoal">
+        <p className="mt-1 break-words text-sm leading-6 text-muted">{concern}</p>
+        <p className="mt-1 text-sm text-muted">
           {formatTimestamp(createdAt)}
           {recordedBy && ` · captured by ${recordedBy}`}
         </p>
@@ -192,7 +192,7 @@ function QueueRow({
         <p className="text-sm font-medium">
           {decided ? priorityLabel(priority) : "Not yet decided"}
         </p>
-        <p className="mt-1 text-sm text-charcoal">
+        <p className="mt-1 text-sm text-muted">
           {decided ? nextStepLabel(nextStep) : NOT_YET_DECIDED}
         </p>
       </div>

@@ -16,10 +16,10 @@ export default async function LoginPage() {
   return (
     <main
       id="main"
-      className="grid-container flex min-h-screen flex-col bg-blue py-6"
+      className="grid-container flex min-h-screen flex-col bg-paper py-6"
     >
       <Link href="/" className="w-fit font-semibold">
-        ER Triage
+        Front Brief
       </Link>
       <div className="mx-auto my-auto w-full max-w-md py-16">
         <p className="text-body-2 mb-4">STAFF SIGN IN</p>

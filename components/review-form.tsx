@@ -13,7 +13,7 @@ function ReadOnly({ label, value }: { label: string; value: string }) {
   return (
     <div>
       <p className="text-sm font-medium">{label}</p>
-      <p className="mt-2 text-sm leading-6 text-charcoal">
+      <p className="mt-2 text-sm leading-6 text-muted">
         {value.trim() ? (
           <span className="whitespace-pre-wrap">{value}</span>
         ) : (
@@ -36,13 +36,13 @@ function Choice({
   pending: boolean;
 }) {
   return (
-    <label className="flex cursor-pointer items-center gap-3 rounded-[20px] border border-black/15 bg-white px-4 py-3 text-base has-[:checked]:border-black has-[:checked]:bg-off-white">
+    <label className="flex cursor-pointer items-center gap-3 rounded-card border border-line bg-surface px-4 py-3 text-base has-[:checked]:border-pine has-[:checked]:bg-moss">
       <input
         type="radio"
         name={name}
         value={value}
         disabled={pending}
-        className="size-5 shrink-0 accent-black"
+        className="size-5 shrink-0 accent-pine"
       />
       <span>{label}</span>
     </label>
@@ -63,7 +63,7 @@ export function ReviewForm({ brief }: { brief: Brief }) {
           <h2 id="provenance-heading" className="text-xl font-semibold">
             What was captured
           </h2>
-          <p className="mt-2 text-sm leading-6 text-charcoal">
+          <p className="mt-2 text-sm leading-6 text-muted">
             Recorded once at intake and locked. These are the patient&apos;s and
             staff members&apos; own words, not a summary.
           </p>
@@ -77,7 +77,7 @@ export function ReviewForm({ brief }: { brief: Brief }) {
           <h2 id="draft-heading" className="text-xl font-semibold">
             Draft brief
           </h2>
-          <p className="mt-2 text-sm leading-6 text-charcoal">
+          <p className="mt-2 text-sm leading-6 text-muted">
             Organised from the text above by matching phrases, nothing more.
             Remove anything that does not apply and add what is missing.
           </p>
@@ -102,7 +102,7 @@ export function ReviewForm({ brief }: { brief: Brief }) {
           <label htmlFor="items_to_check" className="text-sm font-medium">
             Items to check
           </label>
-          <p className="mt-2 text-sm leading-6 text-charcoal">
+          <p className="mt-2 text-sm leading-6 text-muted">
             Phrases found in the notes. A phrase is not a finding. Delete
             anything that does not apply to this patient.
           </p>
@@ -121,7 +121,7 @@ export function ReviewForm({ brief }: { brief: Brief }) {
           <label htmlFor="open_questions" className="text-sm font-medium">
             Open questions
           </label>
-          <p className="mt-2 text-sm leading-6 text-charcoal">
+          <p className="mt-2 text-sm leading-6 text-muted">
             Gaps found in the notes. Edit freely — you know the patient.
           </p>
           <textarea
@@ -157,7 +157,7 @@ export function ReviewForm({ brief }: { brief: Brief }) {
           <h2 id="decision-heading" className="text-xl font-semibold">
             Your decision
           </h2>
-          <p className="mt-2 text-sm leading-6 text-charcoal">
+          <p className="mt-2 text-sm leading-6 text-muted">
             This application has not suggested a priority and will not pick one
             for you. Both answers are required, and nothing is pre-selected.
           </p>
@@ -165,7 +165,7 @@ export function ReviewForm({ brief }: { brief: Brief }) {
 
         <fieldset disabled={pending}>
           <legend className="text-sm font-medium">Priority</legend>
-          <p className="mt-2 text-sm leading-6 text-charcoal">
+          <p className="mt-2 text-sm leading-6 text-muted">
             Use your department&apos;s own scale. These labels are placeholders
             until local policy is confirmed.
           </p>
@@ -198,7 +198,7 @@ export function ReviewForm({ brief }: { brief: Brief }) {
         </fieldset>
       </section>
 
-      <div className="flex flex-wrap items-center gap-4 border-t border-black/10 pt-6">
+      <div className="flex flex-wrap items-center gap-4 border-t border-line pt-6">
         <Button type="submit" name="intent" value="save" disabled={pending}>
           {pending ? "Saving…" : "Save draft"}
         </Button>
