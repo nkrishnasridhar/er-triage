@@ -60,7 +60,7 @@ Hackathon data is synthetic and fictional. Do not enter real patient health info
 ### Known mismatches between `docs/` and the code
 
 - **Product name.** The public product name is *ERgency*. The npm package, GitHub repository, and migration identifiers remain `er-triage` as technical identifiers.
-- **Triage scale.** The docs specify the *Australasian* Triage Scale. The code ships the UK-style labels (Immediate / Very urgent / Urgent / Standard / Non-urgent) as placeholders. No category is ever assigned by the app, so this is a labelling decision, not a safety one — but it should be settled before any clinician sees it.
+- **Triage scale.** The docs specify the *Australasian* Triage Scale. The code now presents the chosen four-level clinician scale: Immediate, Urgent, Soon, and Non-urgent / go home. No category is ever assigned by the app; a clinician must select a value with no default.
 - **Draft generation.** The code uses a single deterministic local keyword matcher (`lib/draft-brief.ts`), not a hosted model. No model output is presented as clinical truth, so the provenance and human-oversight intent is preserved.
 
 ## Getting Started

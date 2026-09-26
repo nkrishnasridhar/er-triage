@@ -166,8 +166,8 @@ export function ReviewForm({ brief }: { brief: Brief }) {
         <fieldset disabled={pending}>
           <legend className="text-sm font-medium">Priority</legend>
           <p className="mt-2 text-sm leading-6 text-muted">
-            Use your department&apos;s own scale. These labels are placeholders
-            until local policy is confirmed.
+            Choose the priority yourself. The application will not fill this
+            in or suggest a choice from the draft.
           </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {PRIORITY_OPTIONS.map((option) => (

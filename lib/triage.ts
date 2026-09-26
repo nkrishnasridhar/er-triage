@@ -10,9 +10,8 @@
 
 export type Priority =
   | "immediate"
-  | "very_urgent"
   | "urgent"
-  | "standard"
+  | "soon"
   | "non_urgent";
 
 export type NextStep =
@@ -23,11 +22,10 @@ export type NextStep =
   | "discharge_with_advice";
 
 export const PRIORITY_OPTIONS: { value: Priority; label: string }[] = [
-  { value: "immediate", label: "Immediate" },
-  { value: "very_urgent", label: "Very urgent" },
-  { value: "urgent", label: "Urgent" },
-  { value: "standard", label: "Standard" },
-  { value: "non_urgent", label: "Non-urgent" },
+  { value: "immediate", label: "1. Immediate — needs attention now" },
+  { value: "urgent", label: "2. Urgent — needs to be seen soon" },
+  { value: "soon", label: "3. Soon — needs timely review" },
+  { value: "non_urgent", label: "4. Non-urgent — go home" },
 ];
 
 export const NEXT_STEP_OPTIONS: { value: NextStep; label: string }[] = [
@@ -42,12 +40,22 @@ export const PRIORITY_LABEL = new Map(
   PRIORITY_OPTIONS.map((option) => [option.value, option.label]),
 );
 
+// Older approved records may use the former five-level placeholder scale.
+// They remain readable but cannot be selected for a new decision: approval is
+// immutable, so historical clinician choices must never be rewritten.
+const LEGACY_PRIORITY_LABEL = new Map([
+  ["very_urgent", "Legacy: Very urgent"],
+  ["standard", "Legacy: Standard"],
+]);
+
 export const NEXT_STEP_LABEL = new Map(
   NEXT_STEP_OPTIONS.map((option) => [option.value, option.label]),
 );
 
 export function priorityLabel(value: string | null) {
-  return value ? (PRIORITY_LABEL.get(value as Priority) ?? value) : null;
+  return value
+    ? (PRIORITY_LABEL.get(value as Priority) ?? LEGACY_PRIORITY_LABEL.get(value) ?? value)
+    : null;
 }
 
 export function nextStepLabel(value: string | null) {
