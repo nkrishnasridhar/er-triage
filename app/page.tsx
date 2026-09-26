@@ -1,4 +1,4 @@
-import { Mic } from "lucide-react";
+import { VoiceCheckIn } from "@/components/voice-check-in";
 
 export default function Home() {
   return (
@@ -20,14 +20,7 @@ export default function Home() {
             How can we help today?
           </p>
 
-          <button
-            type="button"
-            className="mt-12 flex min-h-52 min-w-52 flex-col items-center justify-center gap-3 rounded-full bg-blue p-8 transition-transform active:scale-95"
-            aria-label="Tap to begin your check-in"
-          >
-            <Mic aria-hidden="true" className="size-14" strokeWidth={1.75} />
-            <span className="text-lg font-semibold">Tap to begin</span>
-          </button>
+          <VoiceCheckIn />
         </div>
       </section>
     </main>
