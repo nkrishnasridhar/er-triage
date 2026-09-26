@@ -4,16 +4,18 @@
 
 The product has two separate surfaces:
 
-1. **Tablet check-in (`/`)** is an anonymous, touch-first capture surface. A person may type or use browser speech recognition, then must review the resulting text before submitting it. The submitted account is write-once. The tablet cannot read a report, queue, decision, or staff data.
+1. **Voice-first tablet check-in (`/`)** is an anonymous, touch-first guided conversation. The assistant asks a small number of neutral questions aloud. A person must review the resulting text in the separate confirmation form (`/check-in`) before submitting it. The written form is also available directly. The submitted account is write-once. The tablet cannot read a report, queue, decision, or staff data.
 2. **Staff workspace (`/queue`)** requires an authenticated staff account. Clinicians can correct the draft, record a priority and next step, and approve. Nurses and admins have a read-only view in this build.
 
 The current build remains for fictional demonstration data only. The screen’s identity-minimisation copy and database limits do not make it suitable for real patient information.
 
-## Speech and capture
+## Voice, speech, and capture
 
-Browser speech recognition is a convenience input, not a clinical signal. It populates the same editable text field as typing; unsupported browser, permission denial, and recognition errors leave typing available. The application neither records nor uploads audio and stores only the text the person confirms by submitting.
+The primary flow uses a browser WebRTC connection and an ephemeral server-issued Realtime session credential. The Realtime provider processes microphone audio to create a live transcription and speak the questions back. The app does not record or retain audio, does not expose the long-lived provider key, and stores only the text the person confirms by submitting. Microphone denial, connection failure, or a stopped conversation shows a clear route to the written form.
 
-Speech fluency, accent, language, disability, silence, or use of the typed fallback is never supplied to the draft generator as a clinical feature and never changes a priority.
+The written form remains fully usable without voice. A voice transcript is copied only into that editable form in browser session storage; it is not submitted until the person explicitly sends it. Speech fluency, accent, language, disability, silence, or use of the typed fallback is never supplied to the draft generator as a clinical feature and never changes a priority.
+
+The guided assistant may organise the conversation but cannot diagnose, assess severity or urgency, assign a triage category, recommend a priority or next step, reassure, or infer an escalation request from symptoms. It only says to alert staff when the person explicitly asks for a staff member.
 
 ## AI composition boundary
 

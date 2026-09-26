@@ -1,6 +1,6 @@
 # 16 — Privacy, governance, and regulatory context
 
-> **Implementation update — 26 September 2026:** Browser speech recognition is optional input only. The product stores neither audio nor microphone recordings, just the text a person confirms. This does not settle consent, browser/provider processing, HIPC, retention, overseas transfer, or governance questions for a real deployment; the build remains fictional-data-only.
+> **Implementation update — 26 September 2026:** The primary tablet uses a live Realtime voice session: microphone audio is processed by the provider to transcribe and speak questions back, while the app itself records no audio and stores only text the person confirms. The written form remains available. This does not settle consent, provider processing, HIPC, retention, overseas transfer, or governance questions for a real deployment; the build remains fictional-data-only.
 
 This chapter is not legal advice. It does not classify Front Brief as a medical device or as not a medical device. It records what public sources say and what a specialist must confirm before any real health information is processed. Classifications use three labels:
 
@@ -46,7 +46,7 @@ The MVP processes fictional data only. Fictional data can still be personal info
 | Data minimisation | One conversation, no NHI, no full record | **LIKELY** a relevant principle; the minimum set for a real pilot is not decided here |
 | Security | RLS, secrets, no service role in the client | A health-system security review is **REQUIRES SPECIALIST CONFIRMATION** and was not done |
 | Retention | Demo data lives until the team deletes the project. No clinical retention schedule | **REQUIRES SPECIALIST CONFIRMATION** |
-| Overseas processing | Model API may process text outside New Zealand. Unknown for the event key without reading the account | **REQUIRES SPECIALIST CONFIRMATION** before PHI. Do not promise on-shore processing this weekend |
+| Overseas processing | Model API may process text and the live voice provider may process audio outside New Zealand. Unknown for the event key without reading the account | **REQUIRES SPECIALIST CONFIRMATION** before PHI. Do not promise on-shore processing this weekend |
 | Clinician accountability | The nurse approves. The software does not become the decision-maker | **LIKELY** consistent with how scribes are being introduced, but accountability arrangements are a local clinical governance question |
 | Audit | Append-only events | Whether that audit meets a health-agency record standard is **REQUIRES SPECIALIST CONFIRMATION** |
 | Māori data governance | Not designed with Māori partnership in this package | **REQUIRES SPECIALIST CONFIRMATION** and a real relationship, not a checkbox. NAIAEAG's public terms include Māori data sovereignty in its scope |

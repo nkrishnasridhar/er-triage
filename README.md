@@ -1,10 +1,11 @@
 # ER Triage
 
 ER Triage separates a tablet check-in from a **clinician-reviewed** workspace.
-On the tablet, a person types or uses browser speech recognition, checks the
-text, and submits a write-once account. On a computer, a qualified clinician
-reviews the source account and draft, corrects it, sets priority and next step,
-and signs it off.
+The primary tablet flow is a spoken conversation: the assistant asks neutral
+questions aloud, then the person must check and edit the resulting text before
+submitting a write-once account. A separate written form remains available. On
+a computer, a qualified clinician reviews the source account and draft,
+corrects it, sets priority and next step, and signs it off.
 
 The product is described in full, including what it deliberately does not do, in
 [PRODUCT_GOAL.md](PRODUCT_GOAL.md).
@@ -16,8 +17,11 @@ The product is described in full, including what it deliberately does not do, in
 
 ## The workflow
 
-1. **Check in** — the anonymous tablet captures a confirmed typed or spoken-text
-   account. It retains no audio and cannot read the clinical workspace.
+1. **Check in** — the anonymous tablet starts with a voice-first browser
+   conversation. The Realtime provider processes microphone audio to speak and
+   transcribe during that session; the app does not record audio and submits
+   only user-confirmed text. A separate written form is always available, and
+   the tablet cannot read the clinical workspace.
 2. **Draft** — a server-only composition boundary organises the text into a
    source-preserving draft, falling back safely to local deterministic rules.
 3. **Review** — a clinician edits the draft and chooses a priority and next
@@ -45,7 +49,8 @@ in the application cannot cross them.
 
 The product specified for this weekend is **Front Brief**, a clinician-reviewed emergency-department intake copilot. The design package is in [docs/README.md](docs/README.md).
 
-The implemented path is `/` for tablet check-in, `/queue` for staff reports, and
+The implemented path is `/` for voice-first tablet check-in, `/check-in` for
+the written/voice-transcript confirmation form, `/queue` for staff reports, and
 `/encounters/[id]` for clinician review and approved handover. See
 [the implementation contract](docs/33-tablet-clinician-workflow.md) for the
 data-access, AI, speech, and role boundaries.

@@ -1,6 +1,6 @@
 # 29 — Pitch
 
-> **Implementation update — 26 September 2026:** The pitch now begins at the front door: a patient confirms a typed or speech-to-text account on a tablet, then a clinician receives a source-linked draft on their workstation. Our differentiator is not an AI queue rank; it is keeping uncertainty visible while retaining clinician decision ownership.
+> **Implementation update — 26 September 2026:** The pitch now begins at the front door: a person speaks with a guided tablet assistant, confirms the editable transcript (or uses the written form), then a clinician receives a source-linked draft on their workstation. Our differentiator is not an AI queue rank; it is keeping uncertainty visible while retaining clinician decision ownership.
 
 Spoken version of the demo's argument. The demo carries it. This page is the spare if the projector dies, and the spine of the five minutes.
 

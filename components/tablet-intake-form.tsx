@@ -1,80 +1,29 @@
 "use client";
 
-import { Mic, MicOff } from "lucide-react";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useState, useSyncExternalStore } from "react";
+import { useRouter } from "next/navigation";
 import { submitTabletEncounter } from "@/app/check-in/actions";
 import { Button } from "@/components/ui/button";
 import { fieldClass } from "@/components/ui/field";
+import { VOICE_ACCOUNT_STORAGE_KEY } from "@/lib/voice-check-in";
 
-type RecognitionResultEvent = Event & {
-  resultIndex: number;
-  results: ArrayLike<ArrayLike<{ transcript: string }>>;
-};
-type RecognitionErrorEvent = Event & { error: string };
-type Recognition = {
-  continuous: boolean;
-  interimResults: boolean;
-  lang: string;
-  start(): void;
-  stop(): void;
-  onresult: ((event: RecognitionResultEvent) => void) | null;
-  onerror: ((event: RecognitionErrorEvent) => void) | null;
-  onend: (() => void) | null;
-};
-type RecognitionConstructor = new () => Recognition;
+const noSubscription = () => () => undefined;
 
-function getRecognitionConstructor(): RecognitionConstructor | null {
-  if (typeof window === "undefined") return null;
-  const candidate = window as typeof window & {
-    SpeechRecognition?: RecognitionConstructor;
-    webkitSpeechRecognition?: RecognitionConstructor;
-  };
-  return candidate.SpeechRecognition ?? candidate.webkitSpeechRecognition ?? null;
+function useVoiceAccount() {
+  return useSyncExternalStore(
+    noSubscription,
+    () => window.sessionStorage.getItem(VOICE_ACCOUNT_STORAGE_KEY) ?? "",
+    () => "",
+  );
 }
 
 export function TabletIntakeForm() {
+  const router = useRouter();
   const [state, action, pending] = useActionState(submitTabletEncounter, {});
   const [account, setAccount] = useState("");
-  const [speechState, setSpeechState] = useState<
-    "unsupported" | "ready" | "listening" | "error"
-  >("ready");
-  const [speechUsed, setSpeechUsed] = useState(false);
-  const recognition = useRef<Recognition | null>(null);
-
-  useEffect(() => () => recognition.current?.stop(), []);
-
-  function startSpeech() {
-    const Constructor = getRecognitionConstructor();
-    if (!Constructor) {
-      setSpeechState("unsupported");
-      return;
-    }
-    const instance = new Constructor();
-    recognition.current = instance;
-    instance.continuous = true;
-    instance.interimResults = false;
-    instance.lang = "en-NZ";
-    instance.onresult = (event) => {
-      let recognised = "";
-      for (let index = event.resultIndex; index < event.results.length; index += 1) {
-        recognised += event.results[index][0]?.transcript ?? "";
-      }
-      if (recognised.trim()) {
-        setAccount((current) => `${current}${current.trim() ? " " : ""}${recognised.trim()}`);
-        setSpeechUsed(true);
-      }
-    };
-    instance.onerror = () => setSpeechState("error");
-    instance.onend = () => setSpeechState((current) => (current === "error" ? current : "ready"));
-    setSpeechState("listening");
-    instance.start();
-  }
-
-  function stopSpeech() {
-    recognition.current?.stop();
-    recognition.current = null;
-    setSpeechState("ready");
-  }
+  const [accountEdited, setAccountEdited] = useState(false);
+  const voiceAccount = useVoiceAccount();
+  const accountValue = accountEdited ? account : voiceAccount;
 
   if (state.success) {
     return (
@@ -85,7 +34,14 @@ export function TabletIntakeForm() {
           Your account has been sent to the clinical team. Please follow the
           instructions from staff.
         </p>
-        <Button className="mt-8" type="button" onClick={() => window.location.reload()}>
+        <Button
+          className="mt-8"
+          type="button"
+          onClick={() => {
+            window.sessionStorage.removeItem(VOICE_ACCOUNT_STORAGE_KEY);
+            router.push("/");
+          }}
+        >
           Start a new check-in
         </Button>
       </section>
@@ -94,7 +50,7 @@ export function TabletIntakeForm() {
 
   return (
     <form action={action} className="space-y-7 rounded-card bg-surface p-6 shadow-sm sm:p-8">
-      <input type="hidden" name="speech_used" value={speechUsed ? "true" : "false"} />
+      <input type="hidden" name="speech_used" value={voiceAccount ? "true" : "false"} />
       <div>
         <label htmlFor="patient_reference" className="text-base font-semibold">
           Local patient reference
@@ -128,42 +84,23 @@ export function TabletIntakeForm() {
       </div>
 
       <div>
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <label htmlFor="patient_account" className="text-base font-semibold">
-            Tell us in your own words
-          </label>
-          {speechState !== "unsupported" && (
-            <Button
-              type="button"
-              variant={speechState === "listening" ? "secondary" : "outline"}
-              size="lg"
-              onClick={speechState === "listening" ? stopSpeech : startSpeech}
-              disabled={pending}
-            >
-              {speechState === "listening" ? <MicOff aria-hidden="true" /> : <Mic aria-hidden="true" />}
-              {speechState === "listening" ? "Stop listening" : "Speak instead"}
-            </Button>
-          )}
-        </div>
+        <label htmlFor="patient_account" className="text-base font-semibold">
+          Tell us in your own words
+        </label>
         <p id="account-help" className="mt-2 text-sm leading-6 text-muted">
-          You can type or speak, then check and correct the text before sending.
+          {voiceAccount
+            ? "This is the transcript from your voice check-in. Check and correct it before sending."
+            : "Type what you want the clinical team to know."}{" "}
           Difficulty communicating does not change how staff assess you.
         </p>
-        {speechState === "unsupported" && (
-          <p className="mt-2 text-sm leading-6 text-muted">
-            Speech input is not available in this browser. You can still type your account.
-          </p>
-        )}
-        {speechState === "error" && (
-          <p role="alert" className="mt-2 text-sm leading-6 text-muted">
-            Speech input stopped. Check the text below or continue by typing.
-          </p>
-        )}
         <textarea
           id="patient_account"
           name="patient_account"
-          value={account}
-          onChange={(event) => setAccount(event.target.value)}
+          value={accountValue}
+          onChange={(event) => {
+            setAccountEdited(true);
+            setAccount(event.target.value);
+          }}
           required
           maxLength={4000}
           rows={8}
@@ -174,8 +111,8 @@ export function TabletIntakeForm() {
       </div>
 
       <aside className="rounded-card bg-moss p-4 text-sm leading-6 text-muted">
-        We do not store audio. Only the text you check and send is shared with the clinical team.
-        This demonstration accepts fictional information only.
+        Only the text you check and send is shared with the clinical team. This demonstration
+        accepts fictional information only.
       </aside>
 
       <Button type="submit" size="xl" className="min-h-14 w-full text-base" disabled={pending}>

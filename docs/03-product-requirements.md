@@ -1,6 +1,6 @@
 # 03 — Product requirements
 
-> **Implementation update — 26 September 2026:** The live workflow is an anonymous tablet text hand-off followed by authenticated role-gated review. Browser speech recognition is optional input only; `clinician` is the sole mutable role. AI cannot produce or imply priority, next step, triage category, queue order, confidence, or risk. The current source of truth is [33](33-tablet-clinician-workflow.md).
+> **Implementation update — 26 September 2026:** The live workflow is an anonymous voice-first tablet conversation with a required editable text confirmation and a direct written alternative, followed by authenticated role-gated review. `clinician` is the sole mutable role. AI cannot produce or imply priority, next step, triage category, queue order, confidence, or risk. The current source of truth is [33](33-tablet-clinician-workflow.md).
 
 Identifiers are stable. Later docs use the same IDs. "MVP" means the SaaSathon build. Acceptance criteria are written so a teammate can demo or test them on synthetic data.
 

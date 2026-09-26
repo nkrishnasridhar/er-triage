@@ -210,10 +210,13 @@ async function main() {
       return request(path, { method: "POST", body });
     }
 
-    const tabletHtml = await (await request("/")).text();
+    const voiceHtml = await (await request("/")).text();
+    assert.ok(voiceHtml.includes("Start by speaking"));
+    assert.ok(voiceHtml.includes("Use written form"));
+    assert.ok(!voiceHtml.includes("priority"), "The tablet never exposes a priority control");
+    const tabletHtml = await (await request("/check-in")).text();
     assert.ok(tabletHtml.includes("Tell us what is happening"));
-    assert.ok(!tabletHtml.includes("priority"), "The tablet never exposes a priority control");
-    const tabletResult = await submit("/", tabletHtml, 'form:has(textarea[name="patient_account"])', {
+    const tabletResult = await submit("/check-in", tabletHtml, 'form:has(textarea[name="patient_account"])', {
       patient_reference: "TABLET-HTTP-1",
       presenting_concern: "Sore ankle",
       patient_account: "I rolled my ankle while walking.",

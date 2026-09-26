@@ -1,6 +1,6 @@
 # 07 — System architecture (MVP)
 
-> **Implementation update — 26 September 2026:** Anonymous tablet capture uses one constrained Supabase security-definer RPC that atomically stores a write-once encounter and draft. Server Actions validate the form and call a server-only composition boundary; the desktop remains Server Component reads plus clinician-only actions. See [33](33-tablet-clinician-workflow.md).
+> **Implementation update — 26 September 2026:** Anonymous tablet capture uses one constrained Supabase security-definer RPC that atomically stores a write-once encounter and draft. The voice-first route obtains an ephemeral Realtime credential from a server route; the long-lived provider key remains server-only and the app retains no audio. Server Actions validate the confirmation form and call a server-only composition boundary; the desktop remains Server Component reads plus clinician-only actions. See [33](33-tablet-clinician-workflow.md).
 
 ## Recommendation
 

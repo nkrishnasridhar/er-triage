@@ -1,6 +1,6 @@
 # 12 — AI design
 
-> **Implementation update — 26 September 2026:** The shipped composition boundary optionally calls a server-side JSON model endpoint, rejects unsafe/non-source-linked draft content, and falls back to `lib/draft-brief.ts`. It never writes or recommends priority, next step, ATS, queue position, severity, confidence, or risk. The richer extract/gap/revision pipeline below is design material, not current behavior.
+> **Implementation update — 26 September 2026:** The voice assistant asks only neutral intake questions and has no clinical-decision output. The shipped composition boundary optionally calls a server-side JSON model endpoint, rejects unsafe/non-source-linked draft content, and falls back to `lib/draft-brief.ts`. Neither model path writes or recommends priority, next step, ATS, queue position, severity, confidence, or risk. The richer extract/gap/revision pipeline below is design material, not current behavior.
 
 ## Recommendation
 

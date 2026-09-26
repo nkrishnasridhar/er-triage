@@ -1,6 +1,6 @@
 # 15 — Security threat model
 
-> **Implementation update — 26 September 2026:** The tablet is intentionally anonymous but has no read, update, or direct table-insert permission. Its sole database capability is a validated, atomic capture RPC. Model input is untrusted text in a server-only boundary; provider responses are rejected on unsafe language or fabricated quoted text.
+> **Implementation update — 26 September 2026:** The tablet is intentionally anonymous but has no read, update, or direct table-insert permission. Its sole database capability is a validated, atomic capture RPC. The voice flow receives only an ephemeral Realtime credential, not a provider API key; the live provider connection has no database capability. Model input is untrusted text in a server-only boundary; provider responses are rejected on unsafe language or fabricated quoted text.
 
 Scope: the SaaSathon MVP as specified. A hosted demo with fictional transcripts, one seed user, Supabase, Vercel, and an external model API. This is a STRIDE pass so the team knows what to code. It is not a penetration test and not a Health NZ security certification.
 

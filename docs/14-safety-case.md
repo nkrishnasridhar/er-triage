@@ -1,6 +1,6 @@
 # 14 — Safety case
 
-> **Implementation update — 26 September 2026:** The tablet adds no model-derived urgency signal. It records only voluntarily confirmed text; speech success/failure is never clinical input. Database roles make nurse/admin review read-only and clinician decision/approval authority exclusive. These controls are implemented and covered by the local integration test.
+> **Implementation update — 26 September 2026:** The tablet adds no model-derived urgency signal. Its voice assistant asks neutral questions aloud, and only voluntarily confirmed text is recorded; speech success/failure is never clinical input. Database roles make nurse/admin review read-only and clinician decision/approval authority exclusive. These controls are implemented and covered by the local integration test.
 
 This is an engineering exercise for a hackathon specification. It is not a validated clinical safety case, not a Health NZ endorsement, not an ISO 14971 file, and not clearance to use the product with patients. Nobody should attach this chapter to an ethics application as if it were one.
 

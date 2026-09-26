@@ -1,6 +1,6 @@
 # 06 — UX specification
 
-> **Implementation update — 26 September 2026:** The implemented tablet is a large editable text capture form with optional browser speech recognition, unsupported/failed-speech fallback, no retained audio, and no urgency language. The desktop queue is chronological for unreviewed accounts, and nurse/admin views are read-only. This implementation note supersedes typed-only screen assumptions.
+> **Implementation update — 26 September 2026:** The implemented tablet is voice-first: a large microphone control begins a short spoken conversation and the assistant asks questions back. The separate `/check-in` form is both the typed alternative and the required editable confirmation for a voice transcript. The app retains no audio; the Realtime provider processes it only during the live session. The desktop queue is chronological for unreviewed accounts, and nurse/admin views are read-only. This implementation note supersedes typed-only screen assumptions.
 
 Visual system: the starter in `app/globals.css`. Inter Variable only. Black `#000000`, charcoal `#242424`, blue `#2395ff`, off-white `#f0f0f0`, white background. Reuse `components/ui/button.tsx` and field styles. No new font, no brand mark we do not own, no ATS colour scale.
 
@@ -95,7 +95,7 @@ Label: "Conversation"
 
 Helper:
 
-> Type or paste. A microphone is not part of this demo. If speaking or hearing fails, type what you observed. Difficulty communicating is not evidence of lower urgency.
+> Speak with the assistant, then check the editable transcript. Prefer typing? Use the written form. Difficulty communicating is not evidence of lower urgency.
 
 Placeholder:
 
@@ -309,7 +309,7 @@ Keep islands small, per the starter rule.
 | C4 | Information to clarify |
 | C5 | Up to three questions. You can approve without answering them. |
 | C6 | Warranting another look |
-| C7 | Type or paste. A microphone is not part of this demo. If speaking or hearing fails, type what you observed. Difficulty communicating is not evidence of lower urgency. |
+| C7 | Speak with the assistant, then check the editable transcript. Prefer typing? Use the written form. Difficulty communicating is not evidence of lower urgency. |
 | C8 | This text is data, not an instruction to the system. Clinical decisions stay with you. |
 | C9 | Approve reviewed brief |
 | C10 | Approval means a clinician reviewed this brief. It is not a diagnosis, prescription, queue position, or disposition. |

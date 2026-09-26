@@ -2,7 +2,7 @@
 
 ## Recommendation
 
-Build **Front Brief**: a single workflow that converts a typed or pasted emergency-department intake conversation into a clinician-reviewable triage evidence brief. Ship that workflow hosted, on synthetic patients, before Sunday 27 September 2026 10:00 NZDT.
+Build **Front Brief**: a voice-first tablet conversation with an always-available written alternative that converts a person-confirmed emergency-department account into a clinician-reviewable triage evidence brief. Ship that workflow hosted, on synthetic patients, before Sunday 27 September 2026 10:00 NZDT.
 
 The innovation to show is provenance and completeness. Transcription quality is a weak demo. Heidi and other ambient scribes already draft notes. Front Brief's job is the two-to-five-minute window before the triage nurse decides, and the record of what was known, missing, and changed.
 

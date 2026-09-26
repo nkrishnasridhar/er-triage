@@ -1,6 +1,6 @@
 # 32 — CTO decision summary
 
-> **Implementation update — 26 September 2026:** ADR-009 is implemented: public tablet capture is a narrow write-only capability; clinician work is role-gated; browser speech recognition is optional and audio-free; composition is server-only with deterministic fallback. AI urgency recommendation, ATS output, and queue ranking remain forbidden.
+> **Implementation update — 26 September 2026:** ADR-009 is implemented: public tablet capture is a narrow write-only capability; the tablet is voice-first with an editable text confirmation and typed fallback; the app retains no audio while the provider processes it live; clinician work is role-gated; composition is server-only with deterministic fallback. AI urgency recommendation, ATS output, and queue ranking remain forbidden.
 
 Opinionated record. One decision per controversy. If a later chat proposes five options, this file already chose. Change it only by editing the decision and the ADR, not by quietly coding the alternative.
 
@@ -18,7 +18,7 @@ The product converts a pasted conversation into a reviewable brief with provenan
 
 | Line | Decision |
 | --- | --- |
-| SaaSathon MVP | Synthetic only. One seeded clinician. Paste. Provenance review. Approve. Hosted by 10:00 NZDT Sunday |
+| SaaSathon MVP | Synthetic only. Voice-first tablet conversation plus written fallback. Provenance review. Approve. Hosted by 10:00 NZDT Sunday |
 | Post-hackathon prototype | Still no real patients. Interviews. Optional audio spike off the main path |
 | Clinical pilot | Not started. Gates in [24-pilot-plan.md](24-pilot-plan.md) are mandatory and unmet |
 | Production healthcare product | Not claimed. One app remains the architecture until a measured limit forces a split |
@@ -30,7 +30,7 @@ Do not use pilot language on Sunday.
 1. **ATS dropdown.** The field starts empty. The model has no writer. Copy: "You are recording your category. Front Brief does not assign or recommend one." Do not narrate a fictional category as correct.
 2. **Items warranting attention.** They are template pointers to uncertain, negated, or contradicted quotes. No score, rank, or colour scale. Title: "Warranting another look".
 3. **Gap detection.** Show at most three. Title: "Information to clarify". Never block approve.
-4. **Audio.** Typed or pasted transcript is the demo. Live mic is cut first.
+4. **Audio.** The tablet is voice-first, but the typed form is always available and no audio is retained by the app. Live provider processing is synthetic-demo-only pending governance.
 5. **Scribe-shaped demo.** Forbidden. The demo must show a hedge, a negation or contradiction, a gap, a quote, and an empty category.
 6. **FHIR, NHI, SNOMED.** Future mappings only. MVP columns are plain. No FHIR library.
 7. **Confidence.** No numeric model confidence in the schema, the UI, or the audit meta. It will be read as clinical certainty.

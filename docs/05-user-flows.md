@@ -1,6 +1,6 @@
 # 05 — User flows
 
-> **Implementation update — 26 September 2026:** Start with the public tablet route: type or speak, correct the text, submit, and receive a neutral completion message. Only authenticated staff can open `/queue`; only clinicians can alter a draft or approve. See [33](33-tablet-clinician-workflow.md) for the implemented flow.
+> **Implementation update — 26 September 2026:** Start with the public voice-first tablet route: speak with the guided assistant, review and correct the transcript in `/check-in`, submit, and receive a neutral completion message. `/check-in` is also the fully typed alternative when microphone access or voice does not work. Only authenticated staff can open `/queue`; only clinicians can alter a draft or approve. See [33](33-tablet-clinician-workflow.md) for the implemented flow.
 
 The nurse is the only actor. The model is a server step, drawn as a service. Flows use the names in [docs/README.md](README.md).
 
@@ -90,9 +90,9 @@ Jules's nurse asks "Any chest pain?". The patient says "No, it's my ankle." Allo
 
 Forbidden: an `EXPLICIT` chest-pain statement sourced from the nurse's question.
 
-## Failure: speech cannot be used
+## Failure: voice cannot be used
 
-There is no mic on the critical path. The transcript screen tells the nurse to type. If a patient cannot speak, the nurse types observations as `STAFF_OBSERVED` context and what a companion said as `CONTEXT_PROVIDED` only when the nurse marks it as companion context. The product does not infer urgency from silence, accent, literacy, or language.
+The direct written form at `/check-in` is available from the first tablet screen and from every voice failure message. If a person cannot or does not want to speak, they type their own account there. The product does not infer urgency from silence, accent, literacy, or language.
 
 ```mermaid
 flowchart TD

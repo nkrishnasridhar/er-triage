@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted for the SaaSathon MVP.
+Superseded by the implemented voice-first tablet flow in [ADR-009](ADR-009-tablet-capture-clinician-decision.md). This record remains the historical reason that the written confirmation form is mandatory and always available.
 
 ## Context
 

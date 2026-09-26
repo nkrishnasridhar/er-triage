@@ -1,6 +1,6 @@
 # 30 — Judge questions and answers
 
-> **Implementation update — 26 September 2026:** “Why does the system not reorder the queue?” Answer: that would be an AI urgency recommendation. The demo instead shows anonymous capture, zero retained audio, a chronological awaiting-review list, and a clinician-owned priority/next-step decision.
+> **Implementation update — 26 September 2026:** “Why does the system not reorder the queue?” Answer: that would be an AI urgency recommendation. The demo instead shows anonymous voice-first capture with no app-retained audio, a chronological awaiting-review list, and a clinician-owned priority/next-step decision.
 
 Three minutes. Answer in two or three sentences, then stop. Admit the weakness in the same breath as the defence. Do not invent a statistic to fill silence.
 
@@ -30,9 +30,9 @@ It is a list of pointers to uncertain, negated, or contradicted quotes, from fix
 
 We show at most three, and approve works with none of them answered. ACEM's published material says the triage assessment generally should take no more than two to five minutes and is not a diagnosis. We did not study real timings. Weakness: three can still be too many. The validation question asks nurses what number they would tolerate, including zero.
 
-## Where is the voice UI?
+## Why lead with a voice UI?
 
-Cut. Typed or pasted text is the reliable path and it forces the demo onto gaps and provenance. A microphone would make us look like a scribe. Weakness: real triage is spoken. Paste assumes a scribe, a typist, or a nurse willing to type. That is a adoption risk, and it is the right risk for this deadline.
+The first interaction is naturally spoken, so the tablet starts with a short guided conversation and the assistant asks neutral questions back. It never makes a clinical assessment, and nothing reaches staff until the person checks the editable transcript; the typed form is always one tap away. Weakness: live provider processing adds a privacy, reliability, and consent question that blocks real deployment until governance reviews it.
 
 ## What about speech, disability, and language?
 

@@ -6,7 +6,7 @@ Accepted and implemented.
 
 ## Decision
 
-Use a public, anonymous tablet solely to submit a confirmed text account. Browser speech recognition may help enter that text but audio is not retained. Put every read, edit, decision, and approval behind an authenticated staff role; only the `clinician` role may approve.
+Use a public, anonymous tablet solely to submit a confirmed text account. The primary input is a short live Realtime voice conversation in which the assistant asks neutral questions aloud; a separate form is the required editable confirmation step and the fully typed alternative. The app does not retain audio, although the Realtime provider processes audio during the live session. Put every read, edit, decision, and approval behind an authenticated staff role; only the `clinician` role may approve.
 
 The model may organise captured wording and ask neutral clarification questions. It may not set, suggest, rank, prefill, or otherwise imply priority, next step, triage category, severity, risk, or waiting-room order. Awaiting reports remain chronological.
 

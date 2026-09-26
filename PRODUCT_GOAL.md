@@ -18,8 +18,8 @@ The product exists to reduce avoidable administrative delay and make the first s
 
 ## The core workflow
 
-1. A person uses a dedicated tablet to enter a local reference and their account by typing or browser speech-to-text, then confirms the text before sending it.
-2. The tablet submits no audio and cannot access other reports, queue contents, or clinician decisions.
+1. A person uses a dedicated tablet to start a guided voice conversation. The assistant asks neutral questions aloud; the person then reviews and edits the transcript, adds a local reference, and confirms it before sending. A separate written form is always available.
+2. The browser streams audio only for the live voice conversation; the app does not record audio and submits only confirmed text. The tablet cannot access other reports, queue contents, or clinician decisions.
 3. A server-only AI boundary organises the captured text into a source-preserving brief and neutral clarification prompts. It falls back to deterministic rules if a provider response is unavailable or unsafe.
 4. A clinician on the authenticated desktop workspace reviews and corrects the brief, then makes the final decision about priority, assessment, escalation, and next steps.
 5. The approved report becomes a clear handover and record for the care team.
@@ -29,8 +29,8 @@ For the first SaaSathon demo, the most valuable workflow is deliberately narrowe
 ## Features
 
 - **Tablet check-in:** An anonymous, touch-first surface captures a confirmed account without exposing clinical records.
-- **Speech-to-text convenience:** Browser recognition fills an editable text field; typing is always available and audio is not stored.
-- **Focused intake questions:** Capture the presenting concern, symptoms, timeline, severity, relevant warning signs, and unanswered follow-ups.
+- **Voice-first guided conversation:** A Realtime assistant speaks neutral intake questions and transcribes the person's answers into a required editable confirmation step. The written form is always available; the app stores no audio.
+- **Focused intake questions:** Capture the presenting concern, timeline, changes, and unanswered follow-ups without making a clinical assessment.
 - **AI-organised draft:** Turn the conversation into an easy-to-scan report with captured wording, source-linked items to check, and neutral clarification questions.
 - **No AI priority or attention rank:** The system never suggests, assigns, colours, or reorders urgency, escalation, priority, or queue position.
 - **Clinician review and decision:** A qualified clinician can edit the brief and choose the approved next step, such as immediate assessment, priority assessment, or an appropriate discharge pathway.

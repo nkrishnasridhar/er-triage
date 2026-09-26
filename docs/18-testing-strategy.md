@@ -1,6 +1,6 @@
 # 18 — Testing strategy
 
-> **Implementation update — 26 September 2026:** Unit tests now reject model decision language, provenance rewrites, and unknown quoted text; the local integration suite covers anonymous capture, two clinicians, a read-only nurse, immutable approval, and the tablet-to-queue HTTP path. Docker remains required for that local-only integration suite.
+> **Implementation update — 26 September 2026:** Unit tests now reject model decision language, provenance rewrites, and unknown quoted text; the local integration suite covers the voice-first landing route, anonymous capture through the written confirmation form, two clinicians, a read-only nurse, immutable approval, and the tablet-to-queue HTTP path. Docker remains required for that local-only integration suite. Browser rehearsal must also cover microphone denial and the written fallback.
 
 There is no single "accuracy" score. A model can be fluent and still flip a negation. Report separate checks. A green overall percentage would hide H1 and H2.
 

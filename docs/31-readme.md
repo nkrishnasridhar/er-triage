@@ -1,6 +1,6 @@
 # Front Brief
 
-Front Brief is an intake copilot for the first minutes of an emergency-department presentation. A triage nurse pastes a messy conversation. The product returns a brief the nurse can review: what the patient reported, what staff observed, what context was provided, what the software only highlighted, what is still unanswered, and what the nurse changed or approved.
+Front Brief is an intake copilot for the first minutes of an emergency-department presentation. A person begins with a guided voice conversation or uses a written tablet form, confirms the account, and the product returns a brief the clinician can review: what the patient reported, what staff observed, what context was provided, what the software only highlighted, what is still unanswered, and what the clinician changed or approved.
 
 It does not diagnose, prescribe, assign an Australasian Triage Scale category, rank patients, decide who is seen first, or determine disposition. Model output is not clinical truth.
 
@@ -13,7 +13,7 @@ Documentation is in [docs/README.md](README.md). Application behaviour is still 
 ## Demo boundaries
 
 - Synthetic data only.
-- Typed or pasted transcript. No live microphone on the critical path.
+- Voice-first guided conversation with an editable confirmation step; written check-in is always available.
 - The category field starts empty and only the clinician can set it.
 - At most three clarification questions, and they never block approval.
 - Highlights are questions or pointers to source text, not new clinical assertions.

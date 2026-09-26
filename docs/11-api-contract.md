@@ -1,6 +1,6 @@
 # 11 — API contract
 
-> **Implementation update — 26 September 2026:** The public mutation is the validated `submitTabletEncounter` Server Action, backed by `capture_tablet_intake(...)`; it returns only success/failure copy and never an encounter ID. Desktop mutations still derive identity from the session and now require a `clinician` database role. The earlier transcript/revision operation list remains future design work.
+> **Implementation update — 26 September 2026:** The public mutation is the validated `submitTabletEncounter` Server Action, backed by `capture_tablet_intake(...)`; it returns only success/failure copy and never an encounter ID. The voice-first route may create an ephemeral Realtime session credential, but it has no database read/write capability. Desktop mutations still derive identity from the session and now require a `clinician` database role. The earlier transcript/revision operation list remains future design work.
 
 ## Recommendation
 

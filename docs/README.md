@@ -24,7 +24,7 @@ Front Brief turns a messy first emergency-department conversation into a structu
 
 These four lines are never blurred. See [00-executive-summary.md](00-executive-summary.md).
 
-1. **SaaSathon MVP** — synthetic tablet capture (typed or browser speech-to-text), authenticated clinician review, provenance draft, approve.
+1. **SaaSathon MVP** — synthetic voice-first tablet capture with an editable confirmation and written fallback, authenticated clinician review, provenance draft, approve.
 2. **Post-hackathon prototype** — still synthetic or consented simulation, audio experiment, richer auth.
 3. **Clinical pilot** — real patients only after governance this package does not claim to have.
 4. **Production healthcare product** — regulated deployment this weekend does not attempt.
@@ -99,7 +99,7 @@ These four lines are never blurred. See [00-executive-summary.md](00-executive-s
 | --- | --- |
 | Front Brief | Product |
 | Encounter | One synthetic presentation |
-| Transcript | Typed or pasted text. Untrusted |
+| Transcript | Voice-derived or typed text, confirmed by the person. Untrusted |
 | Statement | One extracted claim with an epistemic status |
 | Gap | One "Information to clarify" item. At most three shown |
 | Highlight | An AI question or pointer to source text |
