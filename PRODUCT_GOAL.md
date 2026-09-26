@@ -26,6 +26,16 @@ The product exists to reduce avoidable administrative delay and make the first s
 
 For the first SaaSathon demo, the most valuable workflow is deliberately narrower: guide an intake conversation, produce a structured triage brief, and show a human clinician reviewing it before it is saved or acted on.
 
+## Features
+
+- **New intake start screen:** Staff can quickly begin a patient intake on a shared tablet.
+- **Voice-guided conversation:** The app asks clear intake questions and transcribes the patient's answers, with staff able to correct or add details.
+- **Focused intake questions:** Capture the presenting concern, symptoms, timeline, severity, relevant warning signs, and unanswered follow-ups.
+- **AI triage brief:** Turn the conversation into an easy-to-scan report with the main concern, key symptoms, risk signals, and items needing clinical attention.
+- **Suggested attention flag:** Surface a suggested priority or escalation prompt for clinician consideration; it is never a diagnosis or final decision.
+- **Clinician review and decision:** A qualified clinician can edit the brief and choose the approved next step, such as immediate assessment, priority assessment, or an appropriate discharge pathway.
+- **Clear handover record:** Save the clinician-approved brief as a consistent handover for the care team.
+
 ## Who it helps
 
 The primary users are emergency-department nurses, triage clinicians, and other staff responsible for receiving and assessing patients. They need a fast, consistent way to turn an initial conversation into information that the wider care team can use.

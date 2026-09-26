@@ -41,6 +41,10 @@ in the application cannot cross them.
 | Accounts cannot be deleted out from under a record | `ON DELETE RESTRICT` on every reference |
 | Patient identity is minimised | No name, date of birth or contact detail is stored at all |
 
+The product specified for this weekend is **Front Brief**, a clinician-reviewed emergency-department intake copilot. The design package is in [docs/README.md](docs/README.md). This pass is documentation only. Application behaviour is still the starter.
+
+Hackathon data is synthetic and fictional. Do not enter real patient health information. The product must not diagnose, prescribe, assign an Australasian Triage Scale category, rank patients, or present model output as clinical truth. A clinician reviews and approves every brief.
+
 ## Getting Started
 
 You need Node.js 22+, pnpm 10 and Docker for local Supabase.
