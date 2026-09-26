@@ -11,7 +11,7 @@ export default async function LoginPage() {
   if (configured) {
     const supabase = await createClient();
     const { data } = await supabase.auth.getClaims();
-    if (data?.claims.sub) redirect("/ideas");
+    if (data?.claims.sub) redirect("/queue");
   }
   return (
     <main
@@ -19,17 +19,18 @@ export default async function LoginPage() {
       className="grid-container flex min-h-screen flex-col bg-blue py-6"
     >
       <Link href="/" className="w-fit font-semibold">
-        SaaSathon / Starter
+        ER Triage
       </Link>
       <div className="mx-auto my-auto w-full max-w-md py-16">
-        <p className="text-body-2 mb-4">YOUR NEXT IDEA</p>
-        <h1 className="text-h2 mb-4">Let’s get started.</h1>
+        <p className="text-body-2 mb-4">STAFF SIGN IN</p>
+        <h1 className="text-h2 mb-4">Clinical staff only.</h1>
         <p className="mb-8 text-sm leading-6">
-          We’ll email you a code. Your first sign-in creates your account.
+          We’ll email you a code. Your first sign-in creates your account. Do not
+          use this with real patient information.
         </p>
         {configured ? <LoginForm /> : <SetupNotice />}
       </div>
-      <p className="text-sm">A little less setup. A lot more building.</p>
+      <p className="text-sm">Supporting clinical judgement, never replacing it.</p>
     </main>
   );
 }

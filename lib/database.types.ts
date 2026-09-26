@@ -34,29 +34,108 @@ export type Database = {
   };
   public: {
     Tables: {
-      ideas: {
+      encounters: {
         Row: {
+          age_years: number | null;
           created_at: string;
-          description: string;
           id: string;
-          title: string;
-          user_id: string;
+          observed_signs: string;
+          patient_account: string;
+          patient_reference: string;
+          presenting_concern: string;
+          recorded_by: string;
+          recorded_by_label: string;
         };
         Insert: {
+          age_years?: number | null;
           created_at?: string;
-          description?: string;
           id?: string;
-          title: string;
-          user_id: string;
+          observed_signs?: string;
+          patient_account?: string;
+          patient_reference: string;
+          presenting_concern: string;
+          recorded_by: string;
+          recorded_by_label?: string;
         };
         Update: {
+          age_years?: number | null;
           created_at?: string;
-          description?: string;
           id?: string;
-          title?: string;
-          user_id?: string;
+          observed_signs?: string;
+          patient_account?: string;
+          patient_reference?: string;
+          presenting_concern?: string;
+          recorded_by?: string;
+          recorded_by_label?: string;
         };
         Relationships: [];
+      };
+      triage_briefs: {
+        Row: {
+          approved_at: string | null;
+          clinician_notes: string;
+          concern_summary: string;
+          drafted_at: string;
+          drafted_by: string;
+          drafted_from: string;
+          encounter_id: string;
+          id: string;
+          items_to_check: string;
+          next_step: string | null;
+          open_questions: string;
+          patient_reported: string;
+          priority: string | null;
+          reviewed_by: string | null;
+          reviewed_by_label: string | null;
+          staff_observed: string;
+          status: string;
+        };
+        Insert: {
+          approved_at?: string | null;
+          clinician_notes?: string;
+          concern_summary?: string;
+          drafted_at?: string;
+          drafted_by: string;
+          drafted_from?: string;
+          encounter_id: string;
+          id?: string;
+          items_to_check?: string;
+          next_step?: string | null;
+          open_questions?: string;
+          patient_reported?: string;
+          priority?: string | null;
+          reviewed_by?: string | null;
+          staff_observed?: string;
+          status?: string;
+        };
+        Update: {
+          approved_at?: string | null;
+          clinician_notes?: string;
+          concern_summary?: string;
+          drafted_at?: string;
+          drafted_by?: string;
+          drafted_from?: string;
+          encounter_id?: string;
+          id?: string;
+          items_to_check?: string;
+          next_step?: string | null;
+          open_questions?: string;
+          patient_reported?: string;
+          priority?: string | null;
+          reviewed_by?: string | null;
+          reviewed_by_label?: string | null;
+          staff_observed?: string;
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "triage_briefs_encounter_id_fkey";
+            columns: ["encounter_id"];
+            isOneToOne: true;
+            referencedRelation: "encounters";
+            referencedColumns: ["id"];
+          },
+        ];
       };
     };
     Views: {

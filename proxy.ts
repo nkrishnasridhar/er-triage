@@ -19,7 +19,10 @@ export async function proxy(request: NextRequest) {
     },
   });
   const { data } = await supabase.auth.getClaims();
-  if (request.nextUrl.pathname.startsWith("/ideas") && !data?.claims.sub) {
+  const protectedPath = ["/queue", "/intake", "/encounters"].some((path) =>
+    request.nextUrl.pathname.startsWith(path),
+  );
+  if (protectedPath && !data?.claims.sub) {
     const login = NextResponse.redirect(new URL("/login", request.url));
     response.cookies.getAll().forEach((cookie) => login.cookies.set(cookie));
     login.headers.set("Cache-Control", "private, no-store");
@@ -29,4 +32,6 @@ export async function proxy(request: NextRequest) {
   response.headers.set("Cache-Control", "private, no-store");
   return response;
 }
-export const config = { matcher: ["/ideas/:path*", "/login"] };
+export const config = {
+  matcher: ["/queue/:path*", "/intake/:path*", "/encounters/:path*", "/login"],
+};

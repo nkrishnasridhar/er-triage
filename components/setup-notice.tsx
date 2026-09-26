@@ -5,7 +5,7 @@ export function SetupNotice() {
       <p className="mt-2 text-sm leading-6 text-charcoal">
         Copy <code>.env.example</code> to <code>.env.local</code>, add your
         project URL and publishable key, then restart your app. Follow the
-        README to apply the database migration and email templates.
+        README to apply the database migrations and email templates.
       </p>
     </aside>
   );
