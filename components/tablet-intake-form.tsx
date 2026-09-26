@@ -102,7 +102,7 @@ export function TabletIntakeForm() {
               Local patient reference
             </label>
             <p id="reference-help" className="mt-2 text-sm leading-6 text-muted">
-              Enter the fictional local record reference. Do not use a name or contact details here.
+              Enter the local record reference. Do not use a name or contact details here.
             </p>
             <input
               id="patient_reference"
@@ -160,8 +160,7 @@ export function TabletIntakeForm() {
       )}
 
       <aside className="rounded-card bg-moss p-4 text-sm leading-6 text-muted">
-        Only the text you check and send is shared with the clinical team. This demonstration
-        accepts fictional information only.
+        Only the text you check and send is shared with the clinical team.
       </aside>
 
       <Button type="submit" size="xl" className="min-h-14 w-full text-base" disabled={pending}>
