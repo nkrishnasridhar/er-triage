@@ -3,12 +3,9 @@ import { VoiceCheckIn } from "@/components/voice-check-in";
 
 export default function Home() {
   return (
-    <main
-      id="main"
-      className="flex min-h-screen flex-col bg-paper text-pine"
-    >
+    <main id="main" className="flex min-h-screen flex-col bg-paper text-pine">
       <header className="flex items-center justify-between px-6 py-6 sm:px-10 sm:py-8">
-        <p className="text-sm font-semibold tracking-tight">Christchurch ER</p>
+        <p className="text-sm font-semibold tracking-tight">Front Brief</p>
         <Link href="/login" className="text-sm underline-offset-4 hover:underline">
           Staff sign in
         </Link>
