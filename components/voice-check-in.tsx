@@ -67,7 +67,7 @@ export function VoiceCheckIn() {
     setStatus("Connecting to the check-in assistant…");
     nextQuestionIndex.current = 0;
     initialQuestionSent.current = false;
-    setCurrentQuestion("");
+    setCurrentQuestion(fixedQuestions[0]);
     setQuestionIndex(0);
     setPatientAnswers([]);
 
