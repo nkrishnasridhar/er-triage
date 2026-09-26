@@ -21,15 +21,13 @@ Clinical statuses must stay explicit and separate from the brand palette. Do not
 
 Cards use a 20 px radius; controls use 12 px. Prefer the existing Tailwind spacing scale and Inter type utilities.
 
-## Logo finalists
+## Selected logo
 
-Two icon directions are being kept: **Voice to brief** and **Clear handoff**. Both share the Fieldnote wordmark and palette. The voice direction moves an irregular input line into ordered strokes; the handoff direction shows two source lines moving into one reviewed brief.
-
-Finalist exports and usage notes are in [selected-logo](selected-logo/README.md), including editable SVG lockups and icon-only files.
+**Voice to brief** is the approved Front Brief logo. Its gently wavering input line resolves into ordered strokes, with a clay point to mark the human step. Use the icon and wordmark as shown in [selected-logo](selected-logo/README.md); Clear handoff is an unselected exploration.
 
 ## Exploration boards
 
 - [Fieldnote reference overview](fieldnote-reference-overview.png)
-- [Two logo finalists](selected-logo/front-brief-logo-finalists.png)
+- [Selected Voice to brief logo](selected-logo/front-brief-voice-to-brief.png)
 
 The exported vectors are editable. The logo wordmark remains live text set to Inter with an Arial fallback.

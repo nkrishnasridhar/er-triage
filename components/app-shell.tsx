@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { signOut } from "@/app/login/actions";
+import { BrandMark } from "@/components/brand-mark";
 import { Button } from "@/components/ui/button";
 import type { StaffRole } from "@/lib/auth";
 
@@ -21,8 +22,8 @@ export function AppShell({
       <header className="border-b border-line">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-5 py-5 lg:px-[30px]">
           <div className="flex min-w-0 items-center gap-6">
-            <Link href="/queue" className="font-semibold">
-              Front Brief
+            <Link href="/queue" aria-label="Front Brief home">
+              <BrandMark />
             </Link>
             <nav aria-label="Main" className="flex items-center gap-4 text-sm">
               <Link href="/queue" className="underline-offset-4 hover:underline">

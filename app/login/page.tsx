@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { BrandMark } from "@/components/brand-mark";
 import { LoginForm } from "@/components/login-form";
 import { SetupNotice } from "@/components/setup-notice";
 import { isConfigured } from "@/lib/config";
@@ -18,8 +19,8 @@ export default async function LoginPage() {
       id="main"
       className="grid-container flex min-h-screen flex-col bg-paper py-6"
     >
-      <Link href="/" className="w-fit font-semibold">
-        Front Brief
+      <Link href="/" className="w-fit" aria-label="Front Brief home">
+        <BrandMark />
       </Link>
       <div className="mx-auto my-auto w-full max-w-md py-16">
         <p className="text-body-2 mb-4">STAFF SIGN IN</p>
