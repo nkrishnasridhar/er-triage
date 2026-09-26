@@ -2,7 +2,7 @@
 
 ## Recommendation
 
-Deploy the existing Vercel project connected to this GitHub repo. Use a Supabase project created for the hackathon, not a linked production database and not a hospital tenant. Apply the new migration there with the Supabase CLI or the SQL editor. Seed the clinician. Freeze at Sunday 09:00 NZDT.
+Deploy the existing Vercel project connected to this GitHub repo. Use a Supabase project created for the hackathon, not a linked production database and not a hospital tenant. Apply the forward migrations there with the Supabase CLI or the SQL editor. Create the first clinician account. The primary tablet screen also needs a server-only OpenAI key with Realtime access; without it, the written check-in remains available but voice cannot start. Freeze at Sunday 09:00 NZDT.
 
 SaaSathon's own docs say to deploy early because last-minute failures are deployment failures. The starter may already have a URL. Keep that URL alive while schema work happens.
 
@@ -12,24 +12,24 @@ SaaSathon's own docs say to deploy early because last-minute failures are deploy
 
 - [ ] Confirm the branch `cursor/ed-triage-docs-d13e` is not where implementation will be mixed blindly. Implementation can continue on this branch or a follow-on branch. Do not force-push `main`.
 - [ ] `pnpm install`, `pnpm lint`, `pnpm typecheck`, `pnpm build` on a clean checkout once before relying on CI.
-- [ ] Vercel env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, server Supabase key the starter already expects (see `.env.example`), `OPENAI_API_KEY`, `OPENAI_MODEL`, `DEMO_CLINICIAN_EMAIL`.
-- [ ] Password is set only in Vercel and in a local `.env.local`. It is not in git.
-- [ ] Supabase auth email/password enabled for the seed user. Magic link is not the demo path.
+- [ ] Vercel production env: `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` from the deployed Supabase project. No Supabase service-role key belongs in this app.
+- [ ] Vercel server-only env: `OPENAI_API_KEY` with Realtime access; optionally set `OPENAI_REALTIME_MODEL` (defaults to `gpt-realtime-2.1`). `OPENAI_MODEL` is optional—the deterministic composition fallback is used when it is absent. None of these keys are committed or prefixed `NEXT_PUBLIC_`.
+- [ ] Supabase auth email/password is enabled and the first synthetic-demo staff account is created and able to sign in. Its first successful sign-in bootstraps the audited `clinician` role; later accounts are read-only until an operator provisions their role.
 - [ ] Confirm the Supabase project is one the team created this weekend or an empty course project. Read `AGENTS.md`: never reset a linked or production database.
 
 ### Schema
 
-- [ ] New migration only. `ideas` still present.
+- [ ] Apply the repository’s unapplied forward migrations with `supabase db push` or Supabase SQL Editor. Never run `supabase db reset` against the hosted project.
 - [ ] RLS enabled, grants minimal, two-account test written.
 - [ ] `synthetic` check constraint present.
 - [ ] Forbidden-key check present if the team finished that SQL.
 
 ### App
 
-- [ ] Home or post-login route reaches `/encounters`.
-- [ ] Signup hidden on the demo path.
+- [ ] `/` starts voice-first check-in over HTTPS; microphone permission and speaker output work on the tablet. `/check-in` remains usable when microphone permission is denied or the Realtime service is unavailable.
+- [ ] `/login` reaches the role-gated `/queue` after the synthetic clinician signs in.
 - [ ] No `dangerouslySetInnerHTML` on transcript or brief text.
-- [ ] Model called only from server code.
+- [ ] The long-lived model key is server-only. The browser receives only a short-lived Realtime credential.
 
 ### Sunday before 07:30 NZDT
 
