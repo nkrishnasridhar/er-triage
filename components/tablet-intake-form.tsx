@@ -113,19 +113,15 @@ export function TabletIntakeForm() {
         <>
           <fieldset className="space-y-4">
             <legend className="text-base font-semibold">
-              What is your name, how old are you, and what is your sex?
+              What is your age and sex assigned at birth?
             </legend>
-            <div>
-              <label htmlFor="patient_name" className="text-sm font-medium">Name</label>
-              <input id="patient_name" name="patient_name" required maxLength={100} className={`${fieldClass} mt-2 min-h-14 text-lg`} disabled={pending} />
-            </div>
             <div>
               <label htmlFor="patient_age" className="text-sm font-medium">Age</label>
               <input id="patient_age" name="patient_age" type="number" min={0} max={130} required className={`${fieldClass} mt-2 min-h-14 text-lg`} disabled={pending} />
             </div>
             <div>
-              <label htmlFor="patient_sex" className="text-sm font-medium">Sex</label>
-              <input id="patient_sex" name="patient_sex" required maxLength={80} className={`${fieldClass} mt-2 min-h-14 text-lg`} disabled={pending} />
+              <label htmlFor="sex_assigned_at_birth" className="text-sm font-medium">Sex assigned at birth</label>
+              <input id="sex_assigned_at_birth" name="sex_assigned_at_birth" required maxLength={80} className={`${fieldClass} mt-2 min-h-14 text-lg`} disabled={pending} />
             </div>
           </fieldset>
           <div>

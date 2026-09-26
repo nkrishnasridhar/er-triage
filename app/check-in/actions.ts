@@ -19,9 +19,8 @@ export async function submitTabletEncounter(
   let patientAccount = voiceAccount;
   if (typeof voiceAccount !== "string" || !voiceAccount.trim()) {
     const answers = writtenTabletQuestionsSchema.safeParse({
-      patient_name: form.get("patient_name"),
       patient_age: form.get("patient_age"),
-      patient_sex: form.get("patient_sex"),
+      sex_assigned_at_birth: form.get("sex_assigned_at_birth"),
       when_started: form.get("when_started"),
       what_changed: form.get("what_changed"),
       current_symptoms: form.get("current_symptoms"),
@@ -29,7 +28,7 @@ export async function submitTabletEncounter(
     });
     if (!answers.success) return { error: answers.error.issues[0].message };
     patientAccount = [
-      `Name: ${answers.data.patient_name}; age: ${answers.data.patient_age}; sex: ${answers.data.patient_sex}`,
+      `Age: ${answers.data.patient_age}; sex assigned at birth: ${answers.data.sex_assigned_at_birth}`,
       `When did this start? ${answers.data.when_started}`,
       `Has it changed since it started? ${answers.data.what_changed}`,
       `What symptoms are you experiencing right now? ${answers.data.current_symptoms}`,

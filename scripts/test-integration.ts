@@ -216,10 +216,15 @@ async function main() {
     assert.ok(!voiceHtml.includes("priority"), "The tablet never exposes a priority control");
     const tabletHtml = await (await request("/check-in")).text();
     assert.ok(tabletHtml.includes("Tell us what is happening"));
-    const tabletResult = await submit("/check-in", tabletHtml, 'form:has(textarea[name="patient_account"])', {
+    const tabletResult = await submit("/check-in", tabletHtml, "form", {
       patient_reference: "TABLET-HTTP-1",
       presenting_concern: "Sore ankle",
-      patient_account: "I rolled my ankle while walking.",
+      patient_age: "35",
+      sex_assigned_at_birth: "female",
+      when_started: "Earlier today",
+      what_changed: "It has become more painful.",
+      current_symptoms: "Pain and swelling around my ankle.",
+      anything_else: "Nothing else.",
       speech_used: "false",
     });
     assert.ok((await tabletResult.text()).includes("account has been sent"));
