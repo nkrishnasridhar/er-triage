@@ -219,8 +219,9 @@ async function main() {
     const tabletResult = await submit("/check-in", tabletHtml, "form", {
       patient_reference: "TABLET-HTTP-1",
       presenting_concern: "Sore ankle",
+      patient_name: "Test Person",
       patient_age: "35",
-      sex_assigned_at_birth: "female",
+      patient_sex: "female",
       when_started: "Earlier today",
       what_changed: "It has become more painful.",
       current_symptoms: "Pain and swelling around my ankle.",
