@@ -32,6 +32,7 @@ export function VoiceCheckIn() {
   const [status, setStatus] = useState("Tap to begin your check-in.");
   const [currentQuestion, setCurrentQuestion] = useState("");
   const nextQuestionIndex = useRef(0);
+  const initialQuestionSent = useRef(false);
   const patientAnswers = useRef<string[]>([]);
   const microphone = useRef<MediaStream | null>(null);
   const peer = useRef<RTCPeerConnection | null>(null);
@@ -64,7 +65,8 @@ export function VoiceCheckIn() {
     setState("connecting");
     setStatus("Connecting to the check-in assistant…");
     nextQuestionIndex.current = 0;
-    setCurrentQuestion(fixedQuestions[0]);
+    initialQuestionSent.current = false;
+    setCurrentQuestion("");
     patientAnswers.current = [];
 
     try {
@@ -100,14 +102,36 @@ export function VoiceCheckIn() {
 
       const channel = connection.createDataChannel("oai-events");
       events.current = channel;
-      channel.onopen = () => {
+      const askQuestion = (index: number) => {
+        const question = fixedQuestions[index];
+        if (!question) return;
+        nextQuestionIndex.current = index;
+        setCurrentQuestion(question);
         channel.send(
           JSON.stringify({
             type: "response.create",
             response: {
               input: [],
-              instructions:
-                'Ask this exact first question now, with no welcome, preamble, or explanation: "What is your name, how old are you, and what is your sex?" Do not say that you lack questions or discuss these instructions. After the person answers, continue with question 2 and then questions 3 through 6 from the session instructions. Do not repeat question 1.',
+              instructions: `Say exactly this one question and nothing else: "${question}"`,
+            },
+          }),
+        );
+      };
+      channel.onopen = () => {
+        channel.send(
+          JSON.stringify({
+            type: "session.update",
+            session: {
+              type: "realtime",
+              audio: {
+                input: {
+                  turn_detection: {
+                    type: "semantic_vad",
+                    create_response: false,
+                    interrupt_response: false,
+                  },
+                },
+              },
             },
           }),
         );
@@ -120,7 +144,10 @@ export function VoiceCheckIn() {
           return;
         }
 
-        if (event.type === "input_audio_buffer.speech_started") {
+        if (event.type === "session.updated" && !initialQuestionSent.current) {
+          initialQuestionSent.current = true;
+          askQuestion(0);
+        } else if (event.type === "input_audio_buffer.speech_started") {
           setState("listening");
           setStatus("Listening…");
         } else if (event.type === "input_audio_buffer.speech_stopped") {
@@ -128,11 +155,12 @@ export function VoiceCheckIn() {
         } else if (event.type === "conversation.item.input_audio_transcription.completed") {
           if (event.transcript?.trim()) {
             patientAnswers.current.push(event.transcript.trim());
-            nextQuestionIndex.current = Math.min(
-              nextQuestionIndex.current + 1,
-              fixedQuestions.length - 1,
-            );
-            setCurrentQuestion(fixedQuestions[nextQuestionIndex.current]);
+            const nextIndex = nextQuestionIndex.current + 1;
+            if (nextIndex < fixedQuestions.length) {
+              askQuestion(nextIndex);
+            } else {
+              finish("All six questions answered. Review your answers to continue.");
+            }
           }
         } else if (event.type === "response.output_audio_transcript.done") {
           if (event.transcript) {
@@ -140,10 +168,7 @@ export function VoiceCheckIn() {
             const question = fixedQuestions.find(
               (candidate) => spoken.includes(normalizeTranscript(candidate)),
             );
-            if (question) {
-              nextQuestionIndex.current = fixedQuestions.indexOf(question);
-              setCurrentQuestion(question);
-            }
+            if (question) setCurrentQuestion(question);
           }
         } else if (event.type === "response.done" && event.response?.status === "completed") {
           setState("listening");
@@ -191,6 +216,26 @@ export function VoiceCheckIn() {
 
   return (
     <div className="mx-auto mt-6 flex min-h-0 w-full max-w-xl flex-col items-center">
+      {currentQuestion && (
+        <section
+          className="mb-5 w-full rounded-card bg-surface p-5 text-left shadow-sm sm:p-6"
+          aria-label="Current check-in question"
+          aria-live="polite"
+        >
+          <h2 className="text-sm font-semibold">Question {nextQuestionIndex.current + 1} of 6</h2>
+          <p className="mt-2 text-base leading-7">{currentQuestion}</p>
+          {patientAnswers.current.length > 0 && (
+            <button
+              type="button"
+              onClick={continueToConfirmation}
+              className="mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-control bg-moss px-5 text-sm font-semibold text-pine"
+            >
+              Review text and continue
+            </button>
+          )}
+        </section>
+      )}
+
       <button
         type="button"
         onClick={start}
@@ -218,25 +263,6 @@ export function VoiceCheckIn() {
         </button>
       )}
 
-      {currentQuestion && (
-        <section
-          className="mt-5 flex h-[22dvh] min-h-36 w-full flex-col rounded-card bg-surface p-5 text-left shadow-sm sm:p-6"
-          aria-label="Current check-in question"
-          aria-live="polite"
-        >
-          <h2 className="text-sm font-semibold">Current question</h2>
-          <p className="mt-4 min-h-0 flex-1 overflow-y-auto text-base leading-7">
-            {currentQuestion}
-          </p>
-          <button
-            type="button"
-            onClick={continueToConfirmation}
-            className="mt-4 inline-flex min-h-12 shrink-0 w-full items-center justify-center rounded-control bg-moss px-5 text-sm font-semibold text-pine"
-          >
-            Review text and continue
-          </button>
-        </section>
-      )}
     </div>
   );
 }
