@@ -12,7 +12,7 @@ Presenter is the pitch role. A second person watches the clock and signals at 4:
 
 > Triage nurses in emergency departments already have an EHR, and in New Zealand many will have an ambient scribe. The scribe writes the note. The nurse still has to see what the patient actually said, what was observed, what was never asked, and what the software only highlighted.
 >
-> Front Brief is that review. It does not diagnose, it does not prescribe, and it does not assign a triage category. The nurse does.
+> ERgency is that review. It does not diagnose, it does not prescribe, and it does not assign a triage category. The nurse does.
 
 Point at the list. Read the line "This list is not a queue and not an urgency order."
 

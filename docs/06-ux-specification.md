@@ -10,7 +10,7 @@ The nurse is tired and fast. One primary button per screen. Safety text is a sen
 
 ## Global chrome
 
-- Product name in the header: **Front Brief**
+- Product name in the header: **ERgency**
 - Session: "Demo Clinician"
 - Persistent safety line on encounter screens: "Fictional patients only. Not for real health information."
 - Sign out is a text button, not the visual primary.
@@ -35,7 +35,7 @@ Safety copy, under the button:
 
 > Synthetic demo. Do not type a real patient's name or story.
 
-Exact title: "Front Brief"
+Exact title: "ERgency"
 
 Exact subtitle: "A triage evidence brief for the nurse to review. It does not assign urgency."
 
@@ -200,7 +200,7 @@ Control: select, first option "Not recorded", then 1, 2, 3, 4, 5. No description
 
 Helper, exact:
 
-> You are recording your category. Front Brief does not assign or recommend one.
+> You are recording your category. ERgency does not assign or recommend one.
 
 If unset, the summary chip says "Not recorded".
 
@@ -258,7 +258,7 @@ Hierarchy: "Approved brief", approver display name, Pacific/Auckland timestamp, 
 
 ATS line, if empty: "Category: not recorded by the clinician."
 
-ATS line, if set: "Category: 3, recorded by Demo Clinician at {time}. Recorded by the clinician. Not assigned by Front Brief."
+ATS line, if set: "Category: 3, recorded by Demo Clinician at {time}. Recorded by the clinician. Not assigned by ERgency."
 
 Use the numeral the nurse chose. Do not add a sentence that the category fits the story.
 
@@ -305,7 +305,7 @@ Keep islands small, per the starter rule.
 | --- | --- |
 | C1 | Fictional patients only. Not for real health information. |
 | C2 | Draft for clinician review. Not a diagnosis, triage category, queue rank, or disposition. |
-| C3 | You are recording your category. Front Brief does not assign or recommend one. |
+| C3 | You are recording your category. ERgency does not assign or recommend one. |
 | C4 | Information to clarify |
 | C5 | Up to three questions. You can approve without answering them. |
 | C6 | Warranting another look |

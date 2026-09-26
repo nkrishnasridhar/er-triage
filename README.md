@@ -47,7 +47,7 @@ in the application cannot cross them.
 | Accounts cannot be deleted out from under a record | `ON DELETE RESTRICT` on every reference |
 | Patient identity is minimised | No name, date of birth or contact detail is stored at all |
 
-The product specified for this weekend is **Front Brief**, a clinician-reviewed emergency-department intake copilot. The design package is in [docs/README.md](docs/README.md).
+The product specified for this weekend is **ERgency**, a clinician-reviewed emergency-department intake copilot. The design package is in [docs/README.md](docs/README.md).
 
 The implemented path is `/` for voice-first tablet check-in, `/check-in` for
 the written/voice-transcript confirmation form, `/queue` for staff reports, and
@@ -59,7 +59,7 @@ Hackathon data is synthetic and fictional. Do not enter real patient health info
 
 ### Known mismatches between `docs/` and the code
 
-- **Product name.** The docs say *Front Brief*; the UI, package and migrations say *ER Triage*. One name needs choosing.
+- **Product name.** The public product name is *ERgency*. The npm package, GitHub repository, and migration identifiers remain `er-triage` as technical identifiers.
 - **Triage scale.** The docs specify the *Australasian* Triage Scale. The code ships the UK-style labels (Immediate / Very urgent / Urgent / Standard / Non-urgent) as placeholders. No category is ever assigned by the app, so this is a labelling decision, not a safety one — but it should be settled before any clinician sees it.
 - **Draft generation.** The code uses a single deterministic local keyword matcher (`lib/draft-brief.ts`), not a hosted model. No model output is presented as clinical truth, so the provenance and human-oversight intent is preserved.
 

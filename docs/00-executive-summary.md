@@ -2,9 +2,9 @@
 
 ## Recommendation
 
-Build **Front Brief**: a voice-first tablet conversation with an always-available written alternative that converts a person-confirmed emergency-department account into a clinician-reviewable triage evidence brief. Ship that workflow hosted, on synthetic patients, before Sunday 27 September 2026 10:00 NZDT.
+Build **ERgency**: a voice-first tablet conversation with an always-available written alternative that converts a person-confirmed emergency-department account into a clinician-reviewable triage evidence brief. Ship that workflow hosted, on synthetic patients, before Sunday 27 September 2026 10:00 NZDT.
 
-The innovation to show is provenance and completeness. Transcription quality is a weak demo. Heidi and other ambient scribes already draft notes. Front Brief's job is the two-to-five-minute window before the triage nurse decides, and the record of what was known, missing, and changed.
+The innovation to show is provenance and completeness. Transcription quality is a weak demo. Heidi and other ambient scribes already draft notes. ERgency's job is the two-to-five-minute window before the triage nurse decides, and the record of what was known, missing, and changed.
 
 ## What the nurse can see
 
@@ -48,7 +48,7 @@ A demo ATS control may exist. It starts empty. Only the signed-in clinician can 
 
 SaaSathon asks for one useful workflow, hosted, with AI doing real work, demoed live in five minutes. Judging is innovation, execution, impact, and presentation ([event docs](https://www.saasathon.dev/docs)). A generic chatbot and "another AI meeting recorder" are listed as weak fits.
 
-Front Brief fits the strong pattern: messy conversation in, a finished reviewable record out, with a reason to open it on the next patient. The AI step is extraction, negation handling, and gap detection. Assembly of the brief is deterministic code so the model cannot silently add a fact while "summarising".
+ERgency fits the strong pattern: messy conversation in, a finished reviewable record out, with a reason to open it on the next patient. The AI step is extraction, negation handling, and gap detection. Assembly of the brief is deterministic code so the model cannot silently add a fact while "summarising".
 
 ## User and buyer
 
@@ -60,7 +60,7 @@ The buyer hypothesis is a health system (in New Zealand, Health New Zealand | Te
 
 Against Heidi, already being rolled out to New Zealand emergency departments as an ambient scribe, and against other scribes:
 
-| They do | Front Brief does |
+| They do | ERgency does |
 | --- | --- |
 | Draft the note from ambient audio | Orchestrate triage information before the decision |
 | Optimise documentation time | Show gaps, provenance, and reported versus observed versus highlighted |

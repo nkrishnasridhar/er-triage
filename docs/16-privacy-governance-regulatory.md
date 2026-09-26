@@ -2,7 +2,7 @@
 
 > **Implementation update — 26 September 2026:** The primary tablet uses a live Realtime voice session: microphone audio is processed by the provider to transcribe and speak questions back, while the app itself records no audio and stores only text the person confirms. The written form remains available. This does not settle consent, provider processing, HIPC, retention, overseas transfer, or governance questions for a real deployment; the build remains fictional-data-only.
 
-This chapter is not legal advice. It does not classify Front Brief as a medical device or as not a medical device. It records what public sources say and what a specialist must confirm before any real health information is processed. Classifications use three labels:
+This chapter is not legal advice. It does not classify ERgency as a medical device or as not a medical device. It records what public sources say and what a specialist must confirm before any real health information is processed. Classifications use three labels:
 
 - **KNOWN** — a public instrument or official page states this, and the sentence is limited to that.
 - **LIKELY** — a reasonable reading for planning. Not a determination.
@@ -34,7 +34,7 @@ The MVP processes fictional data only. Fictional data can still be personal info
 
 **KNOWN:** Health NZ announced a New Zealand AI Pre-Implementation Evaluation Framework, endorsed by the Health NZ Board as the methodology NAIAEAG will use, and said there is no specific AI legislation in this setting. Source: [Health NZ news](https://www.healthnz.govt.nz/news-and-updates/consistent-approach-to-ai-tools-backed-by-new-national-framework).
 
-**KNOWN:** Heidi's vendor blog says NAIAEAG endorsed Heidi's scribe after privacy, cybersecurity, and data-sovereignty review. That is **vendor-reported** endorsement of a different product. It is not an endorsement of Front Brief, and it is not a shortcut through governance.
+**KNOWN:** Heidi's vendor blog says NAIAEAG endorsed Heidi's scribe after privacy, cybersecurity, and data-sovereignty review. That is **vendor-reported** endorsement of a different product. It is not an endorsement of ERgency, and it is not a shortcut through governance.
 
 **REQUIRES SPECIALIST CONFIRMATION:** whether a provenance brief that refuses to assign ATS would be reviewed as an administrative documentation aid, a clinical decision support tool, or something else, and what evidence NAIAEAG would require.
 
@@ -57,7 +57,7 @@ The MVP processes fictional data only. Fictional data can still be personal info
 
 **REQUIRES SPECIALIST CONFIRMATION:**
 
-- Whether any configuration of Front Brief is a medical device or software as a medical device under the law that applies at the time of a pilot.
+- Whether any configuration of ERgency is a medical device or software as a medical device under the law that applies at the time of a pilot.
 - The status of the Therapeutic Products regime versus the Medicines Act for software. This package does not state a classification, because getting it wrong in a pitch is worse than saying it is open.
 - Whether "we do not assign ATS" is sufficient to keep an intended purpose outside decision support. Intended purpose is judged on what the product does and how it is promoted, not only on a disclaimer. Marketing "items warranting attention" as risk detection could pull the purpose toward decision support. The copy rules in [06-ux-specification.md](06-ux-specification.md) exist partly for that reason. They are not a legal conclusion.
 

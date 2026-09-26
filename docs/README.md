@@ -1,6 +1,6 @@
-# Front Brief documentation
+# ERgency documentation
 
-Front Brief is the SaaSathon product specified in this repository. The npm package and GitHub repo remain `er-triage`. The public name is Front Brief so the pitch does not collide with CAREPOI's ERTRIAGE product.
+ERgency is the SaaSathon product specified in this repository. The npm package and GitHub repo remain `er-triage`. The public name is ERgency so the pitch does not collide with CAREPOI's ERTRIAGE product.
 
 This tree is the build specification. It does not implement the product. The starter app (ideas, login, Supabase) stays in place until a later implementation pass follows these docs.
 
@@ -18,7 +18,7 @@ Read [32-cto-decision-summary.md](32-cto-decision-summary.md) first if you are a
 
 ## Product in one paragraph
 
-Front Brief turns a messy first emergency-department conversation into a structured triage evidence brief that a triage nurse can review in well under the two-to-five minutes ACEM describes for a triage assessment. Every statement is labelled as patient-reported, staff-observed, explicitly provided context, or an AI highlight that only points at source text. Uncertain, negated, contradicted, and unknown statements stay uncertain, negated, contradicted, or unknown. The nurse edits, answers or skips up to three clarifications, may manually record an Australasian Triage Scale category, and approves the brief. The model never assigns that category, ranks the waiting room, diagnoses, prescribes, or decides disposition.
+ERgency turns a messy first emergency-department conversation into a structured triage evidence brief that a triage nurse can review in well under the two-to-five minutes ACEM describes for a triage assessment. Every statement is labelled as patient-reported, staff-observed, explicitly provided context, or an AI highlight that only points at source text. Uncertain, negated, contradicted, and unknown statements stay uncertain, negated, contradicted, or unknown. The nurse edits, answers or skips up to three clarifications, may manually record an Australasian Triage Scale category, and approves the brief. The model never assigns that category, ranks the waiting room, diagnoses, prescribes, or decides disposition.
 
 ## Maturity lines
 
@@ -97,7 +97,7 @@ These four lines are never blurred. See [00-executive-summary.md](00-executive-s
 
 | Name | Meaning |
 | --- | --- |
-| Front Brief | Product |
+| ERgency | Product |
 | Encounter | One synthetic presentation |
 | Transcript | Voice-derived or typed text, confirmed by the person. Untrusted |
 | Statement | One extracted claim with an epistemic status |

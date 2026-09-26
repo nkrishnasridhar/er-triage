@@ -7,13 +7,13 @@ Labels used below:
 - **Assumption** — a planning assumption, not a measured fact.
 - **Vendor-reported** — the vendor's own page or blog. Not independently audited.
 
-Nothing here is a claim that Front Brief improves waiting times, safety, or cost.
+Nothing here is a claim that ERgency improves waiting times, safety, or cost.
 
 ## The job
 
 A triage nurse has a short first conversation and must leave a record another clinician can trust. ACEM's policy says the triage assessment generally should take no more than two to five minutes, and that the assessment and the ATS category allocated must be recorded. The same policy says the ATS describes clinical urgency, not severity, complexity, or staffing. Source: [ACEM, Triage](https://acem.org.au/Content-Sources/Advancing-Emergency-Medicine/Better-Outcomes-for-Patients/Triage) and [P06 Policy on the Australasian Triage Scale](https://acem.org.au/getmedia/484b39f1-7c99-427b-b46e-005b0cd6ac64/P06_Policy_Australasian_Triage_Scale). **Verified** as the published policy text. It is not evidence about how long New Zealand nurses actually take.
 
-G24 says the triage assessment is not intended to make a diagnosis, and that documentation should include at least date and time, chief presenting problem, limited relevant history, relevant assessment findings, the initial triage category, any re-triage, the area allocated, and measures initiated. Source: [ACEM G24](https://acem.org.au/getmedia/51dc74f7-9ff0-42ce-872a-0437f3db640a/Guidelines_on_the_Implementation_of_the_ATS_in_EDs). **Verified** as guideline text. Front Brief aims at the information part of that list. It does not allocate the category.
+G24 says the triage assessment is not intended to make a diagnosis, and that documentation should include at least date and time, chief presenting problem, limited relevant history, relevant assessment findings, the initial triage category, any re-triage, the area allocated, and measures initiated. Source: [ACEM G24](https://acem.org.au/getmedia/51dc74f7-9ff0-42ce-872a-0437f3db640a/Guidelines_on_the_Implementation_of_the_ATS_in_EDs). **Verified** as guideline text. ERgency aims at the information part of that list. It does not allocate the category.
 
 The failure mode this product is for: the story is messy, a negation or a hedge is flattened, a clinician's question is written up as a symptom, and the next person cannot see what was never asked. That mechanism is a **product hypothesis**, not a measured NZ error rate.
 
@@ -31,7 +31,7 @@ The failure mode this product is for: the story is messy, a negation or a hedge 
 | ATS is in use | Verified as the Australasian tool | ACEM states the ATS has been used in Australia and Aotearoa New Zealand. Local charting practice still **requires specialist confirmation** per hospital |
 | About 1,250 NZ ED doctors or frontline staff in a national AI scribe rollout | Stated in the product brief | Not confirmed. Heidi's own announcement says 1,000 licences for clinicians and 100 for mental health crisis teams in EDs. See below |
 
-Do not tell judges that Front Brief will move the six-hour target. Access block, beds, and staffing dominate public explanations of that target. Peter Jones, quoted in The Press, describes bed-block as the crowding mechanism. That article is journalism, not a Front Brief study.
+Do not tell judges that ERgency will move the six-hour target. Access block, beds, and staffing dominate public explanations of that target. Peter Jones, quoted in The Press, describes bed-block as the crowding mechanism. That article is journalism, not a ERgency study.
 
 ## Australia, as context only
 
@@ -53,7 +53,7 @@ The first buyer conversation is New Zealand because the team is at a Christchurc
 
 [Health Informatics New Zealand](https://www.hinz.org.nz/news/713303/AI-scribe-rolled-out-to-EDs-nationwide.htm) reported the same rollout and quoted clinicians on documentation time. Treat overlapping numbers as press coverage of the vendor and the minister, not as an independent trial publication retrieved here.
 
-Implication for the pitch: a scribe is already the incumbent story in NZ EDs. A second scribe is a weak SaaSathon idea and a weak sale. Front Brief has to be obviously about the triage brief, not the note.
+Implication for the pitch: a scribe is already the incumbent story in NZ EDs. A second scribe is a weak SaaSathon idea and a weak sale. ERgency has to be obviously about the triage brief, not the note.
 
 ## Who hurts, how often
 
@@ -69,5 +69,5 @@ No hospital price was found that we are willing to treat as a comparable. Do not
 
 - That 1.47 million, 5.3%, 5.7%, or 1,250 are official.
 - That 73.9% is the latest six-hour result. It is the Q4 2024/25 figure. Later published quarters differ.
-- That Front Brief has an ROI, a minute saved, or a safety outcome.
+- That ERgency has an ROI, a minute saved, or a safety outcome.
 - That ACEM's two-to-five minutes is a New Zealand staffing standard we measured.

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { VOICE_ACCOUNT_STORAGE_KEY } from "@/lib/voice-check-in";
 
 type CheckInState = "idle" | "connecting" | "listening" | "speaking" | "finished";
-type Line = { speaker: "You" | "Front Brief"; text: string };
+type Line = { speaker: "You" | "ERgency"; text: string };
 type RealtimeEvent = {
   type: string;
   transcript?: string;
@@ -80,7 +80,7 @@ export function VoiceCheckIn() {
       speaker.autoplay = true;
       speaker.onplaying = () => {
         setState("speaking");
-        setStatus("Front Brief is speaking…");
+        setStatus("ERgency is speaking…");
       };
       connection.ontrack = ({ streams }) => {
         speaker.srcObject = streams[0];
@@ -118,7 +118,7 @@ export function VoiceCheckIn() {
         } else if (event.type === "conversation.item.input_audio_transcription.completed") {
           addLine("You", event.transcript);
         } else if (event.type === "response.output_audio_transcript.done") {
-          addLine("Front Brief", event.transcript);
+          addLine("ERgency", event.transcript);
         } else if (event.type === "response.done" && event.response?.status === "completed") {
           setState("listening");
           setStatus("Listening…");

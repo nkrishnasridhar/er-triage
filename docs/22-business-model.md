@@ -18,7 +18,7 @@ We do not know the price. [21-cost-model.md](21-cost-model.md) refuses invented 
 
 **Hypothesis B3.** The pain is not "writing takes time" (Heidi's pitch, already in market). The pain is a thin or misleading triage record: negations lost, questions written as facts, handover that cannot show what was missing. A system might pay to reduce rework and unsafe misunderstanding at the front door.
 
-**Falsifier.** Nurses say the EHR template plus the scribe already shows this, or that the real pain is beds and staffing, which a brief cannot move. The Press reporting on ED crowding, quoting Peter Jones, points at access block. If buyers only care about the six-hour target's bed problem, Front Brief is the wrong product. Say that before they do.
+**Falsifier.** Nurses say the EHR template plus the scribe already shows this, or that the real pain is beds and staffing, which a brief cannot move. The Press reporting on ED crowding, quoting Peter Jones, points at access block. If buyers only care about the six-hour target's bed problem, ERgency is the wrong product. Say that before they do.
 
 ## Why they would come back
 
@@ -34,7 +34,7 @@ A reviewed evidence brief with an audit of what the clinician changed. Not a mod
 
 | # | Experiment | Pass signal | Fail signal | When |
 | --- | --- | --- | --- | --- |
-| E1 | Five triage nurses compare a pasted Heidi-style note with a Front Brief review on the same fictional transcript | At least three say the brief shows something they would otherwise miss, unprompted | They say it is a slower scribe | Before any pilot conversation |
+| E1 | Five triage nurses compare a pasted Heidi-style note with a ERgency review on the same fictional transcript | At least three say the brief shows something they would otherwise miss, unprompted | They say it is a slower scribe | Before any pilot conversation |
 | E2 | Two charge nurses or clinical nurse managers asked who would sign a purchase | A named budget path | "Interesting" and no owner | After E1 |
 | E3 | One privacy or digital lead asked what would block a synthetic simulation inside their training environment | A written list of gates | A flat no to any software of this shape | Before pilot planning |
 | E4 | Measure cost per compose from real tokens | Number exists | n/a | Sunday, optional |

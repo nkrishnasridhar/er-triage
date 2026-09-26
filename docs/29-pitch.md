@@ -6,7 +6,7 @@ Spoken version of the demo's argument. The demo carries it. This page is the spa
 
 ## One sentence
 
-Front Brief turns a messy emergency-department arrival conversation into a brief the triage nurse can check: what was said, what was observed, what is missing, and what the software only highlighted.
+ERgency turns a messy emergency-department arrival conversation into a brief the triage nurse can check: what was said, what was observed, what is missing, and what the software only highlighted.
 
 ## The user
 
@@ -24,7 +24,7 @@ The first conversation is full of hedges, denials, and questions. Notes, includi
 
 Heidi is already being rolled out across New Zealand emergency departments as an AI scribe. Their own account: documentation support, a Hawke's Bay pilot, licences for clinicians, and a review by Health NZ's AI advisory group. Those outcomes are vendor-reported, and they are about the note.
 
-SaaSathon lists "another AI meeting recorder" as a weak fit. A second scribe would be that product. Front Brief assumes the scribe and the EHR stay. The nurse pastes the conversation. We show completeness and provenance before the nurse decides.
+SaaSathon lists "another AI meeting recorder" as a weak fit. A second scribe would be that product. ERgency assumes the scribe and the EHR stay. The nurse pastes the conversation. We show completeness and provenance before the nurse decides.
 
 KATE, TriageGO, and ERTRIAGE want to influence the acuity decision. We refuse that. The refusal is the safety position and the positioning.
 

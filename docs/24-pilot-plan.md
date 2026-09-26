@@ -44,4 +44,4 @@ Nurses need fifteen minutes on three things: hedges stay hedges, the category co
 
 ## Relationship to Heidi
 
-The pilot assumption is that Heidi or another scribe may already be in the room. Front Brief must accept pasted text. A pilot that requires removing the scribe will not be approved and should not be proposed.
+The pilot assumption is that Heidi or another scribe may already be in the room. ERgency must accept pasted text. A pilot that requires removing the scribe will not be approved and should not be proposed.

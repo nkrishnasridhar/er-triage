@@ -8,7 +8,7 @@ Nothing here authorises real patient data. The pilot gates are in [24-pilot-plan
 flowchart TB
   subgraph site [One health-system tenant]
     Browser[Nurse browser]
-    App[Front Brief application]
+    App[ERgency application]
     Db[(Postgres)]
     Obj[Object store for exports]
     Audit[Append-only audit]
@@ -52,7 +52,7 @@ flowchart TB
 
 ## Availability
 
-An ED tool that is down must fail into normal practice: the nurse documents in the EHR as they do today. Front Brief is not on the resuscitation path. SLO hypothesis for a later pilot: the review page loads if the model is down; only compose fails. That is **unvalidated** and not a contractual SLO.
+An ED tool that is down must fail into normal practice: the nurse documents in the EHR as they do today. ERgency is not on the resuscitation path. SLO hypothesis for a later pilot: the review page loads if the model is down; only compose fails. That is **unvalidated** and not a contractual SLO.
 
 ## Security boundary
 

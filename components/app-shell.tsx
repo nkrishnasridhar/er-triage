@@ -22,7 +22,7 @@ export function AppShell({
       <header className="border-b border-line">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4 px-5 py-5 lg:px-[30px]">
           <div className="flex min-w-0 items-center gap-6">
-            <Link href="/queue" aria-label="Front Brief home">
+            <Link href="/queue" aria-label="ERgency home">
               <BrandMark />
             </Link>
             <nav aria-label="Main" className="flex items-center gap-4 text-sm">

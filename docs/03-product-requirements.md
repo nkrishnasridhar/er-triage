@@ -100,7 +100,7 @@ Acceptance:
 
 ### FR-010 ATS control — M
 
-An ATS dropdown on the review screen lists 1, 2, 3, 4, 5, and starts unselected. Helper text: "You are recording your category. Front Brief does not assign or recommend one."
+An ATS dropdown on the review screen lists 1, 2, 3, 4, 5, and starts unselected. Helper text: "You are recording your category. ERgency does not assign or recommend one."
 
 Acceptance:
 

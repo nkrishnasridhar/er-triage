@@ -1,4 +1,4 @@
-# Front Brief brand exploration
+# ERgency brand exploration
 
 The selected direction is **Fieldnote**: a light, soothing palette of warm paper, pine ink, and sage accents, paired with spacious editorial typography. Dark backgrounds are out of scope.
 
@@ -23,7 +23,7 @@ Cards use a 20 px radius; controls use 12 px. Prefer the existing Tailwind spaci
 
 ## Selected logo
 
-**Voice to brief** is the approved Front Brief logo. Its gently wavering input line resolves into ordered strokes, with a clay point to mark the human step. Use the icon and wordmark as shown in [selected-logo](selected-logo/README.md); Clear handoff is an unselected exploration.
+**Voice to brief** is the approved ERgency logo. Its gently wavering input line resolves into ordered strokes, with a clay point to mark the human step. Use the icon and wordmark as shown in [selected-logo](selected-logo/README.md); Clear handoff is an unselected exploration.
 
 ## Exploration boards
 

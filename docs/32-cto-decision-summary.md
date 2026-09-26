@@ -8,7 +8,7 @@ Event baseline: Saturday 26 September 2026, plan starts 12:00 NZST. Deadline: Su
 
 ## A. Product
 
-Build **Front Brief**, a triage evidence brief for the triage nurse. The repo stays `er-triage`. The pitched name is Front Brief because CAREPOI sells ERTRIAGE, a device that claims to classify acuity.
+Build **ERgency**, a triage evidence brief for the triage nurse. The repo stays `er-triage`. The pitched name is ERgency because CAREPOI sells ERTRIAGE, a device that claims to classify acuity.
 
 The product converts a pasted conversation into a reviewable brief with provenance and gaps. The clinician decides. The model extracts and asks. TypeScript assembles.
 
@@ -27,7 +27,7 @@ Do not use pilot language on Sunday.
 
 ## C. The twelve contradictions
 
-1. **ATS dropdown.** The field starts empty. The model has no writer. Copy: "You are recording your category. Front Brief does not assign or recommend one." Do not narrate a fictional category as correct.
+1. **ATS dropdown.** The field starts empty. The model has no writer. Copy: "You are recording your category. ERgency does not assign or recommend one." Do not narrate a fictional category as correct.
 2. **Items warranting attention.** They are template pointers to uncertain, negated, or contradicted quotes. No score, rank, or colour scale. Title: "Warranting another look".
 3. **Gap detection.** Show at most three. Title: "Information to clarify". Never block approve.
 4. **Audio.** The tablet is voice-first, but the typed form is always available and no audio is retained by the app. Live provider processing is synthetic-demo-only pending governance.

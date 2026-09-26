@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "Front Brief", template: "%s · Front Brief" },
+  title: { default: "ERgency", template: "%s · ERgency" },
   description: "Clinician-reviewed emergency intake briefs.",
 };
 

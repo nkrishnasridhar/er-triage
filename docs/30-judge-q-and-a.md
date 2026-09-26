@@ -56,7 +56,7 @@ Not in this build. New Zealand's published direction is FHIR-first, with NZ Base
 
 ## What about Epic, KATE, TriageGO, CareFlow, Mediktor, ERTRIAGE?
 
-Epic is the record in many hospitals; we did not verify an Epic feature that assigns the ATS. KATE and TriageGO recommend acuity and sit on the other side of our product decision. CareFlow's emergency ambient product, on System C's pages, fills configured UK emergency forms inside their EPR. Mediktor is patient-facing navigation, as far as we confirmed. ERTRIAGE is a device-based acuity system with marketing accuracy figures we do not repeat. Our repo's old name sits close to ERTRIAGE, which is why the product name is Front Brief. Weakness: we have not had a salesperson's demo of any of them. Absence from a public page is not absence from the product.
+Epic is the record in many hospitals; we did not verify an Epic feature that assigns the ATS. KATE and TriageGO recommend acuity and sit on the other side of our product decision. CareFlow's emergency ambient product, on System C's pages, fills configured UK emergency forms inside their EPR. Mediktor is patient-facing navigation, as far as we confirmed. ERTRIAGE is a device-based acuity system with marketing accuracy figures we do not repeat. Our repo's old name sits close to ERTRIAGE, which is why the product name is ERgency. Weakness: we have not had a salesperson's demo of any of them. Absence from a public page is not absence from the product.
 
 ## Does this fix the six-hour target?
 

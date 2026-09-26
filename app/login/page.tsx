@@ -19,7 +19,7 @@ export default async function LoginPage() {
       id="main"
       className="grid-container flex min-h-screen flex-col bg-paper py-6"
     >
-      <Link href="/" className="w-fit" aria-label="Front Brief home">
+      <Link href="/" className="w-fit" aria-label="ERgency home">
         <BrandMark />
       </Link>
       <div className="mx-auto my-auto w-full max-w-md py-16">

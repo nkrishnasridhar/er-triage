@@ -34,7 +34,7 @@ encounters_per_year ≈ presentations_per_site × sites × attach_rate
 | Input | Status |
 | --- | --- |
 | `presentations_per_site` | Unknown. Do not use 1.47 million as a national denominator for a price. That national figure is unverified, and a product would not be used on every presentation on day one |
-| `attach_rate` | Hypothesis: only triage conversations where the nurse opens Front Brief. Unvalidated. Could be a small fraction of presentations |
+| `attach_rate` | Hypothesis: only triage conversations where the nurse opens ERgency. Unvalidated. Could be a small fraction of presentations |
 | `tokens_per_compose` | Measure on the demo fixtures. A 1,500-character transcript is the planning size |
 | `price` | Read from the provider on the day. Write it down then. Not here |
 | `hosting` and `database` | One app and one Postgres. Revisit only if a contract requires a region or a dedicated instance. That step-change dominates the token bill and is **unknown** |

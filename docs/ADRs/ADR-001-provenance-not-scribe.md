@@ -10,7 +10,7 @@ New Zealand emergency departments are being offered Heidi as an ambient scribe. 
 
 ## Decision
 
-The product is Front Brief. It produces a triage evidence brief whose value is provenance and completeness. It does not draft "the note" as the primary artefact, and it does not assign or recommend an ATS category. The repo name `er-triage` stays to avoid a rename during the weekend.
+The product is ERgency. It produces a triage evidence brief whose value is provenance and completeness. It does not draft "the note" as the primary artefact, and it does not assign or recommend an ATS category. The repo name `er-triage` stays to avoid a rename during the weekend.
 
 ## Alternatives
 

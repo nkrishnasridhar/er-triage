@@ -1,6 +1,6 @@
-# Front Brief selected logo
+# ERgency selected logo
 
-**Voice to brief** is the finalized Front Brief logo. Use this mark consistently across product UI, documentation, and new brand materials.
+**Voice to brief** is the finalized ERgency logo. Use this mark consistently across product UI, documentation, and new brand materials.
 
 The icon combines one gently wavering source line with a short set of structured strokes, ending in a warm clay point. It represents turning an account into a clear, reviewable brief while keeping the human step visible.
 

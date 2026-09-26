@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-/** The selected Fieldnote icon paired with the Front Brief wordmark. */
+/** The selected Fieldnote icon paired with the ERgency wordmark. */
 export function BrandMark({
   iconWidth = 42,
   iconHeight = 20,
@@ -18,7 +18,7 @@ export function BrandMark({
         height={iconHeight}
         className="shrink-0"
       />
-      <span>Front Brief</span>
+      <span>ERgency</span>
     </span>
   );
 }

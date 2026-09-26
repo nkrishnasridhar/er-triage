@@ -1,10 +1,10 @@
-# Front Brief
+# ERgency
 
-Front Brief is an intake copilot for the first minutes of an emergency-department presentation. A person begins with a guided voice conversation or uses a written tablet form, confirms the account, and the product returns a brief the clinician can review: what the patient reported, what staff observed, what context was provided, what the software only highlighted, what is still unanswered, and what the clinician changed or approved.
+ERgency is an intake copilot for the first minutes of an emergency-department presentation. A person begins with a guided voice conversation or uses a written tablet form, confirms the account, and the product returns a brief the clinician can review: what the patient reported, what staff observed, what context was provided, what the software only highlighted, what is still unanswered, and what the clinician changed or approved.
 
 It does not diagnose, prescribe, assign an Australasian Triage Scale category, rank patients, decide who is seen first, or determine disposition. Model output is not clinical truth.
 
-This repository is the SaaSathon starter (`er-triage`) plus the specification in `/docs`. The public name is Front Brief so it is not confused with CAREPOI's ERTRIAGE product.
+This repository is the SaaSathon starter (`er-triage`) plus the specification in `/docs`. The public name is ERgency so it is not confused with CAREPOI's ERTRIAGE product.
 
 ## Status
 

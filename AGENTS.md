@@ -14,7 +14,7 @@ Keep this a small, readable foundation. Prefer one complete feature over layers 
 
 ## Visual brand system
 
-- The public product name is **Front Brief**. The selected visual direction is **Fieldnote**. The chosen logo is **Voice to brief**: a gently wavering source line resolving into structured strokes with a clay point. Use `public/brand/front-brief-mark.svg` for the icon and `app/icon.svg` for the app icon. Do not use the Clear handoff exploration as the product logo.
+- The public product name is **ERgency**. The selected visual direction is **Fieldnote**. The chosen logo is **Voice to brief**: a gently wavering source line resolving into structured strokes with a clay point. Use `public/brand/front-brief-mark.svg` for the icon and `app/icon.svg` for the app icon. Do not use the Clear handoff exploration as the product logo.
 - Treat `app/globals.css` as the source of truth for UI tokens. Use the Tailwind colors `paper`, `surface`, `pine`, `muted`, `sage`, `moss`, `clay`, and `line`; do not add ad hoc hex colors or revive the starter blue/black palette.
 - Keep screens light and soothing: warm paper page backgrounds, white or pale moss surfaces, pine text, muted secondary text, sage accents, and subtle line borders. **Do not use dark page, panel, or button backgrounds.** Pine is for text and icons; use pale moss with pine text for primary actions.
 - Use Inter, which is already bundled. Prefer the existing spacing scale, `rounded-card` for cards, and `rounded-control` for form fields and buttons.
