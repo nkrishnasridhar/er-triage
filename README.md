@@ -115,6 +115,20 @@ pnpm test:integration
 the safety boundaries above over real HTTP, including a refused approval with no
 clinician decision and the immutability of an approved record.
 
+## Loading the hosted demonstration data
+
+[`supabase/demo/reset-demo.sql`](supabase/demo/reset-demo.sql) resets the
+dedicated hackathon database to 14 fictional tablet submissions: six awaiting
+clinician review and eight approved, read-only handover records. It deliberately
+deletes all existing rows from `public.encounters` and `public.triage_briefs`,
+but leaves staff accounts, staff roles, and role-audit history intact.
+
+Run it manually in the demo project's Supabase SQL Editor only. Before running,
+replace its two confirmation placeholders with the exact confirmation phrase and
+the email of the existing clinician account that will present the demo. The
+script refuses to continue unless that account already has the clinician role.
+Never use the reset in a healthcare, patient, or mixed-data database.
+
 ## Project Layout
 
 ```text
