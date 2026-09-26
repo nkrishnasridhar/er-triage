@@ -31,6 +31,7 @@ export function VoiceCheckIn() {
   const [state, setState] = useState<CheckInState>("idle");
   const [status, setStatus] = useState("Tap to begin your check-in.");
   const [currentQuestion, setCurrentQuestion] = useState("");
+  const nextQuestionIndex = useRef(0);
   const patientAnswers = useRef<string[]>([]);
   const microphone = useRef<MediaStream | null>(null);
   const peer = useRef<RTCPeerConnection | null>(null);
@@ -62,7 +63,8 @@ export function VoiceCheckIn() {
   const start = async () => {
     setState("connecting");
     setStatus("Connecting to the check-in assistant…");
-    setCurrentQuestion("");
+    nextQuestionIndex.current = 0;
+    setCurrentQuestion(fixedQuestions[0]);
     patientAnswers.current = [];
 
     try {
@@ -105,7 +107,7 @@ export function VoiceCheckIn() {
             response: {
               input: [],
               instructions:
-                "Begin by asking question 1 exactly as written in your instructions. Do not add a welcome or preamble. Ask all six fixed questions in order regardless of the answers. Do not skip, rephrase, or add questions.",
+                'Ask this exact first question now, with no welcome, preamble, or explanation: "What is your name, how old are you, and what is your sex?" Do not say that you lack questions or discuss these instructions. After the person answers, continue with question 2 and then questions 3 through 6 from the session instructions. Do not repeat question 1.',
             },
           }),
         );
@@ -124,14 +126,24 @@ export function VoiceCheckIn() {
         } else if (event.type === "input_audio_buffer.speech_stopped") {
           setStatus("Thinking…");
         } else if (event.type === "conversation.item.input_audio_transcription.completed") {
-          if (event.transcript?.trim()) patientAnswers.current.push(event.transcript.trim());
+          if (event.transcript?.trim()) {
+            patientAnswers.current.push(event.transcript.trim());
+            nextQuestionIndex.current = Math.min(
+              nextQuestionIndex.current + 1,
+              fixedQuestions.length - 1,
+            );
+            setCurrentQuestion(fixedQuestions[nextQuestionIndex.current]);
+          }
         } else if (event.type === "response.output_audio_transcript.done") {
           if (event.transcript) {
             const spoken = normalizeTranscript(event.transcript);
             const question = fixedQuestions.find(
-              (candidate) => normalizeTranscript(candidate) === spoken,
+              (candidate) => spoken.includes(normalizeTranscript(candidate)),
             );
-            if (question) setCurrentQuestion(question);
+            if (question) {
+              nextQuestionIndex.current = fixedQuestions.indexOf(question);
+              setCurrentQuestion(question);
+            }
           }
         } else if (event.type === "response.done" && event.response?.status === "completed") {
           setState("listening");
