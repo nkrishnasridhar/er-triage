@@ -13,22 +13,22 @@ export default function Home() {
 
       <section className="flex min-h-0 flex-1 items-center justify-center px-6 py-4 sm:px-10">
         <div className="flex max-h-full w-full max-w-2xl flex-col items-center">
-          <div className="flex w-full flex-col items-center gap-3 md:relative md:block md:min-h-11">
+          <div className="flex w-full flex-col items-center">
             <p className="text-body-2 text-center tracking-[0.12em] text-muted">
               EMERGENCY DEPARTMENT CHECK-IN
             </p>
-            <Link
-              href="/check-in"
-              className="rounded-control border border-line bg-surface px-4 py-2 text-sm font-semibold hover:bg-moss md:absolute md:right-0 md:top-0"
-            >
-              Use written form
-            </Link>
           </div>
           <h1 className="text-h2 mt-4 text-center">Start by speaking.</h1>
           <p className="mx-auto mt-4 max-w-xl text-center text-base leading-7 text-muted">
             The check-in assistant will ask a few questions aloud. You will review and
             confirm the text before anything is sent to the clinical team.
           </p>
+          <Link
+            href="/check-in"
+            className="mt-4 text-sm font-semibold text-pine underline decoration-line underline-offset-4 transition-colors hover:decoration-pine"
+          >
+            Prefer to type? Use the written form
+          </Link>
           <VoiceCheckIn />
         </div>
       </section>
