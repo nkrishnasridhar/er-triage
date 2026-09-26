@@ -43,6 +43,10 @@ begin
   if reviewer_count <> 1 then
     raise exception 'The configured demo reviewer must be an existing clinician account.';
   end if;
+
+  if to_regclass('public.review_suggestions') is null then
+    raise exception 'The review_suggestions migration has not been applied. Deploy all Supabase migrations before loading demo data.';
+  end if;
 end;
 $$;
 
@@ -79,10 +83,11 @@ insert into demo_fixtures values
   ('10000000-0000-4000-8000-000000000011', 'DEMO-Q-003', 'Hand cut while cooking', 'Says they cut their hand while preparing food. They covered it with a clean cloth before arriving.', 'Hand cut while preparing food.', '- Patient reported: "covered it with a clean cloth" — recorded in the account.', 'When did the cut happen?', '', '2026-09-27 10:25:00+13', 'draft', null, null, null),
   ('10000000-0000-4000-8000-000000000012', 'DEMO-Q-004', 'Back pain after lifting', 'Reports back pain after lifting a box at home. They are unsure whether the pain has changed since.', 'Back pain after lifting a box.', '- Patient reported: "after lifting a box" — recorded in the account.', 'Where is the pain located?', '', '2026-09-27 10:34:00+13', 'draft', null, null, null),
   ('10000000-0000-4000-8000-000000000013', 'DEMO-Q-005', 'Rash noticed this morning', 'Noticed a rash this morning and says it feels itchy. They have not tried any treatment.', 'Itchy rash noticed this morning.', '- Patient reported: "feels itchy" — recorded in the account.', 'Where did you first notice the rash?', '', '2026-09-27 10:43:00+13', 'draft', null, null, null),
-  ('10000000-0000-4000-8000-000000000014', 'DEMO-Q-006', 'Feeling shaky', 'Says they have felt shaky since arriving at work. They are not sure what brought it on.', 'Feeling shaky reported after arriving at work.', '- Patient reported: "since arriving at work" — recorded in the account.', 'Are you feeling shaky right now?', '', '2026-09-27 10:52:00+13', 'draft', null, null, null);
+  ('10000000-0000-4000-8000-000000000014', 'DEMO-Q-006', 'Feeling shaky', 'Says they have felt shaky since arriving at work. They are not sure what brought it on, cannot remember when they first felt shaky, and are unsure whether it changed after sitting down.', 'Feeling shaky reported after arriving at work.', '- Patient reported: "since arriving at work" — recorded in the account.', 'Are you feeling shaky right now?', '', '2026-09-27 10:52:00+13', 'draft', null, null, null);
 
--- Explicitly delete the dependent table first. This is intentional and is the
--- only destructive part of the script; staff accounts and audit rows remain.
+-- Explicitly delete briefs first, then encounters. Deleting encounters also
+-- cascades to review_suggestions. This is intentional and is the only
+-- destructive part of the script; staff accounts and audit rows remain.
 delete from public.triage_briefs;
 delete from public.encounters;
 
@@ -126,18 +131,83 @@ cross join lateral (
     and lower(users.email) = lower(current_setting('app.ergency_demo_reviewer_email', true))
 ) reviewer;
 
+-- Every fictional submission receives exactly one review-suggestion record.
+-- Five awaiting reports demonstrate the source-linked display order; the
+-- remaining rows deliberately use the safe Unassessed fallback. These are
+-- fixed demo fixtures, not clinical conclusions or model output about people.
+insert into public.review_suggestions (encounter_id, assessed_at)
+select id, created_at + interval '2 minutes'
+from demo_fixtures
+where status = 'approved' or id = '10000000-0000-4000-8000-000000000009';
+
+insert into public.review_suggestions (
+  encounter_id, attention_band, information_gap_score, account_cue_score,
+  rank_score, reasons, source, model_version, assessed_at
+) values
+  (
+    '10000000-0000-4000-8000-000000000010',
+    'suggested_later', 1, 1, 3,
+    '[
+      {"kind":"information_gap","subtype":"missing","quote":"have not identified anything that changes it"},
+      {"kind":"account_cue","quote":"headache since waking up"}
+    ]'::jsonb,
+    'model-v1', 'demo-fixture-v1', '2026-09-27 10:18:00+13'
+  ),
+  (
+    '10000000-0000-4000-8000-000000000011',
+    'suggested_last', 0, 1, 1,
+    '[
+      {"kind":"account_cue","quote":"cut their hand"}
+    ]'::jsonb,
+    'model-v1', 'demo-fixture-v1', '2026-09-27 10:27:00+13'
+  ),
+  (
+    '10000000-0000-4000-8000-000000000012',
+    'suggested_later', 1, 1, 3,
+    '[
+      {"kind":"information_gap","subtype":"uncertain","quote":"unsure whether the pain has changed since"},
+      {"kind":"account_cue","quote":"back pain after lifting a box"}
+    ]'::jsonb,
+    'model-v1', 'demo-fixture-v1', '2026-09-27 10:36:00+13'
+  ),
+  (
+    '10000000-0000-4000-8000-000000000013',
+    'suggested_later', 0, 2, 2,
+    '[
+      {"kind":"account_cue","quote":"rash this morning"},
+      {"kind":"account_cue","quote":"feels itchy"}
+    ]'::jsonb,
+    'model-v1', 'demo-fixture-v1', '2026-09-27 10:45:00+13'
+  ),
+  (
+    '10000000-0000-4000-8000-000000000014',
+    'suggested_first', 3, 0, 6,
+    '[
+      {"kind":"information_gap","subtype":"uncertain","quote":"not sure what brought it on"},
+      {"kind":"information_gap","subtype":"missing","quote":"cannot remember when they first felt shaky"},
+      {"kind":"information_gap","subtype":"uncertain","quote":"unsure whether it changed after sitting down"}
+    ]'::jsonb,
+    'model-v1', 'demo-fixture-v1', '2026-09-27 10:54:00+13'
+  );
+
 do $$
 declare
   encounter_count integer;
   brief_count integer;
   approved_count integer;
+  suggestion_count integer;
+  model_suggestion_count integer;
 begin
   select count(*) into encounter_count from public.encounters;
   select count(*) into brief_count from public.triage_briefs;
   select count(*) into approved_count from public.triage_briefs where status = 'approved';
+  select count(*) into suggestion_count from public.review_suggestions;
+  select count(*) into model_suggestion_count from public.review_suggestions where source = 'model-v1';
 
-  if encounter_count <> 14 or brief_count <> 14 or approved_count <> 8 then
-    raise exception 'Demo reset verification failed: expected 14 encounters, 14 briefs, and 8 approved records; got %, %, and %.', encounter_count, brief_count, approved_count;
+  if encounter_count <> 14 or brief_count <> 14 or approved_count <> 8
+    or suggestion_count <> 14 or model_suggestion_count <> 5 then
+    raise exception 'Demo reset verification failed: expected 14 encounters, 14 briefs, 8 approved records, 14 suggestions, and 5 model fixtures; got %, %, %, %, and %.',
+      encounter_count, brief_count, approved_count, suggestion_count, model_suggestion_count;
   end if;
 end;
 $$;
