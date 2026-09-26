@@ -24,6 +24,41 @@
 -- something. They are not findings, not a severity assessment and not a
 -- triage category.
 
+-- The hosted hackathon project predates this feature and already has an
+-- unrelated `encounters` table. Preserve it rather than overwriting its rows,
+-- then create the intentionally different, minimal triage table below. A
+-- schema that is neither the known legacy shape nor this migration's shape is
+-- refused so an operator can inspect it before any change is made.
+do $$
+begin
+  if to_regclass('public.encounters') is not null then
+    if exists (
+      select 1
+      from information_schema.columns
+      where table_schema = 'public'
+        and table_name = 'encounters'
+        and column_name = 'owner_id'
+    ) and not exists (
+      select 1
+      from information_schema.columns
+      where table_schema = 'public'
+        and table_name = 'encounters'
+        and column_name = 'patient_reference'
+    ) then
+      if to_regclass('public.legacy_encounters') is not null then
+        raise exception
+          'Cannot adopt legacy encounters: public.legacy_encounters already exists.';
+      end if;
+
+      alter table public.encounters rename to legacy_encounters;
+    else
+      raise exception
+        'Cannot create triage encounters: public.encounters has an unexpected schema.';
+    end if;
+  end if;
+end;
+$$;
+
 create table public.encounters (
   id uuid primary key default gen_random_uuid(),
   patient_reference text not null check (
@@ -188,5 +223,5 @@ for each row execute function public.triage_briefs_freeze_approved();
 
 revoke execute on function public.triage_briefs_freeze_approved() from public;
 
--- The starter's example table is no longer part of the product.
-drop table if exists public.ideas;
+-- The starter's example table is not used by this product. Preserve it rather
+-- than deleting a pre-existing table or any rows it may contain.
