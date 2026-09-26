@@ -9,6 +9,7 @@ import {
   passwordSchema,
   tabletEncounterSchema,
 } from "../lib/validation";
+import { PRIORITY_OPTIONS } from "../lib/triage";
 
 test("auth inputs and record identifiers reject malformed requests", () => {
   assert.equal(emailSchema.safeParse("not-an-email").success, false);
@@ -112,11 +113,45 @@ test("approving requires a clinician priority and a next step", () => {
   assert.equal(
     briefApprovalSchema.safeParse({
       ...base,
-      priority: "urgent",
+      priority: "soon",
       next_step: "standard_queue",
     }).success,
     true,
   );
+});
+
+test("the clinician priority choices use the four-level scale", () => {
+  assert.deepEqual(
+    PRIORITY_OPTIONS,
+    [
+      { value: "immediate", label: "1. Immediate — needs attention now" },
+      { value: "urgent", label: "2. Urgent — needs to be seen soon" },
+      { value: "soon", label: "3. Soon — needs timely review" },
+      { value: "non_urgent", label: "4. Non-urgent — go home" },
+    ],
+  );
+
+  for (const priority of PRIORITY_OPTIONS) {
+    assert.equal(
+      briefApprovalSchema.safeParse({
+        intent: "approve",
+        priority: priority.value,
+        next_step: "standard_queue",
+      }).success,
+      true,
+    );
+  }
+
+  for (const retiredPriority of ["very_urgent", "standard"]) {
+    assert.equal(
+      briefApprovalSchema.safeParse({
+        intent: "approve",
+        priority: retiredPriority,
+        next_step: "standard_queue",
+      }).success,
+      false,
+    );
+  }
 });
 
 test("a priority the app does not recognise cannot be approved", () => {

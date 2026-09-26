@@ -198,8 +198,8 @@ async function main() {
           .from("triage_briefs")
           .update({
             clinician_notes: "Clinician review complete.",
-            priority: "urgent",
-            next_step: "priority_clinical_review",
+            priority: "non_urgent",
+            next_step: "discharge_with_advice",
             status: "approved",
             reviewed_by: userIds[1],
             reviewed_by_label: emails.bob,

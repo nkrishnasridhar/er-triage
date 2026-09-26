@@ -1,5 +1,7 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
+
 import { composeDraftBrief } from "@/lib/brief-composition";
 import { isAdminConfigured, isConfigured } from "@/lib/config";
 import type { Json } from "@/lib/database.types";
@@ -19,8 +21,11 @@ export async function submitTabletEncounter(
 ): Promise<TabletFormState> {
   if (!isConfigured()) return { error: "Check-in is not configured yet." };
   const voiceAccount = form.get("patient_account");
-  let patientAccount = voiceAccount;
-  if (typeof voiceAccount !== "string" || !voiceAccount.trim()) {
+  const isVoiceAccount = typeof voiceAccount === "string" && Boolean(voiceAccount.trim());
+  let patientAccount: string;
+  if (isVoiceAccount && typeof voiceAccount === "string") {
+    patientAccount = voiceAccount;
+  } else {
     const answers = writtenTabletQuestionsSchema.safeParse({
       patient_name: form.get("patient_name"),
       patient_age: form.get("patient_age"),
@@ -40,7 +45,7 @@ export async function submitTabletEncounter(
     ].join("\n");
   }
   const parsed = tabletEncounterSchema.safeParse({
-    patient_reference: form.get("patient_reference"),
+    patient_reference: isVoiceAccount ? `VOICE-${randomUUID()}` : form.get("patient_reference"),
     presenting_concern: form.get("presenting_concern"),
     patient_account: patientAccount,
     speech_used: form.get("speech_used") === "true",

@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import { submitTabletEncounter } from "@/app/check-in/actions";
 import { Button } from "@/components/ui/button";
 import { fieldClass } from "@/components/ui/field";
-import { VOICE_ACCOUNT_STORAGE_KEY } from "@/lib/voice-check-in";
+import {
+  VOICE_ACCOUNT_STORAGE_KEY,
+  VOICE_CONCERN_STORAGE_KEY,
+} from "@/lib/voice-check-in";
 
 const noSubscription = () => () => undefined;
 
@@ -17,13 +20,25 @@ function useVoiceAccount() {
   );
 }
 
+function useVoiceConcern() {
+  return useSyncExternalStore(
+    noSubscription,
+    () => window.sessionStorage.getItem(VOICE_CONCERN_STORAGE_KEY) ?? "",
+    () => "",
+  );
+}
+
 export function TabletIntakeForm() {
   const router = useRouter();
   const [state, action, pending] = useActionState(submitTabletEncounter, {});
   const [account, setAccount] = useState("");
   const [accountEdited, setAccountEdited] = useState(false);
   const voiceAccount = useVoiceAccount();
+  const voiceConcern = useVoiceConcern();
   const accountValue = accountEdited ? account : voiceAccount;
+  const presentingConcern = accountEdited
+    ? accountValue.split(/\r?\n/)[1]?.trim() ?? ""
+    : voiceConcern;
 
   if (state.success) {
     return (
@@ -39,6 +54,7 @@ export function TabletIntakeForm() {
           type="button"
           onClick={() => {
             window.sessionStorage.removeItem(VOICE_ACCOUNT_STORAGE_KEY);
+            window.sessionStorage.removeItem(VOICE_CONCERN_STORAGE_KEY);
             router.push("/");
           }}
         >
@@ -51,39 +67,9 @@ export function TabletIntakeForm() {
   return (
     <form action={action} className="space-y-7 rounded-card bg-surface p-6 shadow-sm sm:p-8">
       <input type="hidden" name="speech_used" value={voiceAccount ? "true" : "false"} />
-      <div>
-        <label htmlFor="patient_reference" className="text-base font-semibold">
-          Local patient reference
-        </label>
-        <p id="reference-help" className="mt-2 text-sm leading-6 text-muted">
-          Enter the fictional local record reference. Do not use a name or contact details here.
-        </p>
-        <input
-          id="patient_reference"
-          name="patient_reference"
-          required
-          maxLength={64}
-          aria-describedby="reference-help"
-          className={`${fieldClass} mt-3 min-h-14 text-lg`}
-          disabled={pending}
-        />
-      </div>
-
       {voiceAccount ? (
         <>
-          <div>
-            <label htmlFor="presenting_concern" className="text-base font-semibold">
-              What would you like staff to know about why you came in today?
-            </label>
-            <input
-              id="presenting_concern"
-              name="presenting_concern"
-              required
-              maxLength={200}
-              className={`${fieldClass} mt-3 min-h-14 text-lg`}
-              disabled={pending}
-            />
-          </div>
+          <input type="hidden" name="presenting_concern" value={presentingConcern} />
           <div>
             <label htmlFor="patient_account" className="text-base font-semibold">
               Review your voice answers
@@ -111,6 +97,23 @@ export function TabletIntakeForm() {
         </>
       ) : (
         <>
+          <div>
+            <label htmlFor="patient_reference" className="text-base font-semibold">
+              Local patient reference
+            </label>
+            <p id="reference-help" className="mt-2 text-sm leading-6 text-muted">
+              Enter the fictional local record reference. Do not use a name or contact details here.
+            </p>
+            <input
+              id="patient_reference"
+              name="patient_reference"
+              required
+              maxLength={64}
+              aria-describedby="reference-help"
+              className={`${fieldClass} mt-3 min-h-14 text-lg`}
+              disabled={pending}
+            />
+          </div>
           <fieldset className="space-y-4">
             <legend className="text-base font-semibold">
               What is your name, how old are you, and what is your sex?
