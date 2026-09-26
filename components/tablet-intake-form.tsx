@@ -56,7 +56,7 @@ export function TabletIntakeForm() {
           Local patient reference
         </label>
         <p id="reference-help" className="mt-2 text-sm leading-6 text-muted">
-          Do not enter your name, date of birth, address, phone number, or email.
+          Enter the fictional local record reference. Do not use a name or contact details here.
         </p>
         <input
           id="patient_reference"
@@ -69,46 +69,92 @@ export function TabletIntakeForm() {
         />
       </div>
 
-      <div>
-        <label htmlFor="presenting_concern" className="text-base font-semibold">
-          What brings you here today?
-        </label>
-        <input
-          id="presenting_concern"
-          name="presenting_concern"
-          required
-          maxLength={200}
-          className={`${fieldClass} mt-3 min-h-14 text-lg`}
-          disabled={pending}
-        />
-      </div>
-
-      <div>
-        <label htmlFor="patient_account" className="text-base font-semibold">
-          Tell us in your own words
-        </label>
-        <p id="account-help" className="mt-2 text-sm leading-6 text-muted">
-          {voiceAccount
-            ? "This is the transcript from your voice check-in. Check and correct it before sending."
-            : "Type what you want the clinical team to know."}{" "}
-          Difficulty communicating does not change how staff assess you.
-        </p>
-        <textarea
-          id="patient_account"
-          name="patient_account"
-          value={accountValue}
-          onChange={(event) => {
-            setAccountEdited(true);
-            setAccount(event.target.value);
-          }}
-          required
-          maxLength={4000}
-          rows={8}
-          aria-describedby="account-help"
-          className={`${fieldClass} mt-3 min-h-52 resize-y text-lg leading-7`}
-          disabled={pending}
-        />
-      </div>
+      {voiceAccount ? (
+        <>
+          <div>
+            <label htmlFor="presenting_concern" className="text-base font-semibold">
+              What would you like staff to know about why you came in today?
+            </label>
+            <input
+              id="presenting_concern"
+              name="presenting_concern"
+              required
+              maxLength={200}
+              className={`${fieldClass} mt-3 min-h-14 text-lg`}
+              disabled={pending}
+            />
+          </div>
+          <div>
+            <label htmlFor="patient_account" className="text-base font-semibold">
+              Review your voice answers
+            </label>
+            <p id="account-help" className="mt-2 text-sm leading-6 text-muted">
+              Check and correct the transcript before sending it. Difficulty communicating
+              does not change how staff assess you.
+            </p>
+            <textarea
+              id="patient_account"
+              name="patient_account"
+              value={accountValue}
+              onChange={(event) => {
+                setAccountEdited(true);
+                setAccount(event.target.value);
+              }}
+              required
+              maxLength={4000}
+              rows={8}
+              aria-describedby="account-help"
+              className={`${fieldClass} mt-3 min-h-52 resize-y text-lg leading-7`}
+              disabled={pending}
+            />
+          </div>
+        </>
+      ) : (
+        <>
+          <fieldset className="space-y-4">
+            <legend className="text-base font-semibold">
+              What is your name, how old are you, and what is your sex?
+            </legend>
+            <div>
+              <label htmlFor="patient_name" className="text-sm font-medium">Name</label>
+              <input id="patient_name" name="patient_name" required maxLength={100} className={`${fieldClass} mt-2 min-h-14 text-lg`} disabled={pending} />
+            </div>
+            <div>
+              <label htmlFor="patient_age" className="text-sm font-medium">Age</label>
+              <input id="patient_age" name="patient_age" type="number" min={0} max={130} required className={`${fieldClass} mt-2 min-h-14 text-lg`} disabled={pending} />
+            </div>
+            <div>
+              <label htmlFor="patient_sex" className="text-sm font-medium">Sex</label>
+              <input id="patient_sex" name="patient_sex" required maxLength={80} className={`${fieldClass} mt-2 min-h-14 text-lg`} disabled={pending} />
+            </div>
+          </fieldset>
+          <div>
+            <label htmlFor="presenting_concern" className="text-base font-semibold">
+              What would you like staff to know about why you came in today?
+            </label>
+            <input id="presenting_concern" name="presenting_concern" required maxLength={200} className={`${fieldClass} mt-3 min-h-14 text-lg`} disabled={pending} />
+          </div>
+          <div>
+            <label htmlFor="when_started" className="text-base font-semibold">When did this start?</label>
+            <input id="when_started" name="when_started" required maxLength={500} className={`${fieldClass} mt-3 min-h-14 text-lg`} disabled={pending} />
+          </div>
+          <div>
+            <label htmlFor="what_changed" className="text-base font-semibold">Has it changed since it started?</label>
+            <input id="what_changed" name="what_changed" required maxLength={500} className={`${fieldClass} mt-3 min-h-14 text-lg`} disabled={pending} />
+          </div>
+          <div>
+            <label htmlFor="current_symptoms" className="text-base font-semibold">What symptoms are you experiencing right now?</label>
+            <textarea id="current_symptoms" name="current_symptoms" required maxLength={1000} rows={3} className={`${fieldClass} mt-3 min-h-28 resize-y text-lg leading-7`} disabled={pending} />
+          </div>
+          <div>
+            <label htmlFor="anything_else" className="text-base font-semibold">
+              Is there anything else you’d like staff to know, including medicines, allergies, or health conditions?
+            </label>
+            <textarea id="anything_else" name="anything_else" required maxLength={1000} rows={4} className={`${fieldClass} mt-3 min-h-32 resize-y text-lg leading-7`} disabled={pending} />
+            <p className="mt-2 text-sm leading-6 text-muted">If there is nothing else, enter “Nothing else.” Difficulty communicating does not change how staff assess you.</p>
+          </div>
+        </>
+      )}
 
       <aside className="rounded-card bg-moss p-4 text-sm leading-6 text-muted">
         Only the text you check and send is shared with the clinical team. This demonstration
