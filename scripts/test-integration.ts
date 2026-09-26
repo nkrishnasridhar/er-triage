@@ -67,7 +67,8 @@ async function main() {
 
     const deviceSnapshot = {
       device_snapshot_heart_rate_bpm: 74,
-      device_snapshot_captured_at: "2026-09-27T10:15:00.000Z",
+      // PostgREST serializes PostgreSQL timestamptz values with an explicit UTC offset.
+      device_snapshot_captured_at: "2026-09-27T10:15:00+00:00",
       device_snapshot_source: "simulated",
     };
     const snapshotEncounter = await admin
