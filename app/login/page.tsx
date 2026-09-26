@@ -25,8 +25,8 @@ export default async function LoginPage() {
         <p className="text-body-2 mb-4">STAFF SIGN IN</p>
         <h1 className="text-h2 mb-4">Clinical staff only.</h1>
         <p className="mb-8 text-sm leading-6">
-          We’ll email you a code. Your first sign-in creates your account. Do not
-          use this with real patient information.
+          Sign in with the staff account set up for this demonstration. Do not use
+          this with real patient information.
         </p>
         {configured ? <LoginForm /> : <SetupNotice />}
       </div>

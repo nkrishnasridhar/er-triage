@@ -4,16 +4,16 @@ import {
   briefApprovalSchema,
   briefDraftSchema,
   emailSchema,
-  codeSchema,
   encounterSchema,
   idSchema,
+  passwordSchema,
 } from "../lib/validation";
 
 test("auth inputs and record identifiers reject malformed requests", () => {
   assert.equal(emailSchema.safeParse("not-an-email").success, false);
   assert.equal(emailSchema.parse("Justus@EXAMPLE.com"), "justus@example.com");
-  assert.equal(codeSchema.safeParse("123456").success, true);
-  assert.equal(codeSchema.safeParse("12abc6").success, false);
+  assert.equal(passwordSchema.safeParse("").success, false);
+  assert.equal(passwordSchema.safeParse("demo-password").success, true);
   assert.equal(idSchema.safeParse("not-an-id").success, false);
 });
 

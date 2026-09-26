@@ -2,10 +2,7 @@ import { z } from "zod";
 import { NEXT_STEP_OPTIONS, PRIORITY_OPTIONS, type NextStep, type Priority } from "@/lib/triage";
 
 export const emailSchema = z.email().trim().toLowerCase().max(254);
-export const codeSchema = z
-  .string()
-  .trim()
-  .regex(/^\d{6,10}$/, "Enter the code from your email.");
+export const passwordSchema = z.string().min(1, "Enter your password.");
 export const idSchema = z.uuid();
 
 /** Column limits here mirror the CHECK constraints in the triage migration. */
