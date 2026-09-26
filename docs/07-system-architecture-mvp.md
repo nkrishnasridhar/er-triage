@@ -1,5 +1,7 @@
 # 07 — System architecture (MVP)
 
+> **Implementation update — 26 September 2026:** Anonymous tablet capture uses one constrained Supabase security-definer RPC that atomically stores a write-once encounter and draft. Server Actions validate the form and call a server-only composition boundary; the desktop remains Server Component reads plus clinician-only actions. See [33](33-tablet-clinician-workflow.md).
+
 ## Recommendation
 
 One Next.js 16 App Router application on Vercel, Supabase Postgres for data and auth, the model called only from server code. No extra service, no queue, no microservice. This matches the starter, the SaaSathon suggested stack (Vercel, Supabase, and Railway only if something will not fit serverless), and a 21-hour clock.

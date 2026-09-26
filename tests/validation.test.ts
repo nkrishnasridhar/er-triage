@@ -7,6 +7,7 @@ import {
   encounterSchema,
   idSchema,
   passwordSchema,
+  tabletEncounterSchema,
 } from "../lib/validation";
 
 test("auth inputs and record identifiers reject malformed requests", () => {
@@ -56,6 +57,37 @@ test("an implausible age is rejected rather than silently dropped", () => {
   assert.equal(encounterSchema.safeParse({ ...base, age_years: 131 }).success, false);
   assert.equal(encounterSchema.safeParse({ ...base, age_years: 4.5 }).success, false);
   assert.equal(encounterSchema.safeParse({ ...base, age_years: "old" }).success, false);
+});
+
+test("the tablet accepts only a confirmed, bounded text account", () => {
+  const parsed = tabletEncounterSchema.parse({
+    patient_reference: "  TABLET-1 ",
+    presenting_concern: "  Ankle pain ",
+    patient_account: "  I hurt my ankle. ",
+    speech_used: true,
+  });
+  assert.deepEqual(parsed, {
+    patient_reference: "TABLET-1",
+    presenting_concern: "Ankle pain",
+    patient_account: "I hurt my ankle.",
+    speech_used: true,
+  });
+  assert.equal(
+    tabletEncounterSchema.safeParse({
+      patient_reference: "TABLET-1",
+      presenting_concern: "Ankle pain",
+      patient_account: " ",
+    }).success,
+    false,
+  );
+  assert.equal(
+    tabletEncounterSchema.safeParse({
+      patient_reference: "TABLET-1",
+      presenting_concern: "Ankle pain",
+      patient_account: "x".repeat(4001),
+    }).success,
+    false,
+  );
 });
 
 test("a draft can be saved without any decision attached", () => {

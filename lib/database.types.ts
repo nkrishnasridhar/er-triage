@@ -45,6 +45,8 @@ export type Database = {
           presenting_concern: string;
           recorded_by: string;
           recorded_by_label: string;
+          speech_used: boolean;
+          submission_source: string;
         };
         Insert: {
           age_years?: number | null;
@@ -54,8 +56,10 @@ export type Database = {
           patient_account?: string;
           patient_reference: string;
           presenting_concern: string;
-          recorded_by: string;
+          recorded_by?: string | null;
           recorded_by_label?: string;
+          speech_used?: boolean;
+          submission_source?: string;
         };
         Update: {
           age_years?: number | null;
@@ -65,8 +69,10 @@ export type Database = {
           patient_account?: string;
           patient_reference?: string;
           presenting_concern?: string;
-          recorded_by?: string;
+          recorded_by?: string | null;
           recorded_by_label?: string;
+          speech_used?: boolean;
+          submission_source?: string;
         };
         Relationships: [];
       };
@@ -76,7 +82,7 @@ export type Database = {
           clinician_notes: string;
           concern_summary: string;
           drafted_at: string;
-          drafted_by: string;
+          drafted_by: string | null;
           drafted_from: string;
           encounter_id: string;
           id: string;
@@ -95,7 +101,7 @@ export type Database = {
           clinician_notes?: string;
           concern_summary?: string;
           drafted_at?: string;
-          drafted_by: string;
+          drafted_by?: string | null;
           drafted_from?: string;
           encounter_id: string;
           id?: string;
@@ -137,12 +143,71 @@ export type Database = {
           },
         ];
       };
+      staff_profiles: {
+        Row: {
+          created_at: string;
+          role: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          role: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          role?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
+      staff_role_audit: {
+        Row: {
+          changed_at: string;
+          changed_by: string | null;
+          id: string;
+          role: string;
+          user_id: string;
+        };
+        Insert: {
+          changed_at?: string;
+          changed_by?: string | null;
+          id?: string;
+          role: string;
+          user_id: string;
+        };
+        Update: {
+          changed_at?: string;
+          changed_by?: string | null;
+          id?: string;
+          role?: string;
+          user_id?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      bootstrap_first_clinician: { Args: Record<PropertyKey, never>; Returns: string };
+      capture_tablet_intake: {
+        Args: {
+          concern_summary_input: string;
+          drafted_from_input: string;
+          items_to_check_input: string;
+          open_questions_input: string;
+          patient_account_input: string;
+          patient_reference_input: string;
+          presenting_concern_input: string;
+          speech_used_input: boolean;
+        };
+        Returns: string;
+      };
+      current_staff_role: { Args: Record<PropertyKey, never>; Returns: string };
     };
     Enums: {
       [_ in never]: never;

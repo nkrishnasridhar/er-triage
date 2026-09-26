@@ -1,5 +1,7 @@
 # 11 — API contract
 
+> **Implementation update — 26 September 2026:** The public mutation is the validated `submitTabletEncounter` Server Action, backed by `capture_tablet_intake(...)`; it returns only success/failure copy and never an encounter ID. Desktop mutations still derive identity from the session and now require a `clinician` database role. The earlier transcript/revision operation list remains future design work.
+
 ## Recommendation
 
 Implement these operations as Server Actions in `app/encounters/actions.ts`, with the function names below. They share validation and repository code. Do not also build a public REST API in the MVP.

@@ -1,5 +1,7 @@
 # 04 — MVP scope
 
+> **Implementation update — 26 September 2026:** Tablet capture is now in scope at `/`; it is anonymous, text-confirmed, and audio-free. The earlier “patient-facing app” and “mic-first” exclusions are superseded only to this limited extent. AI urgency ranking, suggested ATS, risk scores, and queue ordering remain explicit non-goals.
+
 One recommendation: the demo is a pasted transcript becoming an approved, source-linked brief. Everything that does not serve that path is optional, then cut.
 
 Hours refer to [26-hackathon-execution-plan.md](26-hackathon-execution-plan.md). If a trade-off appears, cut from the bottom of "cut first" upward, never from "must build".

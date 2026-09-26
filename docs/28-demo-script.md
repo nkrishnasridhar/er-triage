@@ -1,5 +1,7 @@
 # 28 — Demo script
 
+> **Implementation update — 26 September 2026:** Open on the tablet check-in first: speak or type a fictional account, visibly correct the text, submit, then switch to the authenticated clinician queue. State plainly that the system has not ranked or prioritised the new report; the clinician records the decision.
+
 Five minutes. The product is on the hosted URL, already signed in before the clock starts, encounter list visible, Mara not yet composed so the model call is live. If compose failed in rehearsal, Samir is the backup live call and Mara is opened from a revision composed ten minutes earlier. Say which one is live. Do not fake it.
 
 One laptop, zoomed so the disclaimer is readable from the back of the room. No mic hardware. Slides: optional title only, then the app.

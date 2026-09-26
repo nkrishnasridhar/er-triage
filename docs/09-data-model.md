@@ -1,5 +1,7 @@
 # 09 — Data model
 
+> **Implementation update — 26 September 2026:** The currently applied forward migration extends the existing minimal `encounters`/`triage_briefs` schema with `submission_source`, `speech_used`, nullable tablet attribution, `staff_profiles`, and `staff_role_audit`. It does not replace it with the proposed revision/document tables below; [33](33-tablet-clinician-workflow.md) is the accurate implementation contract.
+
 ## Recommendation
 
 Logical model is an encounter with one current transcript, a versioned brief document, and an append-only audit. The brief document is the schema in [10-triage-brief-schema.md](10-triage-brief-schema.md). Statements, gaps, and highlights live inside that JSON for the MVP so the team migrates one artefact.

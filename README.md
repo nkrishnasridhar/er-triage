@@ -1,9 +1,10 @@
 # ER Triage
 
-ER Triage turns a patient's opening account in an emergency department into a
-**clinician-reviewed** triage brief: staff capture what the patient says and what
-can be observed, a draft brief organises that text, and a qualified clinician
-corrects it, sets the priority and the next step, and signs it off.
+ER Triage separates a tablet check-in from a **clinician-reviewed** workspace.
+On the tablet, a person types or uses browser speech recognition, checks the
+text, and submits a write-once account. On a computer, a qualified clinician
+reviews the source account and draft, corrects it, sets priority and next step,
+and signs it off.
 
 The product is described in full, including what it deliberately does not do, in
 [PRODUCT_GOAL.md](PRODUCT_GOAL.md).
@@ -15,12 +16,13 @@ The product is described in full, including what it deliberately does not do, in
 
 ## The workflow
 
-1. **Record** — a nurse captures the patient's account in their own words, plus
-   anything observable. No interpretation and no prioritising at this stage.
-2. **Draft** — a brief is organised from that text, keeping the source of every
-   line visible and listing what the notes left unanswered.
-3. **Review** — a clinician edits the draft and chooses a priority and a next
-   step. Nothing is pre-selected.
+1. **Check in** — the anonymous tablet captures a confirmed typed or spoken-text
+   account. It retains no audio and cannot read the clinical workspace.
+2. **Draft** — a server-only composition boundary organises the text into a
+   source-preserving draft, falling back safely to local deterministic rules.
+3. **Review** — a clinician edits the draft and chooses a priority and next
+   step. Nothing is pre-selected and the AI never assigns, recommends, or ranks
+   urgency.
 4. **Hand over** — the signed-off brief becomes a read-only record naming the
    clinician who approved it.
 
@@ -37,13 +39,16 @@ in the application cannot cross them.
 | Approval is irreversible | The UPDATE policy can only see rows still in draft, **and** a `BEFORE UPDATE` trigger refuses to touch an approved row for any role (RLS alone is not enough — the table owner and `service_role` both have `BYPASSRLS`) |
 | A captured intake cannot be rewritten | `encounters` has no UPDATE grant and no UPDATE policy |
 | What the patient said cannot be edited during review | `patient_reported` and `staff_observed` are absent from the UPDATE grant |
-| Records name the people responsible | `recorded_by`, `drafted_by`, `reviewed_by`, plus readable label snapshots |
+| Records name clinical decision-makers | `reviewed_by`, readable label snapshot, staff-role audit and a nullable source marker for anonymous tablet capture |
 | Accounts cannot be deleted out from under a record | `ON DELETE RESTRICT` on every reference |
 | Patient identity is minimised | No name, date of birth or contact detail is stored at all |
 
 The product specified for this weekend is **Front Brief**, a clinician-reviewed emergency-department intake copilot. The design package is in [docs/README.md](docs/README.md).
 
-The working application described above is now implemented: `/intake` captures an account, `lib/draft-brief.ts` drafts a brief, and `/encounters/[id]` is the clinician review screen and approved handover record. The `docs/` package is the design intent; where it and the code disagree, the code is what runs and the disagreement needs resolving — see the open questions below.
+The implemented path is `/` for tablet check-in, `/queue` for staff reports, and
+`/encounters/[id]` for clinician review and approved handover. See
+[the implementation contract](docs/33-tablet-clinician-workflow.md) for the
+data-access, AI, speech, and role boundaries.
 
 Hackathon data is synthetic and fictional. Do not enter real patient health information. The product must not diagnose, prescribe, assign an Australasian Triage Scale category, rank patients, or present model output as clinical truth. A clinician reviews and approves every brief.
 
@@ -110,11 +115,12 @@ clinician decision and the immutability of an approved record.
 ```text
 app/                        Next.js App Router pages and actions
   encounters/[id]/          Review screen and approved handover record
-  intake/                   Guided intake capture
+  check-in/                 Anonymous tablet capture action
   queue/                    Shared department queue
 components/                 Shared UI and forms
 lib/
-  draft-brief.ts            Local draft generator. Not a clinical instrument.
+  brief-composition.ts      Server-only model boundary with deterministic fallback
+  draft-brief.ts            Deterministic fallback. Not a clinical instrument.
   triage.ts                 Clinician decision vocabulary
   validation.ts             Input schemas mirroring the database constraints
 supabase/migrations/        Schema, grants, row level security

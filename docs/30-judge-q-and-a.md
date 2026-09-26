@@ -1,5 +1,7 @@
 # 30 — Judge questions and answers
 
+> **Implementation update — 26 September 2026:** “Why does the system not reorder the queue?” Answer: that would be an AI urgency recommendation. The demo instead shows anonymous capture, zero retained audio, a chronological awaiting-review list, and a clinician-owned priority/next-step decision.
+
 Three minutes. Answer in two or three sentences, then stop. Admit the weakness in the same breath as the defence. Do not invent a statistic to fill silence.
 
 The questions below cover the brief's contradictions, the event's judging questions (who is helped, what the workflow is, why someone returns, how AI does the work), and the open questions in `PRODUCT_GOAL.md`.

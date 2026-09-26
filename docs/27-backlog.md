@@ -1,5 +1,7 @@
 # 27 — Backlog
 
+> **Implementation update — 26 September 2026:** The tablet hand-off, role-gated workspace, server-only composition guard, and deterministic fallback are implemented. The remaining future work is governed by [33](33-tablet-clinician-workflow.md): do not turn any backlog queue-management item into AI urgency ranking.
+
 Small tickets. Effort is relative: **S** a short block, **M** a half-day inside the weekend, **L** does not fit the critical path. Priority **P0** is must-build, **P1** should, **P2** cut first, **P3** post-MVP.
 
 Owner type is a role from [26-hackathon-execution-plan.md](26-hackathon-execution-plan.md), not a person's name.

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { ArrowRight } from "lucide-react";
-import { requireUser } from "@/lib/auth";
+import { requireStaff } from "@/lib/auth";
 import { isConfigured } from "@/lib/config";
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ export const metadata = { title: "Queue" };
 
 export default async function QueuePage() {
   if (!isConfigured()) redirect("/login");
-  const { supabase, email } = await requireUser();
+  const { supabase, email, role } = await requireStaff();
 
   const { data: encounters, error } = await supabase
     .from("encounters")
@@ -57,21 +57,20 @@ export default async function QueuePage() {
   const approved = rows.filter((row) => statusOf(row.id) === "approved");
 
   return (
-    <AppShell email={email}>
+    <AppShell email={email} role={role}>
       <main id="main" className="mx-auto max-w-5xl px-5 py-10 lg:px-[30px]">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <p className="text-body-2 text-charcoal">SHARED DEPARTMENT QUEUE</p>
             <h1 className="text-h2 mt-3">Waiting on a clinician.</h1>
             <p className="mt-4 max-w-2xl text-sm leading-6 text-charcoal">
-              Every intake in this department is visible to every member of
-              staff. Nothing here carries a priority until a qualified clinician
-              sets one.
+              Tablet accounts arrive in capture order. Nothing here carries a
+              priority until a qualified clinician records one.
             </p>
           </div>
-          <Button asChild size="xl">
-            <Link href="/intake">
-              New intake <ArrowRight aria-hidden="true" />
+          <Button asChild size="xl" variant="outline">
+            <Link href="/">
+              Open tablet check-in <ArrowRight aria-hidden="true" />
             </Link>
           </Button>
         </div>
@@ -80,8 +79,7 @@ export default async function QueuePage() {
           <div className="mt-10 rounded-[20px] border border-dashed border-black/20 px-6 py-14">
             <p className="text-h3">No intakes yet.</p>
             <p className="mt-4 text-sm leading-6 text-charcoal">
-              Record a patient&apos;s first account and a draft brief will be
-              prepared for a clinician to review.
+              Tablet accounts will appear here for clinician review.
             </p>
           </div>
         ) : (

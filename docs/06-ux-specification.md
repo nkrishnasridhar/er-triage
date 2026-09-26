@@ -1,5 +1,7 @@
 # 06 — UX specification
 
+> **Implementation update — 26 September 2026:** The implemented tablet is a large editable text capture form with optional browser speech recognition, unsupported/failed-speech fallback, no retained audio, and no urgency language. The desktop queue is chronological for unreviewed accounts, and nurse/admin views are read-only. This implementation note supersedes typed-only screen assumptions.
+
 Visual system: the starter in `app/globals.css`. Inter Variable only. Black `#000000`, charcoal `#242424`, blue `#2395ff`, off-white `#f0f0f0`, white background. Reuse `components/ui/button.tsx` and field styles. No new font, no brand mark we do not own, no ATS colour scale.
 
 Primary surface is a laptop browser. Check 768px width once. At 390px the review sections stack in the same order; do not design a separate mobile product.

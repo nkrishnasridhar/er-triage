@@ -1,5 +1,7 @@
 # 19 — Observability
 
+> **Implementation update — 26 September 2026:** Composition failures use deterministic fallback and never log submitted text, raw model output, API credentials, speech audio, or a clinical decision. `drafted_from`, `submission_source`, `speech_used`, and staff-role audit rows are database provenance, not telemetry payloads.
+
 ## Recommendation
 
 Log structured events with codes and timings. Do not log clinical text. The demo is synthetic, and the rule still holds, because the next environment will copy the logger.

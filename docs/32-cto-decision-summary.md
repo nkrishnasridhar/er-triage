@@ -1,5 +1,7 @@
 # 32 — CTO decision summary
 
+> **Implementation update — 26 September 2026:** ADR-009 is implemented: public tablet capture is a narrow write-only capability; clinician work is role-gated; browser speech recognition is optional and audio-free; composition is server-only with deterministic fallback. AI urgency recommendation, ATS output, and queue ranking remain forbidden.
+
 Opinionated record. One decision per controversy. If a later chat proposes five options, this file already chose. Change it only by editing the decision and the ADR, not by quietly coding the alternative.
 
 Event baseline: Saturday 26 September 2026, plan starts 12:00 NZST. Deadline: Sunday 27 September 2026 10:00 NZDT, after clocks jump forward at 02:00 NZST. Rules: [SaaSathon docs](https://www.saasathon.dev/docs).

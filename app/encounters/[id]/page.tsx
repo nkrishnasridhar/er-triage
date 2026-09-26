@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { requireUser } from "@/lib/auth";
+import { requireStaff } from "@/lib/auth";
 import { isConfigured } from "@/lib/config";
 import { AppShell, ClinicianDecisionNotice } from "@/components/app-shell";
 import { ReviewForm } from "@/components/review-form";
@@ -51,7 +51,7 @@ export default async function EncounterPage({
   params: Promise<{ id: string }>;
 }) {
   if (!isConfigured()) redirect("/login");
-  const { supabase, email, userId } = await requireUser();
+  const { supabase, email, role } = await requireStaff();
 
   const { id } = await params;
   if (!idSchema.safeParse(id).success) notFound();
@@ -77,7 +77,7 @@ export default async function EncounterPage({
   const approved = brief.status === "approved";
 
   return (
-    <AppShell email={email}>
+    <AppShell email={email} role={role}>
       <main id="main" className="mx-auto max-w-3xl px-5 py-10 lg:px-[30px]">
         <Link href="/queue" className="text-sm underline-offset-4 hover:underline">
           &larr; Back to the queue
@@ -94,7 +94,9 @@ export default async function EncounterPage({
           </div>
           <p className="text-sm text-charcoal">
             Captured {formatTimestamp(encounter.created_at)}
-            {encounter.recorded_by_label && ` by ${encounter.recorded_by_label}`}
+              {encounter.submission_source === "tablet"
+                ? " from tablet check-in"
+                : encounter.recorded_by_label && ` by ${encounter.recorded_by_label}`}
           </p>
         </div>
 
@@ -171,22 +173,54 @@ export default async function EncounterPage({
           </div>
         ) : (
           <div className="mt-10 space-y-8">
-            {encounter.recorded_by === userId && (
-              <aside className="rounded-[20px] border border-black/15 p-5">
-                <p className="text-sm font-semibold">
-                  You recorded this intake
-                </p>
-                <p className="mt-2 text-sm leading-6 text-charcoal">
-                  Nothing stops you signing it off, and a single reviewer is
-                  normal in a small department. Where staffing allows, a second
-                  clinician reviewing before sign-off is the stronger habit.
-                </p>
-              </aside>
+            {role === "clinician" ? (
+              <ReviewForm brief={brief} />
+            ) : (
+              <ReadOnlyDraft brief={brief} />
             )}
-            <ReviewForm brief={brief} />
           </div>
         )}
       </main>
     </AppShell>
+  );
+}
+
+function ReadOnlyDraft({
+  brief,
+}: {
+  brief: {
+    concern_summary: string;
+    items_to_check: string;
+    open_questions: string;
+    clinician_notes: string;
+    patient_reported: string;
+    staff_observed: string;
+  };
+}) {
+  return (
+    <section className="space-y-7" aria-labelledby="read-only-heading">
+      <div className="rounded-[20px] border border-black/15 bg-off-white p-5">
+        <h2 id="read-only-heading" className="text-lg font-semibold">Read-only report</h2>
+        <p className="mt-2 text-sm leading-6 text-charcoal">
+          A clinician must review, decide and approve this report. Your role cannot change it.
+        </p>
+      </div>
+      <section>
+        <h2 className="text-xl font-semibold">What was captured</h2>
+        <p className="mt-4 text-sm font-medium">In the patient&apos;s words</p>
+        <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-charcoal">{brief.patient_reported || "Nothing recorded."}</p>
+        <p className="mt-5 text-sm font-medium">Observed by staff</p>
+        <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-charcoal">{brief.staff_observed || "Nothing recorded."}</p>
+      </section>
+      <section>
+        <h2 className="text-xl font-semibold">Draft analysis</h2>
+        <p className="mt-4 text-sm font-medium">Summary of the concern</p>
+        <p className="mt-2 text-sm leading-6">{brief.concern_summary || "Nothing recorded."}</p>
+        <p className="mt-5 text-sm font-medium">Items to check</p>
+        <Lines value={brief.items_to_check} />
+        <p className="mt-5 text-sm font-medium">Open questions</p>
+        <Lines value={brief.open_questions} />
+      </section>
+    </section>
   );
 }

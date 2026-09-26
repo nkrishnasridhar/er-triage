@@ -1,5 +1,7 @@
 # 05 — User flows
 
+> **Implementation update — 26 September 2026:** Start with the public tablet route: type or speak, correct the text, submit, and receive a neutral completion message. Only authenticated staff can open `/queue`; only clinicians can alter a draft or approve. See [33](33-tablet-clinician-workflow.md) for the implemented flow.
+
 The nurse is the only actor. The model is a server step, drawn as a service. Flows use the names in [docs/README.md](README.md).
 
 ## Happy path

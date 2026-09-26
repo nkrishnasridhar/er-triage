@@ -22,6 +22,10 @@ export async function signIn(
     return {
       error: "That email address or password is not recognised. Try again.",
     };
+  // The first authenticated account becomes the demo clinician through an
+  // audited, one-time database bootstrap. Later sign-ins remain read-only
+  // unless an operator assigns a clinician role in the database.
+  await supabase.rpc("bootstrap_first_clinician");
   revalidatePath("/", "layout");
   redirect("/queue");
 }

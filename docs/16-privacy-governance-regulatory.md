@@ -1,5 +1,7 @@
 # 16 — Privacy, governance, and regulatory context
 
+> **Implementation update — 26 September 2026:** Browser speech recognition is optional input only. The product stores neither audio nor microphone recordings, just the text a person confirms. This does not settle consent, browser/provider processing, HIPC, retention, overseas transfer, or governance questions for a real deployment; the build remains fictional-data-only.
+
 This chapter is not legal advice. It does not classify Front Brief as a medical device or as not a medical device. It records what public sources say and what a specialist must confirm before any real health information is processed. Classifications use three labels:
 
 - **KNOWN** — a public instrument or official page states this, and the sentence is limited to that.

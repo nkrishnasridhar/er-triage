@@ -35,6 +35,26 @@ export const encounterSchema = z.object({
     .default(""),
 });
 
+/** The anonymous tablet has a deliberately smaller input surface. */
+export const tabletEncounterSchema = z.object({
+  patient_reference: z
+    .string()
+    .trim()
+    .min(1, "Enter the local patient reference.")
+    .max(64, "Keep the reference under 65 characters."),
+  presenting_concern: z
+    .string()
+    .trim()
+    .min(1, "Briefly describe why you are here.")
+    .max(200, "Keep the concern under 201 characters."),
+  patient_account: z
+    .string()
+    .trim()
+    .min(1, "Tell us what is happening in your own words.")
+    .max(4000, "Keep your account under 4,000 characters."),
+  speech_used: z.boolean().default(false),
+});
+
 const prioritySchema = z.enum(
   PRIORITY_OPTIONS.map((option) => option.value) as [Priority, ...Priority[]],
 );
@@ -81,3 +101,4 @@ export const briefApprovalSchema = z.object({
 
 export type EncounterInput = z.infer<typeof encounterSchema>;
 export type FormState = { error?: string; success?: string; email?: string };
+export type TabletFormState = Pick<FormState, "error" | "success">;

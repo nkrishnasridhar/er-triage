@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { signOut } from "@/app/login/actions";
 import { Button } from "@/components/ui/button";
+import type { StaffRole } from "@/lib/auth";
 
 /**
  * Shared chrome for signed-in pages. `isConfigured` pages redirect to /login
@@ -8,9 +9,11 @@ import { Button } from "@/components/ui/button";
  */
 export function AppShell({
   email,
+  role,
   children,
 }: {
   email: string;
+  role: StaffRole;
   children: React.ReactNode;
 }) {
   return (
@@ -23,16 +26,13 @@ export function AppShell({
             </Link>
             <nav aria-label="Main" className="flex items-center gap-4 text-sm">
               <Link href="/queue" className="underline-offset-4 hover:underline">
-                Queue
-              </Link>
-              <Link href="/intake" className="underline-offset-4 hover:underline">
-                New intake
+                Reports
               </Link>
             </nav>
           </div>
           <div className="flex min-w-0 items-center gap-4">
             <span className="max-w-48 truncate text-sm text-charcoal">
-              {email}
+              {email} · {role}
             </span>
             <form action={signOut}>
               <Button variant="ghost" type="submit">

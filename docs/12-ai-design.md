@@ -1,5 +1,7 @@
 # 12 — AI design
 
+> **Implementation update — 26 September 2026:** The shipped composition boundary optionally calls a server-side JSON model endpoint, rejects unsafe/non-source-linked draft content, and falls back to `lib/draft-brief.ts`. It never writes or recommends priority, next step, ATS, queue position, severity, confidence, or risk. The richer extract/gap/revision pipeline below is design material, not current behavior.
+
 ## Recommendation
 
 Two model calls and a deterministic assembler. The model never writes the brief the nurse approves. It writes an extraction list and a gap list. TypeScript builds `TriageEvidenceBrief`.

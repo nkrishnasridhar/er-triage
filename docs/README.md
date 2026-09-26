@@ -24,7 +24,7 @@ Front Brief turns a messy first emergency-department conversation into a structu
 
 These four lines are never blurred. See [00-executive-summary.md](00-executive-summary.md).
 
-1. **SaaSathon MVP** — synthetic patients, typed or pasted transcript, one seeded clinician, provenance review, approve.
+1. **SaaSathon MVP** — synthetic tablet capture (typed or browser speech-to-text), authenticated clinician review, provenance draft, approve.
 2. **Post-hackathon prototype** — still synthetic or consented simulation, audio experiment, richer auth.
 3. **Clinical pilot** — real patients only after governance this package does not claim to have.
 4. **Production healthcare product** — regulated deployment this weekend does not attempt.
@@ -40,6 +40,7 @@ These four lines are never blurred. See [00-executive-summary.md](00-executive-s
 - [04-mvp-scope.md](04-mvp-scope.md)
 - [25-product-roadmap.md](25-product-roadmap.md)
 - [32-cto-decision-summary.md](32-cto-decision-summary.md)
+- [33-tablet-clinician-workflow.md](33-tablet-clinician-workflow.md)
 
 ### Experience
 
@@ -90,6 +91,7 @@ These four lines are never blurred. See [00-executive-summary.md](00-executive-s
 - [ADR-006 No numeric model confidence](ADRs/ADR-006-no-confidence-score.md)
 - [ADR-007 One seeded clinician for the demo](ADRs/ADR-007-seeded-clinician.md)
 - [ADR-008 Synthetic data only this weekend](ADRs/ADR-008-synthetic-only.md)
+- [ADR-009 Tablet capture, clinician-only decision](ADRs/ADR-009-tablet-capture-clinician-decision.md)
 
 ## Names used everywhere
 

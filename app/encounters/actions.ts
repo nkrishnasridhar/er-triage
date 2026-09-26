@@ -1,89 +1,16 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { requireUser } from "@/lib/auth";
-import { buildDraftBrief, DRAFT_SOURCE } from "@/lib/draft-brief";
+import { requireClinician } from "@/lib/auth";
 import {
   briefApprovalSchema,
   briefDraftSchema,
-  encounterSchema,
   idSchema,
   type FormState,
 } from "@/lib/validation";
 
-/** Empty form fields arrive as "", which is not a number. */
-function optionalAge(raw: FormDataEntryValue | null) {
-  if (raw === null) return undefined;
-  const trimmed = String(raw).trim();
-  if (trimmed === "") return undefined;
-  return Number(trimmed);
-}
-
-export async function submitEncounter(
-  _: FormState,
-  form: FormData,
-): Promise<FormState> {
-  const { supabase, userId, email } = await requireUser();
-  const parsed = encounterSchema.safeParse({
-    patient_reference: form.get("patient_reference"),
-    age_years: optionalAge(form.get("age_years")),
-    presenting_concern: form.get("presenting_concern"),
-    patient_account: form.get("patient_account") ?? "",
-    observed_signs: form.get("observed_signs") ?? "",
-  });
-  if (!parsed.success) return { error: parsed.error.issues[0].message };
-
-  // A pure function, so the draft exists before anything is written. If the
-  // brief cannot be stored the encounter is removed again rather than left
-  // sitting in the queue with nothing to review.
-  const draft = buildDraftBrief({
-    presentingConcern: parsed.data.presenting_concern,
-    patientAccount: parsed.data.patient_account,
-    observedSigns: parsed.data.observed_signs,
-  });
-
-  const { data: encounter, error: encounterError } = await supabase
-    .from("encounters")
-    .insert({
-      patient_reference: parsed.data.patient_reference,
-      age_years: parsed.data.age_years ?? null,
-      presenting_concern: parsed.data.presenting_concern,
-      patient_account: parsed.data.patient_account,
-      observed_signs: parsed.data.observed_signs,
-      recorded_by: userId,
-      recorded_by_label: email,
-    })
-    .select("id")
-    .single();
-  if (encounterError || !encounter)
-    return { error: "Couldn’t save this intake. Check the connection and try again." };
-
-  const { error: briefError } = await supabase.from("triage_briefs").insert({
-    encounter_id: encounter.id,
-    drafted_by: userId,
-    concern_summary: draft.concernSummary,
-    patient_reported: draft.patientReported,
-    staff_observed: draft.staffObserved,
-    items_to_check: draft.itemsToCheck,
-    open_questions: draft.openQuestions,
-    drafted_from: DRAFT_SOURCE,
-  });
-
-  if (briefError) {
-    await supabase.from("encounters").delete().eq("id", encounter.id);
-    return {
-      error:
-        "Couldn’t prepare the draft brief, so this intake was not saved. Try again.",
-    };
-  }
-
-  revalidatePath("/queue");
-  redirect(`/encounters/${encounter.id}`);
-}
-
 async function loadDraftBrief(briefId: FormDataEntryValue | null) {
-  const { supabase, userId, email } = await requireUser();
+  const { supabase, userId, email } = await requireClinician();
   const id = idSchema.safeParse(briefId);
   if (!id.success) return { error: "That brief could not be found." as const };
   const { data, error } = await supabase

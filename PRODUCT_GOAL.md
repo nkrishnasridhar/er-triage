@@ -18,21 +18,21 @@ The product exists to reduce avoidable administrative delay and make the first s
 
 ## The core workflow
 
-1. A staff member opens a patient intake on a tablet in the emergency department.
-2. The patient's presentation is captured through a guided conversation. The eventual product may accept voice, typed information, and relevant images or video.
-3. AI converts the captured information into a structured, easy-to-scan triage brief, including the presenting concern, relevant symptoms, observed risk signals, unanswered questions, and suggested areas for clinical attention.
-4. A clinician reviews the brief, corrects or completes it, and makes the final decision about priority, assessment, escalation, and next steps.
+1. A person uses a dedicated tablet to enter a local reference and their account by typing or browser speech-to-text, then confirms the text before sending it.
+2. The tablet submits no audio and cannot access other reports, queue contents, or clinician decisions.
+3. A server-only AI boundary organises the captured text into a source-preserving brief and neutral clarification prompts. It falls back to deterministic rules if a provider response is unavailable or unsafe.
+4. A clinician on the authenticated desktop workspace reviews and corrects the brief, then makes the final decision about priority, assessment, escalation, and next steps.
 5. The approved report becomes a clear handover and record for the care team.
 
 For the first SaaSathon demo, the most valuable workflow is deliberately narrower: guide an intake conversation, produce a structured triage brief, and show a human clinician reviewing it before it is saved or acted on.
 
 ## Features
 
-- **New intake start screen:** Staff can quickly begin a patient intake on a shared tablet.
-- **Voice-guided conversation:** The app asks clear intake questions and transcribes the patient's answers, with staff able to correct or add details.
+- **Tablet check-in:** An anonymous, touch-first surface captures a confirmed account without exposing clinical records.
+- **Speech-to-text convenience:** Browser recognition fills an editable text field; typing is always available and audio is not stored.
 - **Focused intake questions:** Capture the presenting concern, symptoms, timeline, severity, relevant warning signs, and unanswered follow-ups.
-- **AI triage brief:** Turn the conversation into an easy-to-scan report with the main concern, key symptoms, risk signals, and items needing clinical attention.
-- **Suggested attention flag:** Surface a suggested priority or escalation prompt for clinician consideration; it is never a diagnosis or final decision.
+- **AI-organised draft:** Turn the conversation into an easy-to-scan report with captured wording, source-linked items to check, and neutral clarification questions.
+- **No AI priority or attention rank:** The system never suggests, assigns, colours, or reorders urgency, escalation, priority, or queue position.
 - **Clinician review and decision:** A qualified clinician can edit the brief and choose the approved next step, such as immediate assessment, priority assessment, or an appropriate discharge pathway.
 - **Clear handover record:** Save the clinician-approved brief as a consistent handover for the care team.
 
@@ -54,7 +54,7 @@ Patients benefit indirectly through a clearer intake process, less repetition of
 
 ### Human decision-maker, always
 
-The app can organise information and flag items for attention, but it must not diagnose, prescribe treatment, independently assign triage categories, or make final queueing decisions. A qualified clinician has the final say and can edit, reject, or override every suggestion.
+The app can organise captured information and identify wording to verify, but it must not diagnose, prescribe treatment, independently assign triage categories, recommend priority, or rank the queue. A qualified clinician has the final say and can edit the draft before recording a decision.
 
 ### Useful under pressure
 
