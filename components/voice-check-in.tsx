@@ -33,8 +33,11 @@ export function VoiceCheckIn() {
   const [currentQuestion, setCurrentQuestion] = useState("");
   const [questionIndex, setQuestionIndex] = useState(0);
   const [patientAnswers, setPatientAnswers] = useState<string[]>([]);
+  const [pendingAnswer, setPendingAnswer] = useState("");
   const nextQuestionIndex = useRef(0);
   const initialQuestionSent = useRef(false);
+  const pendingAnswerRef = useRef("");
+  const askQuestionRef = useRef<((index: number) => void) | null>(null);
   const microphone = useRef<MediaStream | null>(null);
   const peer = useRef<RTCPeerConnection | null>(null);
   const events = useRef<RTCDataChannel | null>(null);
@@ -45,6 +48,7 @@ export function VoiceCheckIn() {
     microphone.current = null;
     events.current?.close();
     events.current = null;
+    askQuestionRef.current = null;
     peer.current?.close();
     peer.current = null;
     audio.current?.pause();
@@ -70,6 +74,8 @@ export function VoiceCheckIn() {
     setCurrentQuestion(fixedQuestions[0]);
     setQuestionIndex(0);
     setPatientAnswers([]);
+    setPendingAnswer("");
+    pendingAnswerRef.current = "";
 
     try {
       microphone.current = await navigator.mediaDevices.getUserMedia({
@@ -120,6 +126,7 @@ export function VoiceCheckIn() {
           }),
         );
       };
+      askQuestionRef.current = askQuestion;
       channel.onopen = () => {
         channel.send(
           JSON.stringify({
@@ -156,14 +163,14 @@ export function VoiceCheckIn() {
         } else if (event.type === "input_audio_buffer.speech_stopped") {
           setStatus("Thinking…");
         } else if (event.type === "conversation.item.input_audio_transcription.completed") {
-          if (event.transcript?.trim()) {
-            setPatientAnswers((answers) => [...answers, event.transcript!.trim()]);
-            const nextIndex = nextQuestionIndex.current + 1;
-            if (nextIndex < fixedQuestions.length) {
-              askQuestion(nextIndex);
-            } else {
-              finish("All six questions answered. Review your answers to continue.");
-            }
+          const answer = event.transcript?.trim();
+          if (answer && !pendingAnswerRef.current) {
+            pendingAnswerRef.current = answer;
+            setPendingAnswer(answer);
+            microphone.current?.getAudioTracks().forEach((track) => {
+              track.enabled = false;
+            });
+            setStatus("Audio detected. Tap Next question to accept it, or Try again to discard it.");
           }
         } else if (event.type === "response.output_audio_transcript.done") {
           if (event.transcript) {
@@ -174,8 +181,10 @@ export function VoiceCheckIn() {
             if (question) setCurrentQuestion(question);
           }
         } else if (event.type === "response.done" && event.response?.status === "completed") {
-          setState("listening");
-          setStatus("Listening…");
+          if (!pendingAnswerRef.current) {
+            setState("listening");
+            setStatus("Listening for your answer…");
+          }
         } else if (event.type === "error") {
           finish(voiceFailure);
         }
@@ -215,6 +224,34 @@ export function VoiceCheckIn() {
     router.push("/check-in");
   };
 
+  const retryAnswer = () => {
+    pendingAnswerRef.current = "";
+    setPendingAnswer("");
+    microphone.current?.getAudioTracks().forEach((track) => {
+      track.enabled = true;
+    });
+    setState("listening");
+    setStatus("Listening for your answer…");
+  };
+
+  const acceptAnswer = () => {
+    const answer = pendingAnswerRef.current;
+    if (!answer) return;
+    setPatientAnswers((answers) => [...answers, answer]);
+    pendingAnswerRef.current = "";
+    setPendingAnswer("");
+    microphone.current?.getAudioTracks().forEach((track) => {
+      track.enabled = true;
+    });
+
+    const nextIndex = nextQuestionIndex.current + 1;
+    if (nextIndex < fixedQuestions.length) {
+      askQuestionRef.current?.(nextIndex);
+    } else {
+      finish("All six questions answered. Review your answers to continue.");
+    }
+  };
+
   const active = state === "connecting" || state === "listening" || state === "speaking";
 
   return (
@@ -227,6 +264,29 @@ export function VoiceCheckIn() {
         >
           <h2 className="text-sm font-semibold">Question {questionIndex + 1} of 6</h2>
           <p className="mt-2 text-base leading-7">{currentQuestion}</p>
+          {pendingAnswer && (
+            <div className="mt-4">
+              <p className="text-sm leading-6 text-muted" role="status">
+                Audio detected. Continue only if that was your answer.
+              </p>
+              <div className="mt-3 flex gap-3">
+                <button
+                  type="button"
+                  onClick={retryAnswer}
+                  className="min-h-12 flex-1 rounded-control border border-line bg-surface px-4 text-sm font-semibold"
+                >
+                  Try again
+                </button>
+                <button
+                  type="button"
+                  onClick={acceptAnswer}
+                  className="min-h-12 flex-1 rounded-control bg-moss px-4 text-sm font-semibold text-pine"
+                >
+                  Next question
+                </button>
+              </div>
+            </div>
+          )}
           {patientAnswers.length > 0 && (
             <button
               type="button"
@@ -258,11 +318,11 @@ export function VoiceCheckIn() {
       {active && (
         <button
           type="button"
-          onClick={() => finish()}
+          onClick={() => finish("Check-in stopped.")}
           className="mt-3 inline-flex items-center gap-2 rounded-control border border-line bg-surface px-5 py-3 text-sm font-semibold"
         >
           <Square aria-hidden="true" className="size-4 fill-current" />
-          Finish check-in
+          Stop check-in
         </button>
       )}
 
