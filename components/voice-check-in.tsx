@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { VOICE_ACCOUNT_STORAGE_KEY } from "@/lib/voice-check-in";
 
 type CheckInState = "idle" | "connecting" | "listening" | "speaking" | "finished";
-type Line = { speaker: "You" | "ERgency"; text: string };
 type RealtimeEvent = {
   type: string;
   transcript?: string;
@@ -14,12 +13,25 @@ type RealtimeEvent = {
 };
 
 const voiceFailure = "Voice check-in could not continue. You can use the written check-in instead.";
+const fixedQuestions = [
+  "What is your name, how old are you, and what is your sex?",
+  "What would you like staff to know about why you came in today?",
+  "When did this start?",
+  "Has it changed since it started?",
+  "What symptoms are you experiencing right now?",
+  "Is there anything else you’d like staff to know, including medicines, allergies, or health conditions?",
+];
+
+function normalizeTranscript(text: string) {
+  return text.toLocaleLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+}
 
 export function VoiceCheckIn() {
   const router = useRouter();
   const [state, setState] = useState<CheckInState>("idle");
   const [status, setStatus] = useState("Tap to begin your check-in.");
-  const [lines, setLines] = useState<Line[]>([]);
+  const [currentQuestion, setCurrentQuestion] = useState("");
+  const patientAnswers = useRef<string[]>([]);
   const microphone = useRef<MediaStream | null>(null);
   const peer = useRef<RTCPeerConnection | null>(null);
   const events = useRef<RTCDataChannel | null>(null);
@@ -47,15 +59,11 @@ export function VoiceCheckIn() {
 
   useEffect(() => () => closeConnection(), [closeConnection]);
 
-  const addLine = useCallback((speaker: Line["speaker"], text?: string) => {
-    if (!text?.trim()) return;
-    setLines((current) => [...current, { speaker, text: text.trim() }]);
-  }, []);
-
   const start = async () => {
     setState("connecting");
     setStatus("Connecting to the check-in assistant…");
-    setLines([]);
+    setCurrentQuestion("");
+    patientAnswers.current = [];
 
     try {
       microphone.current = await navigator.mediaDevices.getUserMedia({
@@ -97,7 +105,7 @@ export function VoiceCheckIn() {
             response: {
               input: [],
               instructions:
-                "Start with the exact opening statement in your instructions, then ask question 1 verbatim. Ask all five fixed questions in order regardless of the answers. Do not skip, rephrase, or add questions.",
+                "Begin by asking question 1 exactly as written in your instructions. Do not add a welcome or preamble. Ask all six fixed questions in order regardless of the answers. Do not skip, rephrase, or add questions.",
             },
           }),
         );
@@ -116,9 +124,15 @@ export function VoiceCheckIn() {
         } else if (event.type === "input_audio_buffer.speech_stopped") {
           setStatus("Thinking…");
         } else if (event.type === "conversation.item.input_audio_transcription.completed") {
-          addLine("You", event.transcript);
+          if (event.transcript?.trim()) patientAnswers.current.push(event.transcript.trim());
         } else if (event.type === "response.output_audio_transcript.done") {
-          addLine("ERgency", event.transcript);
+          if (event.transcript) {
+            const spoken = normalizeTranscript(event.transcript);
+            const question = fixedQuestions.find(
+              (candidate) => normalizeTranscript(candidate) === spoken,
+            );
+            if (question) setCurrentQuestion(question);
+          }
         } else if (event.type === "response.done" && event.response?.status === "completed") {
           setState("listening");
           setStatus("Listening…");
@@ -151,11 +165,7 @@ export function VoiceCheckIn() {
   };
 
   const continueToConfirmation = () => {
-    const account = lines
-      .filter((line) => line.speaker === "You")
-      .map((line) => line.text)
-      .join("\n")
-      .trim();
+    const account = patientAnswers.current.join("\n").trim();
     if (!account) {
       setStatus("Say something first, or use the written check-in instead.");
       return;
@@ -196,21 +206,16 @@ export function VoiceCheckIn() {
         </button>
       )}
 
-      {lines.length > 0 && (
+      {currentQuestion && (
         <section
           className="mt-5 flex h-[22dvh] min-h-36 w-full flex-col rounded-card bg-surface p-5 text-left shadow-sm sm:p-6"
-          aria-label="Check-in conversation"
+          aria-label="Current check-in question"
           aria-live="polite"
         >
-          <h2 className="text-sm font-semibold">Conversation</h2>
-          <ol className="mt-4 min-h-0 flex-1 space-y-4 overflow-y-auto pr-1">
-            {lines.map((line, index) => (
-              <li key={`${line.speaker}-${index}`} className="text-sm leading-6">
-                <span className="font-semibold">{line.speaker}: </span>
-                {line.text}
-              </li>
-            ))}
-          </ol>
+          <h2 className="text-sm font-semibold">Current question</h2>
+          <p className="mt-4 min-h-0 flex-1 overflow-y-auto text-base leading-7">
+            {currentQuestion}
+          </p>
           <button
             type="button"
             onClick={continueToConfirmation}
