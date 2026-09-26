@@ -14,7 +14,7 @@ type RealtimeEvent = {
 
 const voiceFailure = "Voice check-in could not continue. You can use the written check-in instead.";
 const fixedQuestions = [
-  "What is your name, how old are you, and what is your sex?",
+  "What is your age and sex assigned at birth?",
   "What would you like staff to know about why you came in today?",
   "When did this start?",
   "Has it changed since it started?",
@@ -31,9 +31,10 @@ export function VoiceCheckIn() {
   const [state, setState] = useState<CheckInState>("idle");
   const [status, setStatus] = useState("Tap to begin your check-in.");
   const [currentQuestion, setCurrentQuestion] = useState("");
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [patientAnswers, setPatientAnswers] = useState<string[]>([]);
   const nextQuestionIndex = useRef(0);
   const initialQuestionSent = useRef(false);
-  const patientAnswers = useRef<string[]>([]);
   const microphone = useRef<MediaStream | null>(null);
   const peer = useRef<RTCPeerConnection | null>(null);
   const events = useRef<RTCDataChannel | null>(null);
@@ -67,7 +68,8 @@ export function VoiceCheckIn() {
     nextQuestionIndex.current = 0;
     initialQuestionSent.current = false;
     setCurrentQuestion("");
-    patientAnswers.current = [];
+    setQuestionIndex(0);
+    setPatientAnswers([]);
 
     try {
       microphone.current = await navigator.mediaDevices.getUserMedia({
@@ -106,6 +108,7 @@ export function VoiceCheckIn() {
         const question = fixedQuestions[index];
         if (!question) return;
         nextQuestionIndex.current = index;
+        setQuestionIndex(index);
         setCurrentQuestion(question);
         channel.send(
           JSON.stringify({
@@ -154,7 +157,7 @@ export function VoiceCheckIn() {
           setStatus("Thinking…");
         } else if (event.type === "conversation.item.input_audio_transcription.completed") {
           if (event.transcript?.trim()) {
-            patientAnswers.current.push(event.transcript.trim());
+            setPatientAnswers((answers) => [...answers, event.transcript!.trim()]);
             const nextIndex = nextQuestionIndex.current + 1;
             if (nextIndex < fixedQuestions.length) {
               askQuestion(nextIndex);
@@ -202,7 +205,7 @@ export function VoiceCheckIn() {
   };
 
   const continueToConfirmation = () => {
-    const account = patientAnswers.current.join("\n").trim();
+    const account = patientAnswers.join("\n").trim();
     if (!account) {
       setStatus("Say something first, or use the written check-in instead.");
       return;
@@ -222,9 +225,9 @@ export function VoiceCheckIn() {
           aria-label="Current check-in question"
           aria-live="polite"
         >
-          <h2 className="text-sm font-semibold">Question {nextQuestionIndex.current + 1} of 6</h2>
+          <h2 className="text-sm font-semibold">Question {questionIndex + 1} of 6</h2>
           <p className="mt-2 text-base leading-7">{currentQuestion}</p>
-          {patientAnswers.current.length > 0 && (
+          {patientAnswers.length > 0 && (
             <button
               type="button"
               onClick={continueToConfirmation}
