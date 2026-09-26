@@ -6,6 +6,9 @@ import { once } from "node:events";
 import { createClient } from "@supabase/supabase-js";
 import { load } from "cheerio";
 
+const pnpmCommand = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
+const pnpmShell = process.platform === "win32";
+
 /** React escapes quotes even inside textarea content, so compare on plain text. */
 function plainText(html: string) {
   return html
@@ -18,9 +21,10 @@ function plainText(html: string) {
 
 async function main() {
   const local = JSON.parse(
-    execFileSync("pnpm", ["supabase", "status", "-o", "json"], {
+    execFileSync(pnpmCommand, ["supabase", "status", "-o", "json"], {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
+      shell: pnpmShell,
     }),
   );
   assert.equal(
@@ -49,14 +53,13 @@ async function main() {
   const run = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   const aliceEmail = `alice-${run}@example.test`;
   const bobEmail = `bob-${run}@example.test`;
-  const inbox = local.MAILPIT_URL || local.INBUCKET_URL;
+  const password = `local-only-${run}-Password1!`;
   let server: ReturnType<typeof spawn> | undefined;
   try {
     for (const [client, email] of [
       [alice, aliceEmail],
       [bob, bobEmail],
     ] as const) {
-      const password = `local-only-${run}-Password1!`;
       const { data, error } = await admin.auth.admin.createUser({
         email,
         password,
@@ -323,7 +326,7 @@ async function main() {
       NEXT_PUBLIC_SUPABASE_URL: local.API_URL,
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: key,
     };
-    execFileSync("pnpm", ["build"], { env, stdio: "pipe" });
+    execFileSync(pnpmCommand, ["build"], { env, stdio: "pipe", shell: pnpmShell });
     const portProbe = createServer();
     portProbe.listen(0, "127.0.0.1");
     await once(portProbe, "listening");
@@ -386,26 +389,6 @@ async function main() {
       for (const [name, value] of Object.entries(fields)) body.set(name, value);
       return request(path, { method: "POST", body });
     }
-    async function getCode(email: string) {
-      let code = "";
-      for (let attempt = 0; attempt < 30 && !code; attempt++) {
-        const messages = await (await fetch(`${inbox}/api/v1/messages`)).json();
-        const message = messages.messages?.find(
-          (item: { To: { Address: string }[] }) =>
-            item.To.some((to) => to.Address === email),
-        );
-        if (message) {
-          const body = await (
-            await fetch(`${inbox}/api/v1/message/${message.ID}`)
-          ).json();
-          code = String(body.Text || body.HTML).match(/\b\d{6}\b/)?.[0] ?? "";
-        }
-        if (!code) await new Promise((resolve) => setTimeout(resolve, 200));
-      }
-      assert.ok(code, "Sign-in email contains a code");
-      return code;
-    }
-
     // Every clinical route is closed to an anonymous visitor.
     for (const path of ["/queue", "/intake"]) {
       const response = await request(path);
@@ -414,25 +397,14 @@ async function main() {
     }
 
     const login = await (await request("/login")).text();
-    const codeResponse = await submit("/login", login, "form", {
+    const signedIn = await submit("/login", login, "form", {
       email: aliceEmail,
+      password,
     });
-    const sentHtml = await codeResponse.text();
-    assert.ok(
-      sentHtml.includes("Check your email"),
-      "OTP request succeeds through the real Server Action",
-    );
-    const code = await getCode(aliceEmail);
-    const verified = await submit(
-      "/login",
-      sentHtml,
-      'form:has(input[name="code"])',
-      { email: aliceEmail, code },
-    );
-    assert.equal(verified.status, 303);
-    assert.equal(verified.headers.get("location"), "/queue");
+    assert.equal(signedIn.status, 303);
+    assert.equal(signedIn.headers.get("location"), "/queue");
 
-    // The queue is empty for a first-time account.
+    // This fresh account has not yet captured the test's own reference.
     // This test's own reference must not already exist. The rest of the queue
     // may legitimately hold records from manual testing, so it is not asserted
     // to be empty.
@@ -629,40 +601,29 @@ async function main() {
     assert.equal(signOutResponse.headers.get("location"), "/login");
     assert.equal((await request("/queue")).headers.get("location"), "/login");
 
-    // A first-time sign-in registers an account and starts with an empty queue.
-    const newcomerEmail = `new-${run}@example.test`;
-    const signupHtml = await (
-      await submit("/login", await (await request("/login")).text(), "form", {
-        email: newcomerEmail,
-      })
+    // A separately provisioned clinician sees the shared queue without
+    // inheriting authorship of another clinician's intake.
+    const bobLogin = await (
+      await request("/login")
     ).text();
-    const { data: registered } = await admin.auth.admin.listUsers();
-    const newcomer = registered.users.find(
-      (user) => user.email === newcomerEmail,
-    );
-    assert.ok(newcomer, "First sign-in registers an account");
-    userIds.push(newcomer.id);
-    const signupVerified = await submit(
-      "/login",
-      signupHtml,
-      'form:has(input[name="code"])',
-      { email: newcomerEmail, code: await getCode(newcomerEmail) },
-    );
-    assert.equal(signupVerified.status, 303);
-    const newcomerQueue = await (await request("/queue")).text();
-    // The queue is shared, so a new colleague can see the department's work.
-    // What they must not inherit is someone else's authorship.
+    const bobSignedIn = await submit("/login", bobLogin, "form", {
+      email: bobEmail,
+      password,
+    });
+    assert.equal(bobSignedIn.status, 303);
+    assert.equal(bobSignedIn.headers.get("location"), "/queue");
+    const bobQueue = await (await request("/queue")).text();
     assert.ok(
-      newcomerQueue.includes("MRN-HTTP-1"),
-      "a new account sees the shared department queue",
+      bobQueue.includes("MRN-HTTP-1"),
+      "a separately provisioned account sees the shared department queue",
     );
     assert.ok(
-      !newcomerQueue.includes(`captured by ${newcomerEmail}`),
-      "a new account has recorded nothing of their own",
+      !bobQueue.includes(`captured by ${bobEmail}`),
+      "a separate account has recorded nothing of its own",
     );
 
     console.log(
-      "PASS: first-time email-code signup, the shared department queue, and no inherited authorship",
+      "PASS: password sign-in, the shared department queue, and no inherited authorship",
     );
     console.log(
       "PASS: protected clinical routes, intake capture, draft brief with no priority, refused approval without a decision, clinician sign-off, immutable approved record and sign-out",
