@@ -56,13 +56,14 @@ export const tabletEncounterSchema = z.object({
 });
 
 export const writtenTabletQuestionsSchema = z.object({
+  patient_name: z.string().trim().min(1, "Enter your name.").max(100),
   patient_age: z
     .string()
     .trim()
     .regex(/^\d+$/, "Enter age in years as a number.")
     .transform(Number)
     .pipe(z.number().int().min(0, "Age cannot be negative.").max(130, "Check that age.")),
-  sex_assigned_at_birth: z.string().trim().min(1, "Enter sex assigned at birth.").max(80),
+  patient_sex: z.string().trim().min(1, "Enter your sex.").max(80),
   when_started: z.string().trim().min(1, "Say when this started.").max(500),
   what_changed: z.string().trim().min(1, "Say whether anything has changed.").max(500),
   current_symptoms: z.string().trim().min(1, "Describe your symptoms.").max(1000),

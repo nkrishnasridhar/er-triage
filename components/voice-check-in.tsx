@@ -14,7 +14,7 @@ type RealtimeEvent = {
 
 const voiceFailure = "Voice check-in could not continue. You can use the written check-in instead.";
 const fixedQuestions = [
-  "What is your age and sex assigned at birth?",
+  "What is your name, how old are you, and what is your sex?",
   "What would you like staff to know about why you came in today?",
   "When did this start?",
   "Has it changed since it started?",
@@ -170,7 +170,7 @@ export function VoiceCheckIn() {
             microphone.current?.getAudioTracks().forEach((track) => {
               track.enabled = false;
             });
-            setStatus("Audio detected. Tap Next question to accept it, or Try again to discard it.");
+            setStatus("Answer detected.");
           }
         } else if (event.type === "response.output_audio_transcript.done") {
           if (event.transcript) {
@@ -213,8 +213,8 @@ export function VoiceCheckIn() {
     }
   };
 
-  const continueToConfirmation = () => {
-    const account = patientAnswers.join("\n").trim();
+  const continueToConfirmation = (answers = patientAnswers) => {
+    const account = answers.join("\n").trim();
     if (!account) {
       setStatus("Say something first, or use the written check-in instead.");
       return;
@@ -237,20 +237,44 @@ export function VoiceCheckIn() {
   const acceptAnswer = () => {
     const answer = pendingAnswerRef.current;
     if (!answer) return;
-    setPatientAnswers((answers) => [...answers, answer]);
+    const acceptedAnswers = [...patientAnswers, answer];
+    setPatientAnswers(acceptedAnswers);
     pendingAnswerRef.current = "";
     setPendingAnswer("");
-    microphone.current?.getAudioTracks().forEach((track) => {
-      track.enabled = true;
-    });
 
     const nextIndex = nextQuestionIndex.current + 1;
     if (nextIndex < fixedQuestions.length) {
+      microphone.current?.getAudioTracks().forEach((track) => {
+        track.enabled = true;
+      });
       askQuestionRef.current?.(nextIndex);
     } else {
-      finish("All six questions answered. Review your answers to continue.");
+      continueToConfirmation(acceptedAnswers);
     }
   };
+
+  const handleMainButton = () => {
+    if (pendingAnswer) {
+      acceptAnswer();
+    } else if (state === "finished") {
+      if (patientAnswers.length > 0) continueToConfirmation();
+      else void start();
+    } else if (state === "idle") {
+      void start();
+    }
+  };
+
+  const mainButtonLabel = pendingAnswer
+    ? questionIndex === fixedQuestions.length - 1
+      ? "Review answers"
+      : "Next question"
+    : state === "finished"
+      ? patientAnswers.length > 0
+        ? "Review answers"
+        : "Tap to begin"
+      : state === "idle"
+        ? "Tap to begin"
+        : "Check-in started";
 
   const active = state === "connecting" || state === "listening" || state === "speaking";
 
@@ -266,49 +290,26 @@ export function VoiceCheckIn() {
           <p className="mt-2 text-base leading-7">{currentQuestion}</p>
           {pendingAnswer && (
             <div className="mt-4">
-              <p className="text-sm leading-6 text-muted" role="status">
-                Audio detected. Continue only if that was your answer.
-              </p>
-              <div className="mt-3 flex gap-3">
-                <button
-                  type="button"
-                  onClick={retryAnswer}
-                  className="min-h-12 flex-1 rounded-control border border-line bg-surface px-4 text-sm font-semibold"
-                >
-                  Try again
-                </button>
-                <button
-                  type="button"
-                  onClick={acceptAnswer}
-                  className="min-h-12 flex-1 rounded-control bg-moss px-4 text-sm font-semibold text-pine"
-                >
-                  Next question
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={retryAnswer}
+                className="min-h-12 rounded-control border border-line bg-surface px-5 text-sm font-semibold"
+              >
+                Try again
+              </button>
             </div>
-          )}
-          {patientAnswers.length > 0 && (
-            <button
-              type="button"
-              onClick={continueToConfirmation}
-              className="mt-4 inline-flex min-h-12 w-full items-center justify-center rounded-control bg-moss px-5 text-sm font-semibold text-pine"
-            >
-              Review text and continue
-            </button>
           )}
         </section>
       )}
 
       <button
         type="button"
-        onClick={start}
-        disabled={active}
+        onClick={handleMainButton}
+        disabled={active && !pendingAnswer}
         className="flex size-48 shrink-0 flex-col items-center justify-center gap-3 rounded-full bg-moss p-8 text-pine shadow-sm transition-transform active:scale-95 disabled:cursor-wait disabled:active:scale-100 sm:size-52"
       >
         <Mic aria-hidden="true" className="size-14" strokeWidth={1.75} />
-        <span className="text-lg font-semibold">
-          {state === "idle" || state === "finished" ? "Tap to begin" : "Check-in started"}
-        </span>
+        <span className="text-lg font-semibold">{mainButtonLabel}</span>
       </button>
 
       <p className="mt-4 text-sm text-muted" role="status" aria-live="polite">
@@ -318,7 +319,11 @@ export function VoiceCheckIn() {
       {active && (
         <button
           type="button"
-          onClick={() => finish("Check-in stopped.")}
+          onClick={() => {
+            pendingAnswerRef.current = "";
+            setPendingAnswer("");
+            finish("Check-in stopped.");
+          }}
           className="mt-3 inline-flex items-center gap-2 rounded-control border border-line bg-surface px-5 py-3 text-sm font-semibold"
         >
           <Square aria-hidden="true" className="size-4 fill-current" />
