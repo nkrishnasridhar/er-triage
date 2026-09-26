@@ -167,12 +167,12 @@ export function VoiceCheckIn() {
   const active = state === "connecting" || state === "listening" || state === "speaking";
 
   return (
-    <div className="mt-10 flex w-full max-w-xl flex-col items-center">
+    <div className="mx-auto mt-6 flex min-h-0 w-full max-w-xl flex-col items-center">
       <button
         type="button"
         onClick={start}
         disabled={active}
-        className="flex min-h-52 min-w-52 flex-col items-center justify-center gap-3 rounded-full bg-moss p-8 text-pine shadow-sm transition-transform active:scale-95 disabled:cursor-wait disabled:active:scale-100"
+        className="flex size-48 shrink-0 flex-col items-center justify-center gap-3 rounded-full bg-moss p-8 text-pine shadow-sm transition-transform active:scale-95 disabled:cursor-wait disabled:active:scale-100 sm:size-52"
       >
         <Mic aria-hidden="true" className="size-14" strokeWidth={1.75} />
         <span className="text-lg font-semibold">
@@ -180,7 +180,7 @@ export function VoiceCheckIn() {
         </span>
       </button>
 
-      <p className="mt-5 text-sm text-muted" role="status" aria-live="polite">
+      <p className="mt-4 text-sm text-muted" role="status" aria-live="polite">
         {status}
       </p>
 
@@ -188,7 +188,7 @@ export function VoiceCheckIn() {
         <button
           type="button"
           onClick={() => finish()}
-          className="mt-5 inline-flex items-center gap-2 rounded-control border border-line bg-surface px-5 py-3 text-sm font-semibold"
+          className="mt-3 inline-flex items-center gap-2 rounded-control border border-line bg-surface px-5 py-3 text-sm font-semibold"
         >
           <Square aria-hidden="true" className="size-4 fill-current" />
           Finish check-in
@@ -197,12 +197,12 @@ export function VoiceCheckIn() {
 
       {lines.length > 0 && (
         <section
-          className="mt-10 w-full rounded-card bg-surface p-5 text-left shadow-sm sm:p-6"
+          className="mt-5 flex h-[22dvh] min-h-36 w-full flex-col rounded-card bg-surface p-5 text-left shadow-sm sm:p-6"
           aria-label="Check-in conversation"
           aria-live="polite"
         >
           <h2 className="text-sm font-semibold">Conversation</h2>
-          <ol className="mt-4 space-y-4">
+          <ol className="mt-4 min-h-0 flex-1 space-y-4 overflow-y-auto pr-1">
             {lines.map((line, index) => (
               <li key={`${line.speaker}-${index}`} className="text-sm leading-6">
                 <span className="font-semibold">{line.speaker}: </span>
@@ -213,7 +213,7 @@ export function VoiceCheckIn() {
           <button
             type="button"
             onClick={continueToConfirmation}
-            className="mt-6 inline-flex min-h-12 w-full items-center justify-center rounded-control bg-moss px-5 text-sm font-semibold text-pine"
+            className="mt-4 inline-flex min-h-12 shrink-0 w-full items-center justify-center rounded-control bg-moss px-5 text-sm font-semibold text-pine"
           >
             Review text and continue
           </button>
