@@ -23,12 +23,7 @@ export default async function LoginPage() {
         <BrandMark />
       </Link>
       <div className="mx-auto my-auto w-full max-w-md py-16">
-        <p className="text-body-2 mb-4">STAFF SIGN IN</p>
-        <h1 className="text-h2 mb-4">Clinical staff only.</h1>
-        <p className="mb-8 text-sm leading-6">
-          Sign in with the staff account set up for this demonstration. Do not use
-          this with real patient information.
-        </p>
+        <h1 className="text-h2 mb-8">Staff sign in</h1>
         {configured ? <LoginForm /> : <SetupNotice />}
       </div>
       <p className="text-sm">Supporting clinical judgement, never replacing it.</p>
