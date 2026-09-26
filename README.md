@@ -34,16 +34,24 @@ in the application cannot cross them.
 | The app never assigns urgency | `triage_briefs.priority` is clinician-supplied; the priority inputs have no default |
 | Nothing is approved without a decision | `approval_requires_a_decision` CHECK constraint |
 | No decision without a named clinician | `decisions_carry_a_reviewer` CHECK constraint |
-| Approval is irreversible | The UPDATE policy can only see rows still in draft |
+| Approval is irreversible | The UPDATE policy can only see rows still in draft, **and** a `BEFORE UPDATE` trigger refuses to touch an approved row for any role (RLS alone is not enough — the table owner and `service_role` both have `BYPASSRLS`) |
 | A captured intake cannot be rewritten | `encounters` has no UPDATE grant and no UPDATE policy |
 | What the patient said cannot be edited during review | `patient_reported` and `staff_observed` are absent from the UPDATE grant |
 | Records name the people responsible | `recorded_by`, `drafted_by`, `reviewed_by`, plus readable label snapshots |
 | Accounts cannot be deleted out from under a record | `ON DELETE RESTRICT` on every reference |
 | Patient identity is minimised | No name, date of birth or contact detail is stored at all |
 
-The product specified for this weekend is **Front Brief**, a clinician-reviewed emergency-department intake copilot. The design package is in [docs/README.md](docs/README.md). This pass is documentation only. Application behaviour is still the starter.
+The product specified for this weekend is **Front Brief**, a clinician-reviewed emergency-department intake copilot. The design package is in [docs/README.md](docs/README.md).
+
+The working application described above is now implemented: `/intake` captures an account, `lib/draft-brief.ts` drafts a brief, and `/encounters/[id]` is the clinician review screen and approved handover record. The `docs/` package is the design intent; where it and the code disagree, the code is what runs and the disagreement needs resolving — see the open questions below.
 
 Hackathon data is synthetic and fictional. Do not enter real patient health information. The product must not diagnose, prescribe, assign an Australasian Triage Scale category, rank patients, or present model output as clinical truth. A clinician reviews and approves every brief.
+
+### Known mismatches between `docs/` and the code
+
+- **Product name.** The docs say *Front Brief*; the UI, package and migrations say *ER Triage*. One name needs choosing.
+- **Triage scale.** The docs specify the *Australasian* Triage Scale. The code ships the UK-style labels (Immediate / Very urgent / Urgent / Standard / Non-urgent) as placeholders. No category is ever assigned by the app, so this is a labelling decision, not a safety one — but it should be settled before any clinician sees it.
+- **Draft generation.** The code uses a single deterministic local keyword matcher (`lib/draft-brief.ts`), not a hosted model. No model output is presented as clinical truth, so the provenance and human-oversight intent is preserved.
 
 ## Getting Started
 

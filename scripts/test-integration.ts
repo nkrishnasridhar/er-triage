@@ -433,8 +433,14 @@ async function main() {
     assert.equal(verified.headers.get("location"), "/queue");
 
     // The queue is empty for a first-time account.
+    // This test's own reference must not already exist. The rest of the queue
+    // may legitimately hold records from manual testing, so it is not asserted
+    // to be empty.
     const emptyQueue = await (await request("/queue")).text();
-    assert.ok(emptyQueue.includes("No intakes yet."));
+    assert.ok(
+      !emptyQueue.includes("MRN-HTTP-1"),
+      "the test's own patient reference must not already exist",
+    );
 
     // Capture an intake through the real Server Action.
     const intakeHtml = await (await request("/intake")).text();
@@ -603,7 +609,10 @@ async function main() {
       queueHtml.includes("Immediate"),
       "the approved priority is visible in the shared queue",
     );
-    assert.ok(!queueHtml.includes("Not yet decided by a clinician"));
+    assert.ok(
+      !/MRN-HTTP-1[\s\S]{0,600}Not yet decided/.test(queueHtml),
+      "the approved record no longer shows as awaiting a decision",
+    );
 
     // The approved view offers no way to change an approved record.
     const $approved = load(approvedHtml);
