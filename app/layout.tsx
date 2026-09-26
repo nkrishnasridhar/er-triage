@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "Christchurch ER", template: "%s · Christchurch ER" },
-  description: "Christchurch ER check-in.",
+  title: { default: "ER Triage", template: "%s · ER Triage" },
+  description: "Patient check-in and clinician-reviewed emergency department briefs.",
 };
 
 export default function RootLayout({

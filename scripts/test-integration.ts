@@ -50,6 +50,7 @@ async function main() {
   const anonymous = publicClient();
   const userIds: string[] = [];
   const encounterIds: string[] = [];
+  const patientCheckInIds: string[] = [];
   const run = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   const aliceEmail = `alice-${run}@example.test`;
   const bobEmail = `bob-${run}@example.test`;
@@ -72,6 +73,54 @@ async function main() {
         null,
       );
     }
+
+    // ---- Public tablet check-ins are write-only for the patient. ------------
+    const tabletAnswers = [
+      { question_id: "main_concern", answer: "Synthetic ankle pain after a fall." },
+      { question_id: "when_started", answer: "About an hour ago." },
+    ];
+    const tabletInsert = await anonymous.from("patient_checkins").insert({
+      check_in_code: "CHK-1A2B",
+      presenting_concern: tabletAnswers[0].answer,
+      answers: tabletAnswers,
+      patient_account: "- Synthetic ankle pain after a fall.\n- About an hour ago.",
+    });
+    assert.equal(tabletInsert.error, null, "a patient may submit a tablet check-in");
+    const tabletCheckIn = (
+      await admin
+        .from("patient_checkins")
+        .select("id, patient_account")
+        .eq("check_in_code", "CHK-1A2B")
+        .single()
+    ).data!;
+    patientCheckInIds.push(tabletCheckIn.id);
+    for (const client of [alice, bob]) {
+      assert.equal(
+        (await client.from("patient_checkins").select("id").eq("id", tabletCheckIn.id))
+          .data?.length,
+        1,
+        "each authenticated department account may read the shared tablet queue",
+      );
+    }
+    const anonymousRead = await anonymous
+      .from("patient_checkins")
+      .select("id")
+      .eq("id", tabletCheckIn.id);
+    assert.ok(
+      anonymousRead.error || (anonymousRead.data ?? []).length === 0,
+      "the public tablet cannot read a submitted check-in",
+    );
+    await alice
+      .from("patient_checkins")
+      .update({ patient_account: "Quietly changed" })
+      .eq("id", tabletCheckIn.id);
+    assert.equal(
+      (
+        await admin.from("patient_checkins").select("patient_account").eq("id", tabletCheckIn.id).single()
+      ).data!.patient_account,
+      tabletCheckIn.patient_account,
+      "tablet answers are write-once, including for staff",
+    );
 
     // ---- The queue is shared, but writing is not. -----------------------------
     const { data: record, error } = await alice
@@ -312,7 +361,7 @@ async function main() {
     );
 
     console.log(
-      "PASS: shared queue, write-once intake, anonymous denial, cross-account isolation, locked provenance, approval requires a clinician decision, one-way approval",
+      "PASS: public write-only patient check-ins, two-account staff access, shared queue, write-once intake, anonymous denial, locked provenance, approval requires a clinician decision, one-way approval",
     );
 
     // Clear the direct-database records so the HTTP section starts from a
@@ -413,6 +462,55 @@ async function main() {
       !emptyQueue.includes("MRN-HTTP-1"),
       "the test's own patient reference must not already exist",
     );
+
+    // A patient can use the public tablet without a staff session. The Server
+    // Action returns a code; staff later use that code to open the submission.
+    const publicCheckIn = await (await request("/check-in")).text();
+    assert.ok(publicCheckIn.includes("Tell the team what brought you in"));
+    const publicSubmit = await submit("/check-in", publicCheckIn, "form", {
+      answers: JSON.stringify([
+        { question_id: "main_concern", answer: "Synthetic tablet ankle pain after a fall." },
+        { question_id: "when_started", answer: "This morning." },
+      ]),
+    });
+    const publicSubmitHtml = await publicSubmit.text();
+    assert.ok(publicSubmitHtml.includes("CHECK-IN SENT"));
+    const httpCheckIn = (
+      await alice
+        .from("patient_checkins")
+        .select("id, check_in_code")
+        .eq("presenting_concern", "Synthetic tablet ankle pain after a fall.")
+        .single()
+    ).data!;
+    patientCheckInIds.push(httpCheckIn.id);
+
+    // Staff see that submission in the shared queue, attach the local reference,
+    // and create the existing clinician-review draft from the patient's words.
+    const queueWithTablet = await (await request("/queue")).text();
+    assert.ok(queueWithTablet.includes(httpCheckIn.check_in_code));
+    const checkInDetail = await (await request(`/check-ins/${httpCheckIn.id}`)).text();
+    const prepared = await submit(
+      `/check-ins/${httpCheckIn.id}`,
+      checkInDetail,
+      'form:has(input[name="check_in_id"])',
+      {
+        check_in_id: httpCheckIn.id,
+        patient_reference: "MRN-TABLET-1",
+        presenting_concern: "Synthetic tablet ankle pain after a fall.",
+      },
+    );
+    const preparedPath = prepared.headers.get("location");
+    assert.ok(preparedPath?.startsWith("/encounters/"));
+    const preparedEncounter = (
+      await alice
+        .from("encounters")
+        .select("id, patient_account, patient_checkin_id")
+        .eq("patient_reference", "MRN-TABLET-1")
+        .single()
+    ).data!;
+    encounterIds.push(preparedEncounter.id);
+    assert.equal(preparedEncounter.patient_checkin_id, httpCheckIn.id);
+    assert.ok(preparedEncounter.patient_account.includes("Synthetic tablet ankle pain"));
 
     // Capture an intake through the real Server Action.
     const intakeHtml = await (await request("/intake")).text();
@@ -626,7 +724,7 @@ async function main() {
       "PASS: password sign-in, the shared department queue, and no inherited authorship",
     );
     console.log(
-      "PASS: protected clinical routes, intake capture, draft brief with no priority, refused approval without a decision, clinician sign-off, immutable approved record and sign-out",
+      "PASS: public tablet submission, staff handoff into a draft brief with no priority, protected clinical routes, intake capture, refused approval without a decision, clinician sign-off, immutable approved record and sign-out",
     );
   } finally {
     server?.kill("SIGTERM");
@@ -635,8 +733,10 @@ async function main() {
     // a run that fails part-way through still leaves the queue clean.
     for (const id of encounterIds)
       await admin.from("encounters").delete().eq("id", id);
-    for (const reference of ["MRN-TEST-1", "MRN-HTTP-1"])
+    for (const reference of ["MRN-TEST-1", "MRN-HTTP-1", "MRN-TABLET-1"])
       await admin.from("encounters").delete().eq("patient_reference", reference);
+    for (const id of patientCheckInIds)
+      await admin.from("patient_checkins").delete().eq("id", id);
     for (const id of userIds) await admin.auth.admin.deleteUser(id);
   }
 }

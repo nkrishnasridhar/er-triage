@@ -22,7 +22,7 @@ export default async function QueuePage() {
 
   const { data: encounters, error } = await supabase
     .from("encounters")
-    .select("id, patient_reference, presenting_concern, created_at, recorded_by_label")
+    .select("id, patient_checkin_id, patient_reference, presenting_concern, created_at, recorded_by_label")
     .order("created_at", { ascending: false });
 
   if (error)
@@ -31,6 +31,22 @@ export default async function QueuePage() {
     );
 
   const rows = encounters ?? [];
+
+  const { data: patientCheckIns, error: checkInError } = await supabase
+    .from("patient_checkins")
+    .select("id, check_in_code, presenting_concern, created_at")
+    .order("created_at", { ascending: false });
+  if (checkInError)
+    throw new Error("Could not load patient check-ins. Check the database migration.");
+
+  const claimedCheckInIds = new Set(
+    rows
+      .map((row) => row.patient_checkin_id)
+      .filter((id): id is string => Boolean(id)),
+  );
+  const waitingCheckIns = (patientCheckIns ?? []).filter(
+    (checkIn) => !claimedCheckInIds.has(checkIn.id),
+  );
 
   // Joined here rather than with a nested select, so the brief is an ordinary
   // typed row rather than a shape the client has to infer.
@@ -69,14 +85,17 @@ export default async function QueuePage() {
               sets one.
             </p>
           </div>
-          <Button asChild size="xl">
-            <Link href="/intake">
-              New intake <ArrowRight aria-hidden="true" />
-            </Link>
-          </Button>
+          <div className="flex flex-wrap gap-3">
+            <Button asChild variant="outline" size="xl">
+              <Link href="/check-in">Open patient tablet</Link>
+            </Button>
+            <Button asChild size="xl">
+              <Link href="/intake">New staff intake <ArrowRight aria-hidden="true" /></Link>
+            </Button>
+          </div>
         </div>
 
-        {rows.length === 0 ? (
+        {rows.length === 0 && waitingCheckIns.length === 0 ? (
           <div className="mt-10 rounded-[20px] border border-dashed border-black/20 px-6 py-14">
             <p className="text-h3">No intakes yet.</p>
             <p className="mt-4 text-sm leading-6 text-charcoal">
@@ -86,6 +105,37 @@ export default async function QueuePage() {
           </div>
         ) : (
           <div className="mt-12 space-y-12">
+            <section aria-labelledby="patient-checkins-heading">
+              <div className="mb-5 flex items-center justify-between border-b border-black/10 pb-4">
+                <div>
+                  <h2 id="patient-checkins-heading" className="text-lg font-semibold">Patient tablet check-ins</h2>
+                  <p className="mt-1 text-sm text-charcoal">In arrival order, not urgency order.</p>
+                </div>
+                <span className="rounded-full bg-off-white px-3 py-1 text-sm">{waitingCheckIns.length}</span>
+              </div>
+              {waitingCheckIns.length === 0 ? (
+                <p className="text-sm leading-6 text-charcoal">No unprepared tablet check-ins.</p>
+              ) : (
+                <ul className="space-y-3">
+                  {waitingCheckIns.map((checkIn) => (
+                    <li key={checkIn.id}>
+                      <Link
+                        href={`/check-ins/${checkIn.id}`}
+                        className="flex flex-wrap items-center justify-between gap-4 rounded-[20px] border border-black/10 p-5 transition-colors hover:bg-off-white"
+                      >
+                        <div className="min-w-0">
+                          <p className="font-semibold">{checkIn.check_in_code}</p>
+                          <p className="mt-1 break-words text-sm leading-6 text-charcoal">{checkIn.presenting_concern}</p>
+                          <p className="mt-1 text-sm text-charcoal">Submitted {formatTimestamp(checkIn.created_at)}</p>
+                        </div>
+                        <span className="text-sm font-medium">Review answers &rarr;</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </section>
+
             <section aria-labelledby="awaiting-heading">
               <div className="mb-5 flex items-center justify-between border-b border-black/10 pb-4">
                 <h2 id="awaiting-heading" className="text-lg font-semibold">
