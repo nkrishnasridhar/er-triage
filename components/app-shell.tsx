@@ -27,7 +27,10 @@ export function AppShell({
             </Link>
             <nav aria-label="Main" className="flex items-center gap-4 text-sm">
               <Link href="/queue" className="underline-offset-4 hover:underline">
-                Reports
+                Active queue
+              </Link>
+              <Link href="/records" className="underline-offset-4 hover:underline">
+                Approved records
               </Link>
             </nav>
           </div>

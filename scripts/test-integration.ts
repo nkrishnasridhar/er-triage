@@ -230,13 +230,20 @@ async function main() {
     assert.ok((await tabletResult.text()).includes("account has been sent"));
 
     assert.equal((await request("/queue")).status, 307, "The queue is never public");
+    assert.equal((await request("/records")).status, 307, "Approved records are never public");
     const login = await (await request("/login")).text();
     const signedIn = await submit("/login", login, "form", { email: emails.alice, password });
     assert.equal(signedIn.headers.get("location"), "/queue");
     const queue = await (await request("/queue")).text();
     assert.ok(queue.includes("TABLET-HTTP-1"));
     assert.ok(queue.includes("Awaiting review"));
+    assert.ok(!queue.includes("TABLET-RLS-1"), "Approved records are not in the active queue");
     assert.ok(!queue.includes("AI priority"));
+    const records = await (await request("/records")).text();
+    assert.ok(records.includes("Approved handover records"));
+    assert.ok(records.includes("TABLET-RLS-1"));
+    const approvedRecord = await (await request(`/encounters/${capturedId}`)).text();
+    assert.ok(approvedRecord.includes("This record is now read-only."));
 
     console.log("PASS: anonymous tablet hand-off, role-gated review, immutable approval, and clinician queue");
   } finally {
