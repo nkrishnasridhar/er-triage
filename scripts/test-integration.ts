@@ -212,7 +212,7 @@ async function main() {
 
     const voiceHtml = await (await request("/")).text();
     assert.ok(voiceHtml.includes("Start by speaking"));
-    assert.ok(voiceHtml.includes("Use written form"));
+    assert.ok(voiceHtml.includes("Use the written form"));
     assert.ok(!voiceHtml.includes("priority"), "The tablet never exposes a priority control");
     const tabletHtml = await (await request("/check-in")).text();
     assert.ok(tabletHtml.includes("Tell us what is happening"));
