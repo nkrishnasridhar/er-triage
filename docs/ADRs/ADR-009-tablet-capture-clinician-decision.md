@@ -8,8 +8,8 @@ Accepted and implemented.
 
 Use a public, anonymous tablet solely to submit a confirmed text account. The primary input is a short live Realtime voice conversation in which the assistant asks neutral questions aloud; a separate form is the required editable confirmation step and the fully typed alternative. The app does not retain audio, although the Realtime provider processes audio during the live session. Put every read, edit, decision, and approval behind an authenticated staff role; only the `clinician` role may approve.
 
-The model may organise captured wording and ask neutral clarification questions. It may not set, suggest, rank, prefill, or otherwise imply priority, next step, triage category, severity, risk, or waiting-room order. Awaiting reports remain chronological.
+The brief model may organise captured wording and ask neutral clarification questions. It may not set, suggest, rank, prefill, or otherwise imply clinician priority, next step, triage category, diagnosis, treatment, or disposition. A separate review-suggestion model may return only source quotes for the application to turn into the initial display order; awaiting reports remain individually openable.
 
 ## Consequences
 
-The tablet is useful without exposing clinical records. It also means the first verified demo account needs an audited clinician bootstrap and later roles need provisioning. This deliberately rejects a more visually dramatic AI queue reorder: such a feature would make the system a triage decision-maker and would require new clinical governance, evaluation, and regulatory work.
+The tablet is useful without exposing clinical records. It also means the first verified demo account needs an audited clinician bootstrap and later roles need provisioning. The review suggestion is stored separately, is immutable after assessment, and can never update a clinical decision field. It remains a fictional-data hackathon demonstration pending governance, evaluation, and regulatory work.

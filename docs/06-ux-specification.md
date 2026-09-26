@@ -43,9 +43,9 @@ Exact subtitle: "A triage evidence brief for the nurse to review. It does not as
 
 Objective: open a fixture or start a fictional encounter.
 
-Hierarchy: title, primary "New fictional encounter", then rows.
+Hierarchy: suggested-review-order title, primary "New fictional encounter", then rows.
 
-Row contents: display name, status word (`Draft`, `Ready for review`, `Approved`), relative time. No ATS numeral, no coloured dot.
+Row contents: numbered suggested-review marker, written suggested-review label, display name, status word (`Draft`, `Ready for review`, `Approved`), and relative time. The marker is not a clinical severity colour.
 
 Actions: open row, new encounter.
 
@@ -57,7 +57,7 @@ Empty: "No fictional encounters yet. Create one, or reload the demo seed."
 
 Safety copy:
 
-> This list is not a queue and not an urgency order.
+> Every report remains openable. This is a suggested review order, not a clinical decision.
 
 Exact heading: "Encounters"
 
@@ -314,7 +314,7 @@ Keep islands small, per the starter rule.
 | C9 | Approve reviewed brief |
 | C10 | Approval means a clinician reviewed this brief. It is not a diagnosis, prescription, queue position, or disposition. |
 | C11 | The brief was not updated. The conversation is saved. Try again. |
-| C12 | This list is not a queue and not an urgency order. |
+| C12 | Every report remains openable. This is a suggested review order, not a clinical decision. |
 
 ## What the UI must never display
 
@@ -323,7 +323,7 @@ Keep islands small, per the starter rule.
 - "Confidence"
 - "Risk score"
 - "High / medium / low" as a clinical tier
-- A waiting-room rank
+- A locked waiting-room rank
 - "Diagnosis"
 - A green check that means the patient is safe
 - Penicillin (or any allergen) as a bare positive chip when status is `UNCERTAIN`

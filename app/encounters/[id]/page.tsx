@@ -10,6 +10,13 @@ import {
   NOT_YET_DECIDED,
   priorityLabel,
 } from "@/lib/triage";
+import {
+  REVIEW_BAND_LABEL,
+  REVIEW_REASON_LABEL,
+  type ReviewBand,
+  type ReviewReason,
+} from "@/lib/review-recommendation-validation";
+import type { Json } from "@/lib/database.types";
 import { idSchema } from "@/lib/validation";
 
 export const dynamic = "force-dynamic";
@@ -45,6 +52,22 @@ function Decision({
   );
 }
 
+function reviewReasons(value: Json): ReviewReason[] {
+  if (!Array.isArray(value)) return [];
+  return value.filter(
+    (reason): reason is ReviewReason =>
+      typeof reason === "object" &&
+      reason !== null &&
+      !Array.isArray(reason) &&
+      (reason.kind === "information_gap" || reason.kind === "account_cue") &&
+      typeof reason.quote === "string" &&
+      (reason.subtype === undefined ||
+        reason.subtype === "uncertain" ||
+        reason.subtype === "conflicting" ||
+        reason.subtype === "missing"),
+  );
+}
+
 export default async function EncounterPage({
   params,
 }: {
@@ -74,7 +97,17 @@ export default async function EncounterPage({
     throw new Error("Could not load this brief. Check the database connection.");
   if (!brief) notFound();
 
+  const { data: suggestion, error: suggestionError } = await supabase
+    .from("review_suggestions")
+    .select("attention_band, reasons")
+    .eq("encounter_id", id)
+    .maybeSingle();
+  if (suggestionError)
+    throw new Error("Could not load this report's review suggestion.");
+
   const approved = brief.status === "approved";
+  const reasons = suggestion ? reviewReasons(suggestion.reasons) : [];
+  const band = (suggestion?.attention_band ?? "unassessed") as ReviewBand;
 
   return (
     <AppShell email={email} role={role}>
@@ -103,6 +136,30 @@ export default async function EncounterPage({
         <div className="mt-8">
           <ClinicianDecisionNotice approved={approved} />
         </div>
+
+        <section className="mt-8 rounded-card border border-line p-5" aria-labelledby="review-suggestion">
+          <p className="text-body-2 text-muted">SUGGESTED REVIEW ORDER</p>
+          <h2 id="review-suggestion" className="mt-2 text-xl font-semibold">
+            Why this was surfaced
+          </h2>
+          <p className="mt-2 text-sm leading-6 text-muted">
+            {REVIEW_BAND_LABEL[band]}. This is a suggested review order, not a clinical decision.
+          </p>
+          {reasons.length > 0 ? (
+            <ul className="mt-5 space-y-4">
+              {reasons.map((reason, index) => (
+                <li key={`${reason.kind}-${reason.quote}-${index}`} className="border-t border-line pt-4 first:border-t-0 first:pt-0">
+                  <p className="text-sm font-medium">{REVIEW_REASON_LABEL[reason.kind]}</p>
+                  <p className="mt-1 text-sm leading-6 text-muted">“{reason.quote}”</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="mt-5 text-sm leading-6 text-muted">
+              No model suggestion was available. The report remains available to open and review.
+            </p>
+          )}
+        </section>
 
         {approved ? (
           <div className="mt-10 space-y-10">

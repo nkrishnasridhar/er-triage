@@ -1,7 +1,10 @@
 "use server";
 
 import { composeDraftBrief } from "@/lib/brief-composition";
-import { isConfigured } from "@/lib/config";
+import { isAdminConfigured, isConfigured } from "@/lib/config";
+import type { Json } from "@/lib/database.types";
+import { composeReviewRecommendation } from "@/lib/review-recommendation";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createPublicClient } from "@/lib/supabase/public";
 import {
   tabletEncounterSchema,
@@ -44,13 +47,18 @@ export async function submitTabletEncounter(
   });
   if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-  const composed = await composeDraftBrief({
+  const intake = {
     presentingConcern: parsed.data.presenting_concern,
     patientAccount: parsed.data.patient_account,
     observedSigns: "",
-  });
+  };
+  const canStoreSuggestion = isAdminConfigured();
+  const recommendation = canStoreSuggestion
+    ? composeReviewRecommendation(intake)
+    : Promise.resolve(null);
+  const composed = await composeDraftBrief(intake);
   const supabase = createPublicClient();
-  const { error } = await supabase.rpc("capture_tablet_intake", {
+  const { data: encounterId, error } = await supabase.rpc("capture_tablet_intake", {
     patient_reference_input: parsed.data.patient_reference,
     presenting_concern_input: parsed.data.presenting_concern,
     patient_account_input: parsed.data.patient_account,
@@ -61,5 +69,25 @@ export async function submitTabletEncounter(
     drafted_from_input: composed.source,
   });
   if (error) return { error: "Your account was not sent. Please try again." };
+
+  const suggestedReview = await recommendation;
+  if (suggestedReview?.source === "model-v1") {
+    // The public capture RPC always created an Unassessed row first. This
+    // server-only update is intentionally best-effort: model or credential
+    // failures leave the report visible in chronological fallback order.
+    await createAdminClient()
+      .from("review_suggestions")
+      .update({
+        attention_band: suggestedReview.attentionBand,
+        information_gap_score: suggestedReview.informationGapScore,
+        account_cue_score: suggestedReview.accountCueScore,
+        rank_score: suggestedReview.rankScore,
+        reasons: suggestedReview.reasons as Json,
+        source: suggestedReview.source,
+        model_version: suggestedReview.modelVersion,
+      })
+      .eq("encounter_id", encounterId)
+      .eq("source", "unassessed");
+  }
   return { success: "Your account has been sent to the clinical team." };
 }

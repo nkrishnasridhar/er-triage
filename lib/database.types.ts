@@ -143,6 +143,50 @@ export type Database = {
           },
         ];
       };
+      review_suggestions: {
+        Row: {
+          account_cue_score: number;
+          assessed_at: string;
+          attention_band: string;
+          encounter_id: string;
+          information_gap_score: number;
+          model_version: string | null;
+          rank_score: number;
+          reasons: Json;
+          source: string;
+        };
+        Insert: {
+          account_cue_score?: number;
+          assessed_at?: string;
+          attention_band?: string;
+          encounter_id: string;
+          information_gap_score?: number;
+          model_version?: string | null;
+          rank_score?: number;
+          reasons?: Json;
+          source?: string;
+        };
+        Update: {
+          account_cue_score?: number;
+          assessed_at?: string;
+          attention_band?: string;
+          encounter_id?: string;
+          information_gap_score?: number;
+          model_version?: string | null;
+          rank_score?: number;
+          reasons?: Json;
+          source?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "review_suggestions_encounter_id_fkey";
+            columns: ["encounter_id"];
+            isOneToOne: true;
+            referencedRelation: "encounters";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       staff_profiles: {
         Row: {
           created_at: string;

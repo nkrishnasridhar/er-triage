@@ -1,6 +1,6 @@
 # 32 — CTO decision summary
 
-> **Implementation update — 26 September 2026:** ADR-009 is implemented: public tablet capture is a narrow write-only capability; the tablet is voice-first with an editable text confirmation and typed fallback; the app retains no audio while the provider processes it live; clinician work is role-gated; composition is server-only with deterministic fallback. AI urgency recommendation, ATS output, and queue ranking remain forbidden.
+> **Implementation update — 27 September 2026:** Public tablet capture remains a narrow write-only capability; the tablet is voice-first with an editable text confirmation and typed fallback; clinician work is role-gated; composition is server-only with deterministic fallback. A separate source-linked model pass may set the initial report-review display order, while ATS output, clinician priority, next step, approval, diagnosis, and disposition remain outside its control.
 
 Opinionated record. One decision per controversy. If a later chat proposes five options, this file already chose. Change it only by editing the decision and the ADR, not by quietly coding the alternative.
 
@@ -12,7 +12,7 @@ Build **ERgency**, a triage evidence brief for the triage nurse. The repo stays 
 
 The product converts a pasted conversation into a reviewable brief with provenance and gaps. The clinician decides. The model extracts and asks. TypeScript assembles.
 
-`PRODUCT_GOAL.md` is the starter's looser goal. It allows "suggested areas for clinical attention" and a clinician decision about priority and next steps. This file tightens that: no suggested acuity, no disposition, no ranking. Follow this file.
+`PRODUCT_GOAL.md` is the starter's looser goal. The implemented scope is a source-linked suggested review order: information gaps weigh twice as much as account cues, every report stays openable, and a clinician retains clinical priority and next-step ownership.
 
 ## B. Maturity lines
 
@@ -28,7 +28,7 @@ Do not use pilot language on Sunday.
 ## C. The twelve contradictions
 
 1. **ATS dropdown.** The field starts empty. The model has no writer. Copy: "You are recording your category. ERgency does not assign or recommend one." Do not narrate a fictional category as correct.
-2. **Items warranting attention.** They are template pointers to uncertain, negated, or contradicted quotes. No score, rank, or colour scale. Title: "Warranting another look".
+2. **Suggested review order.** A separate model pass may return only source quotes grouped as information gaps or account cues. Application code scores the groups, exposes the reasons only after opening a report, and never writes a clinician priority or category.
 3. **Gap detection.** Show at most three. Title: "Information to clarify". Never block approve.
 4. **Audio.** The tablet is voice-first, but the typed form is always available and no audio is retained by the app. Live provider processing is synthetic-demo-only pending governance.
 5. **Scribe-shaped demo.** Forbidden. The demo must show a hedge, a negation or contradiction, a gap, a quote, and an empty category.

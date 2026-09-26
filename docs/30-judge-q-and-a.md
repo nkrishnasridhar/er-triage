@@ -1,6 +1,6 @@
 # 30 — Judge questions and answers
 
-> **Implementation update — 26 September 2026:** “Why does the system not reorder the queue?” Answer: that would be an AI urgency recommendation. The demo instead shows anonymous voice-first capture with no app-retained audio, a chronological awaiting-review list, and a clinician-owned priority/next-step decision.
+> **Implementation update — 27 September 2026:** The awaiting-review list has an AI-suggested *display order*. It is calculated only from up to three source-linked information gaps and up to three account cues; gaps count twice. It is not a clinical priority, diagnosis, triage category, safety judgement, or approval. Every report stays openable, and the clinician alone records priority, next step, and approval.
 
 Three minutes. Answer in two or three sentences, then stop. Admit the weakness in the same breath as the defence. Do not invent a statistic to fill silence.
 
@@ -12,19 +12,19 @@ The user is the triage nurse. The buyer we would have to convince is a health sy
 
 ## What does AI actually do?
 
-It extracts statements and proposes at most three clarification questions. Code then checks quotes, drops illegal fields, and builds the brief. The model does not approve anything and cannot write the triage category. If we had used one prompt to "write the note", we would have built the scribe we are trying not to be.
+It extracts statements and proposes at most three clarification questions for the brief. In a separate call, it may return up to three exact-source information gaps and up to three exact-source account cues. Code validates every quote against the captured account, gives gaps double weight, and uses the resulting score only to set the review-list display order. The model does not approve anything and cannot write priority, a triage category, or a clinical decision.
 
 ## Why wouldn't Heidi just add this?
 
-They might. Their public product is the note, the template, and the languages, plus an Evidence feature we did not verify as triage provenance. If they add epistemic status and gap detection, our wedge gets thin. The residual is a review workflow that refuses to score acuity. That may not be enough to buy. We would rather find that out in interviews than pretend the scribe cannot move.
+They might. Their public product is the note, the template, and the languages, plus an Evidence feature we did not verify as triage provenance. If they add source-linked epistemic status, gap detection, and a non-clinical review order, our wedge gets thin. Our distinction is that the queue offers a transparent place to start without assigning acuity. That may not be enough to buy; we would rather find that out in interviews than pretend the scribe cannot move.
 
 ## Can it assign an ATS category?
 
 No. The control starts empty. The only write path is the signed-in clinician. We will not justify a category for a fictional patient as clinically correct. A demo dropdown can look like automation. The copy on the control says the clinician is recording it. Weakness: a careless presenter can still type a number and sound like the computer chose it. The script says not to.
 
-## Isn't "warranting another look" just a risk score?
+## Isn't a suggested review order just an AI priority?
 
-It is a list of pointers to uncertain, negated, or contradicted quotes, from fixed templates, with no number and no colour scale. Weakness: any highlighted list can be over-read as severity. We banned scores and "high/medium/low". We cannot ban a human inference. If the UI grows a red badge, that is a bug.
+No. The number is a bounded count of source-linked information gaps and account cues, not a claim about a patient. The queue exposes text labels such as “Suggested first” and the report explains the exact quotes after it is opened; every lower-listed report is still one click away. Weakness: any order can be over-read as severity. We must keep the UI free of clinical labels, traffic-light colours, and claims of accuracy.
 
 ## Won't the extra questions slow triage?
 
@@ -36,15 +36,15 @@ The first interaction is naturally spoken, so the tablet starts with a short gui
 
 ## What about speech, disability, and language?
 
-Difficulty communicating is not evidence of lower urgency. The product has no urgency score to bias, and the transcript screen says to type observations if speech fails. Weakness: we have not tested this with disabled people, interpreters, or te reo Māori speakers. A string on a screen is not an equity programme. We also have not involved Māori data governance. That blocks any real deployment, not the fictional demo.
+Difficulty communicating is not evidence of lower urgency. Speech traits do not enter the suggested-order calculation, and the transcript screen says to type observations if speech fails. Weakness: we have not tested this with disabled people, interpreters, or te reo Māori speakers. A string on a screen is not an equity programme. We also have not involved Māori data governance. That blocks any real deployment, not the fictional demo.
 
 ## A patient says "ignore previous instructions".
 
-That line is untrusted speech. The system prompt says so. The schema has no field for the model to set a category. The assembler will not take one from the model. We have a fixture for it. Weakness: one fixture is not a security proof. A novel jailbreak could still produce bad prose inside a quote. Quotes are substrings, so the damage is a weird statement the nurse can see, not a hidden tool call. There is no tool to call.
+That line is untrusted speech. The system prompt says so, and neither schema has a field for the model to set a category, priority, or clinical decision. The brief assembler will not take one from the model; the review-order pipeline accepts only literal source quotes and calculates its score in code. We have a fixture for it. Weakness: one fixture is not a security proof. A novel jailbreak could still produce bad prose inside a quote, but it cannot call a tool or introduce hidden scoring instructions.
 
 ## How accurate is it?
 
-We do not have an accuracy number, on purpose. We check separate things: hedges, negations, questions that are not findings, quote exactness, gap cap, and category silence. A single accuracy score would hide a flipped allergy. Weakness: we will have run those checks on a handful of fictional transcripts, not on a representative set.
+We do not have an accuracy or clinical-efficacy number, on purpose. We check separate things: hedges, negations, questions that are not findings, quote exactness, signal caps, score mapping, and category silence. A single number would hide a flipped allergy or falsely suggest the order has clinical validity. Weakness: we will have run those checks on a handful of fictional transcripts, not on a representative set.
 
 ## Is it a medical device? Are you HIPAA compliant? What about the Privacy Act?
 
@@ -68,11 +68,11 @@ The clinician who approves the brief. The software stores who approved it and wh
 
 ## What did you cut, and what is the weakest part of the demo?
 
-We cut the microphone, standards integration, roles, and any confidence number. The weakest part is that extraction quality depends on a model call we do not fully control, and our evidence is a few fixtures. The strongest part, if we built it, is that the category stays empty and the penicillin hedge stays visible. If those two fail, the project fails the brief even if the UI is pretty.
+We cut the microphone, standards integration, and a clinical-risk or confidence claim. The weakest part is that extraction quality depends on a model call we do not fully control, and our evidence is a few fixtures. The strongest part is that the category stays empty, the penicillin hedge stays visible, and any suggested order can be traced to exact captured text. If those fail, the project fails the brief even if the UI is pretty.
 
 ## Why will they come back?
 
-Only if the next patient is easier to hand over with the brief than without it. We have not shown that. The SaaSathon test is a reason to return. Ours is "every arrival". It stands or falls with the nurse interviews.
+Only if the next patient is easier to hand over with the brief and the active list gives a useful, non-clinical place to start. We have not shown that. The SaaSathon test is a reason to return. Ours is “every arrival.” It stands or falls with the nurse interviews.
 
 ## Can it replace a nurse or a doctor?
 
@@ -80,7 +80,7 @@ No. If a judge describes it that way, correct them.
 
 ## What happens after Sunday?
 
-Interviews with triage nurses using fictional cases, comparing the brief to a scribe-style note. If they do not describe a completeness problem, we stop. A pilot with real patients is behind privacy, security, AI governance, and a real safety case. Those gates are not started.
+Interviews with triage nurses using fictional cases, comparing the brief to a scribe-style note and asking whether they accept or differ from the suggested starting order. If they do not describe a completeness or review-sequencing problem, we stop. A pilot with real patients is behind privacy, security, AI governance, and a real safety case. Those gates are not started.
 
 ## Market numbers you might get challenged on
 

@@ -24,10 +24,12 @@ The product is described in full, including what it deliberately does not do, in
    the tablet cannot read the clinical workspace.
 2. **Draft** — a server-only composition boundary organises the text into a
    source-preserving draft, falling back safely to local deterministic rules.
-3. **Review** — a clinician edits the draft and chooses a priority and next
-   step. Nothing is pre-selected and the AI never assigns, recommends, or ranks
-   urgency.
-4. **Hand over** — the signed-off brief becomes a read-only record naming the
+3. **Suggest** — a separate, source-linked model pass suggests where to start
+   in the active review list. Every report remains openable; the order is not a
+   clinical priority or decision.
+4. **Review** — a clinician edits the draft and chooses a priority and next
+   step. Nothing is pre-selected by the application.
+5. **Hand over** — the signed-off brief becomes a read-only record naming the
    clinician who approved it.
 
 ## The safety boundaries, and where they are enforced
@@ -37,7 +39,8 @@ in the application cannot cross them.
 
 | Boundary | Enforced by |
 | --- | --- |
-| The app never assigns urgency | `triage_briefs.priority` is clinician-supplied; the priority inputs have no default |
+| Clinical priority remains clinician-owned | `triage_briefs.priority` is clinician-supplied; the priority inputs have no default |
+| A suggested review order is auditable | `review_suggestions` stores source-linked reasons, staff may only read it, and a database trigger freezes a saved model suggestion |
 | Nothing is approved without a decision | `approval_requires_a_decision` CHECK constraint |
 | No decision without a named clinician | `decisions_carry_a_reviewer` CHECK constraint |
 | Approval is irreversible | The UPDATE policy can only see rows still in draft, **and** a `BEFORE UPDATE` trigger refuses to touch an approved row for any role (RLS alone is not enough — the table owner and `service_role` both have `BYPASSRLS`) |
@@ -55,13 +58,13 @@ the written/voice-transcript confirmation form, `/queue` for staff reports, and
 [the implementation contract](docs/33-tablet-clinician-workflow.md) for the
 data-access, AI, speech, and role boundaries.
 
-Hackathon data is synthetic and fictional. Do not enter real patient health information. The product must not diagnose, prescribe, assign an Australasian Triage Scale category, rank patients, or present model output as clinical truth. A clinician reviews and approves every brief.
+Hackathon data is synthetic and fictional. Do not enter real patient health information. The product must not diagnose, prescribe, assign an Australasian Triage Scale category, or present model output as clinical truth. Its suggested review order is an inspectable starting view only; a clinician reviews and approves every brief.
 
 ### Known mismatches between `docs/` and the code
 
 - **Product name.** The public product name is *ERgency*. The npm package, GitHub repository, and migration identifiers remain `er-triage` as technical identifiers.
 - **Triage scale.** The docs specify the *Australasian* Triage Scale. The code ships the UK-style labels (Immediate / Very urgent / Urgent / Standard / Non-urgent) as placeholders. No category is ever assigned by the app, so this is a labelling decision, not a safety one — but it should be settled before any clinician sees it.
-- **Draft generation.** The code uses a single deterministic local keyword matcher (`lib/draft-brief.ts`), not a hosted model. No model output is presented as clinical truth, so the provenance and human-oversight intent is preserved.
+- **Draft generation.** `lib/draft-brief.ts` remains a deterministic local keyword matcher. A separately validated, optional model pass may organise a draft or attach source-linked review suggestions; no model output records a clinician priority or approval.
 
 ## Getting Started
 
@@ -140,6 +143,7 @@ components/                 Shared UI and forms
 lib/
   brief-composition.ts      Server-only model boundary with deterministic fallback
   draft-brief.ts            Deterministic fallback. Not a clinical instrument.
+  review-recommendation.ts  Source-linked suggested review ordering
   triage.ts                 Clinician decision vocabulary
   validation.ts             Input schemas mirroring the database constraints
 supabase/migrations/        Schema, grants, row level security

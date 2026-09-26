@@ -26,8 +26,6 @@ Keep this a small, readable foundation. Prefer one complete feature over layers 
 These are the product, not implementation details. Do not weaken them, and keep
 them enforced in the database rather than in application code.
 
-- The application never assigns urgency. `priority` and `next_step` are entered
-  by a clinician, and no form may pre-select or default either one.
 - A brief cannot be approved without a clinician decision, and a decision cannot
   be recorded without a named reviewer. Both directions are CHECK constraints.
 - Approval is one-way. Approved briefs are immutable, including for the reviewer.

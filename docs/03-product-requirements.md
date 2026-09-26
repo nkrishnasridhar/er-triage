@@ -217,4 +217,4 @@ Current Chrome. Tablet width 768px is the demo width. A 390px check is enough to
 
 ## Out of scope even if a judge asks for it live
 
-Diagnosis, prescriptions, queue ranking, ambulance triage, patient-facing symptom checker, automatic language translation as a clinical safety feature, and any use of a real NHI.
+Diagnosis, prescriptions, autonomous triage, ambulance triage, patient-facing symptom checker, automatic language translation as a clinical safety feature, and any use of a real NHI. The fictional-demo review suggestion may order reports for opening, but it cannot set a clinical priority, next step, disposition, or category.

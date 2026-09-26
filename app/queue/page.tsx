@@ -6,6 +6,11 @@ import { isConfigured } from "@/lib/config";
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { formatTimestamp } from "@/lib/triage";
+import {
+  compareSuggestedReviewOrder,
+  REVIEW_BAND_LABEL,
+  type ReviewBand,
+} from "@/lib/review-recommendation-validation";
 import type { Tables } from "@/lib/database.types";
 
 export const dynamic = "force-dynamic";
@@ -29,8 +34,37 @@ export default async function QueuePage() {
     : { data: [], error: null };
   if (briefsError) throw new Error("Could not load the briefs for this queue.");
 
+  type ReviewSuggestion = Pick<
+    Tables<"review_suggestions">,
+    "encounter_id" | "attention_band" | "rank_score"
+  >;
+  const { data: suggestions, error: suggestionsError } = ids.length
+    ? await supabase
+        .from("review_suggestions")
+        .select("encounter_id, attention_band, rank_score")
+        .in("encounter_id", ids)
+    : { data: [], error: null };
+  if (suggestionsError)
+    throw new Error("Could not load review suggestions for this queue.");
+
   const briefByEncounter = new Map((briefs as BriefSummary[]).map((brief) => [brief.encounter_id, brief]));
-  const awaiting = rows.filter((row) => briefByEncounter.get(row.id)?.status !== "approved");
+  const suggestionByEncounter = new Map(
+    (suggestions as ReviewSuggestion[]).map((suggestion) => [suggestion.encounter_id, suggestion]),
+  );
+  const awaiting = rows
+    .filter((row) => briefByEncounter.get(row.id)?.status !== "approved")
+    .sort((left, right) =>
+      compareSuggestedReviewOrder(
+        {
+          rankScore: suggestionByEncounter.get(left.id)?.rank_score ?? -1,
+          createdAt: left.created_at,
+        },
+        {
+          rankScore: suggestionByEncounter.get(right.id)?.rank_score ?? -1,
+          createdAt: right.created_at,
+        },
+      ),
+    );
   const approvedCount = rows.length - awaiting.length;
 
   return (
@@ -38,10 +72,10 @@ export default async function QueuePage() {
       <main id="main" className="mx-auto max-w-5xl px-5 py-10 lg:px-[30px]">
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <p className="text-body-2 text-muted">SHARED DEPARTMENT QUEUE</p>
-            <h1 className="text-h2 mt-3">Waiting on a clinician.</h1>
+            <p className="text-body-2 text-muted">SUGGESTED CLINICIAN REVIEW ORDER</p>
+            <h1 className="text-h2 mt-3">Start with a suggestion. Open any report.</h1>
             <p className="mt-4 max-w-2xl text-sm leading-6 text-muted">
-              Tablet accounts arrive in capture order. Nothing here carries a priority until a qualified clinician records one.
+              Every report remains available. This order is a source-linked review suggestion, not a clinical priority or decision.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -72,24 +106,38 @@ export default async function QueuePage() {
               <span className="rounded-full bg-moss px-3 py-1 text-sm">{awaiting.length}</span>
             </div>
             <ul className="space-y-3">
-              {awaiting.map((row) => (
-                <li key={row.id}>
-                  <Link
-                    href={`/encounters/${row.id}`}
+              {awaiting.map((row, index) => {
+                const suggestion = suggestionByEncounter.get(row.id);
+                const band = (suggestion?.attention_band ?? "unassessed") as ReviewBand;
+                return (
+                  <li key={row.id}>
+                    <Link
+                      href={`/encounters/${row.id}`}
                     className="flex flex-wrap items-center justify-between gap-4 rounded-card border border-line p-5 transition-colors hover:bg-moss"
-                  >
-                    <div className="min-w-0">
-                      <p className="break-words font-semibold">{row.patient_reference}</p>
-                      <p className="mt-1 break-words text-sm leading-6 text-muted">{row.presenting_concern}</p>
-                      <p className="mt-1 text-sm text-muted">
-                        {formatTimestamp(row.created_at)}
-                        {row.recorded_by_label && ` · captured by ${row.recorded_by_label}`}
-                      </p>
-                    </div>
-                    <p className="text-right text-sm text-muted">Awaiting clinician review</p>
-                  </Link>
-                </li>
-              ))}
+                    >
+                      <div className="flex min-w-0 items-start gap-4">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-moss text-sm font-semibold text-pine">
+                          {index + 1}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="break-words font-semibold">{row.patient_reference}</p>
+                          <p className="mt-1 break-words text-sm leading-6 text-muted">
+                            {row.presenting_concern}
+                          </p>
+                          <p className="mt-1 text-sm text-muted">
+                            {formatTimestamp(row.created_at)}
+                            {row.recorded_by_label && ` · captured by ${row.recorded_by_label}`}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right text-sm text-muted">
+                        <p>{REVIEW_BAND_LABEL[band]}</p>
+                        <p className="mt-1">Open to review</p>
+                      </div>
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </section>
         )}

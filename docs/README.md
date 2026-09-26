@@ -18,7 +18,7 @@ Read [32-cto-decision-summary.md](32-cto-decision-summary.md) first if you are a
 
 ## Product in one paragraph
 
-ERgency turns a messy first emergency-department conversation into a structured triage evidence brief that a triage nurse can review in well under the two-to-five minutes ACEM describes for a triage assessment. Every statement is labelled as patient-reported, staff-observed, explicitly provided context, or an AI highlight that only points at source text. Uncertain, negated, contradicted, and unknown statements stay uncertain, negated, contradicted, or unknown. The nurse edits, answers or skips up to three clarifications, may manually record an Australasian Triage Scale category, and approves the brief. The model never assigns that category, ranks the waiting room, diagnoses, prescribes, or decides disposition.
+ERgency turns a messy first emergency-department conversation into a structured triage evidence brief and a source-linked suggested review order. Every report remains openable. Information gaps and account cues only point at captured source text; they do not set a clinician priority, ATS category, next step, diagnosis, prescription, or disposition.
 
 ## Maturity lines
 

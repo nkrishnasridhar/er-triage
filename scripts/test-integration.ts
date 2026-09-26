@@ -97,6 +97,71 @@ async function main() {
     assert.equal(brief.drafted_by, null);
     assert.equal(brief.drafted_from, "deterministic-fallback-v1");
     assert.equal(brief.patient_reported, encounter.patient_account);
+    const unassessedSuggestion = (
+      await admin.from("review_suggestions").select("*").eq("encounter_id", capturedId!).single()
+    ).data!;
+    assert.equal(unassessedSuggestion.attention_band, "unassessed");
+    assert.equal(unassessedSuggestion.rank_score, -1);
+    assert.deepEqual(unassessedSuggestion.reasons, []);
+    assert.ok(
+      (await anonymous.from("review_suggestions").select()).error,
+      "Anonymous review-suggestion reads are denied",
+    );
+    assert.ok(
+      (
+        await anonymous.from("review_suggestions").insert({
+          encounter_id: capturedId!,
+          attention_band: "suggested_first",
+        })
+      ).error,
+      "Anonymous review-suggestion writes are denied",
+    );
+    assert.equal(
+      (
+        await admin
+          .from("review_suggestions")
+          .update({
+            attention_band: "suggested_later",
+            information_gap_score: 1,
+            account_cue_score: 1,
+            rank_score: 3,
+            reasons: [
+              { kind: "information_gap", subtype: "uncertain", quote: "twisted my ankle" },
+              { kind: "account_cue", quote: "ankle" },
+            ],
+            source: "model-v1",
+            model_version: "local-test-model",
+          })
+          .eq("encounter_id", capturedId!)
+      ).error,
+      null,
+    );
+    for (const staffClient of [alice, bob, nurse]) {
+      const suggestionResponse: {
+        data: { attention_band: string; rank_score: number; reasons: unknown } | null;
+        error: unknown;
+      } = await staffClient
+        .from("review_suggestions")
+        .select("attention_band, rank_score, reasons")
+        .eq("encounter_id", capturedId!)
+        .single();
+      assert.equal(suggestionResponse.error, null);
+      assert.equal(suggestionResponse.data?.attention_band, "suggested_later");
+      assert.equal(suggestionResponse.data?.rank_score, 3);
+      assert.deepEqual(suggestionResponse.data?.reasons, [
+        { kind: "information_gap", subtype: "uncertain", quote: "twisted my ankle" },
+        { kind: "account_cue", quote: "ankle" },
+      ]);
+    }
+    assert.ok(
+      (
+        await admin
+          .from("review_suggestions")
+          .update({ attention_band: "suggested_first", rank_score: 6 })
+          .eq("encounter_id", capturedId!)
+      ).error,
+      "A stored model suggestion is immutable",
+    );
 
     assert.ok(
       (await anonymous.from("encounters").update({ presenting_concern: "Rewritten" }).eq("id", capturedId!)).error,
@@ -159,6 +224,7 @@ async function main() {
       ...process.env,
       NEXT_PUBLIC_SUPABASE_URL: local.API_URL,
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: key,
+      SUPABASE_SERVICE_ROLE_KEY: local.SERVICE_ROLE_KEY,
     };
     execFileSync(pnpmCommand, ["build"], { env, stdio: "pipe", shell: pnpmShell });
     const probe = createServer();
@@ -238,6 +304,8 @@ async function main() {
     const queue = await (await request("/queue")).text();
     assert.ok(queue.includes("TABLET-HTTP-1"));
     assert.ok(queue.includes("Awaiting review"));
+    assert.ok(queue.includes("Suggested clinician review order"));
+    assert.ok(queue.includes("Unassessed"));
     assert.ok(!queue.includes("TABLET-RLS-1"), "Approved records are not in the active queue");
     assert.ok(!queue.includes("AI priority"));
     const records = await (await request("/records")).text();
@@ -246,7 +314,7 @@ async function main() {
     const approvedRecord = await (await request(`/encounters/${capturedId}`)).text();
     assert.ok(approvedRecord.includes("This record is now read-only."));
 
-    console.log("PASS: anonymous tablet hand-off, role-gated review, immutable approval, and clinician queue");
+    console.log("PASS: anonymous tablet hand-off, review-suggestion access, immutable approval, and clinician queue");
   } finally {
     server?.kill("SIGTERM");
     for (const id of encounterIds) await admin.from("encounters").delete().eq("id", id);
