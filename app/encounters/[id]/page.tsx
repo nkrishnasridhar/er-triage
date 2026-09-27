@@ -141,7 +141,7 @@ export default async function EncounterPage({
           encounter.device_snapshot_heart_rate_bpm !== null &&
           encounter.device_snapshot_captured_at && (
             <section className="mt-8 rounded-card border border-line bg-moss p-5" aria-labelledby="device-snapshot">
-              <p className="text-body-2 text-muted">DEVICE-REPORTED SNAPSHOT — SIMULATED</p>
+              <p className="text-body-2 text-muted">Device-reported snapshot — simulated</p>
               <h2 id="device-snapshot" className="mt-2 text-xl font-semibold">
                 Optional heart-rate reading
               </h2>
