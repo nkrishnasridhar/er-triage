@@ -146,7 +146,7 @@ export default async function EncounterPage({
                 Optional heart-rate reading
               </h2>
               <p className="mt-4 text-2xl font-semibold">
-                {encounter.device_snapshot_heart_rate_bpm} bpm
+                {`${encounter.device_snapshot_heart_rate_bpm} bpm`}
               </p>
               <p className="mt-1 text-sm text-muted">
                 Captured {formatTimestamp(encounter.device_snapshot_captured_at)}
